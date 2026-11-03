@@ -133,9 +133,9 @@ python scripts\run_eval.py --split development --runs 3 --label baseline --rerun
 - 🟡 **Agent Optimizer: prepared, waiting on quota.** `scripts/prepare_optimizer.py` freezes
   the splits (hash manifest in `data/prepared/manifest.json`) and writes per-case judge
   criteria for the 90 optimizer cases. Plans for the MAI deployment, hosted agent and a
-  5-candidate built-in `task_adherence` search have been validated as dry runs. Launch is
-  blocked only by quota: the subscription has no free MAI-Code-1.1-Flash or GPT-5.4 capacity
-  in the target region. Candidates will be re-scored with the canonical grader on development.
+  5-candidate built-in `task_adherence` search have been validated as dry runs. A GPT-5
+  deployment for the optimizer and judge is live in the project. Launch is blocked only by
+  MAI-Code-1.1-Flash quota: the subscription-wide 100K TPM is fully allocated. Candidates will be re-scored with the canonical grader on development.
 - ⏭️ **RFT** for whichever modes the optimizer leaves short, once the reward has been
   calibrated on the train split.
 - ⏭️ Frontier reference (for example GPT-6 Sol) on the same development cases.
