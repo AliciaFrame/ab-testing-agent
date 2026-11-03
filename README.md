@@ -103,7 +103,7 @@ agent/            hosted agent (scaffolded from the mai-agent-hillclimb skill)
   domain.py       tools over agent/data/arms.parquet
   grader.py       deterministic grader and RFT reward
   instructions.md baseline instructions; tools.json is generated from domain.py
-scripts/          build_data.py, build_cases.py, run_eval.py
+scripts/          build_data.py, build_cases.py, run_eval.py, prepare_optimizer.py
 data/cases/       generated cases per split
 runs/             recorded episodes and summaries
 tests/            reference agent passes 100%; negative grader tests
@@ -130,7 +130,12 @@ python scripts\run_eval.py --split development --runs 3 --label baseline --rerun
 
 - ✅ Data checked against the paper, six-mode case set (1,110 cases), deterministic grader
   (1,037 passing tests, cross-checked against statsmodels) and the baseline.
-- ⏭️ **Agent Optimizer** on the optimizer split, judged by the canonical grader on development.
+- 🟡 **Agent Optimizer: prepared, waiting on quota.** `scripts/prepare_optimizer.py` freezes
+  the splits (hash manifest in `data/prepared/manifest.json`) and writes per-case judge
+  criteria for the 90 optimizer cases. Plans for the MAI deployment, hosted agent and a
+  5-candidate built-in `task_adherence` search have been validated as dry runs. Launch is
+  blocked only by quota: the subscription has no free MAI-Code-1.1-Flash or GPT-5.4 capacity
+  in the target region. Candidates will be re-scored with the canonical grader on development.
 - ⏭️ **RFT** for whichever modes the optimizer leaves short, once the reward has been
   calibrated on the train split.
 - ⏭️ Frontier reference (for example GPT-6 Sol) on the same development cases.

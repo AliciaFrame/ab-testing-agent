@@ -1,0 +1,18 @@
+{
+  "source_sha256": "5a2b38a6cf7271b8303181daf43f8903dc7f94614ffe19edb3143cb7e648fd75",
+  "counts": {
+    "optimizer": 90,
+    "train": 600,
+    "validation": 90,
+    "development": 90,
+    "final": 150
+  },
+  "files": {
+    "optimizer": "587746ebd198482b00ab4129636cd99713a99d3cceb28f19f2d6a76baa4ad0ff",
+    "train": "c39036166cb5308e5ab8dbee2304df03d44d06f01c7c7573d1e4b0c181b62d63",
+    "validation": "0228f5edfe600a9374718f4d4fb6d9f9ec2d93a3a2a847a17244fd6b58cd476b",
+    "development": "1d0aaf95db061021d11804a5bd1e153d1b8b0ba0a5f28a19fcb79394db766bbd",
+    "final": "b842dd978652dd5a39bf11345cf8f32acf45791e2d9428b80f36ea1b1e4fbd10"
+  },
+  "resolved_policy_sha256": null
+}
