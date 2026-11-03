@@ -1,0 +1,9 @@
+*
+!requirements.txt
+!abstats.py
+!domain.py
+!grader.py
+!service.py
+!Dockerfile
+!data/
+!data/arms.parquet

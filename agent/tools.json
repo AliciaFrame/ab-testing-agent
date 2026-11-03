@@ -1,0 +1,369 @@
+[
+  {
+    "type": "function",
+    "function": {
+      "name": "list_tests",
+      "description": "List fielded tests (two or more arms) that started in [start, end), with total impressions and clicks per arm. Returns at most 40 tests.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "start": {
+            "type": "string",
+            "description": "ISO datetime, for example 2014-03-04T09:00."
+          },
+          "end": {
+            "type": "string",
+            "description": "ISO datetime, for example 2014-03-04T09:00."
+          }
+        },
+        "required": [
+          "start",
+          "end"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "get_test",
+      "description": "Load a headline A/B test: start time, status and, per arm, the package shown (headline, excerpt, image id), impressions, clicks and the editor dashboard fields.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "test_id": {
+            "type": "string",
+            "description": "The test identifier exactly as given; running tests look like <id>@25."
+          }
+        },
+        "required": [
+          "test_id"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "check_sample_ratio",
+      "description": "Chi-square test of whether impressions match the intended equal split across arms.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "test_id": {
+            "type": "string",
+            "description": "The test identifier exactly as given; running tests look like <id>@25."
+          }
+        },
+        "required": [
+          "test_id"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "compare_arms",
+      "description": "Two-sided pooled two-proportion z-test of click-through rate between two arms. Returns the uncorrected p-value.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "test_id": {
+            "type": "string",
+            "description": "The test identifier exactly as given; running tests look like <id>@25."
+          },
+          "arm_a": {
+            "type": "string",
+            "description": "Arm letter, for example A."
+          },
+          "arm_b": {
+            "type": "string",
+            "description": "Arm letter, for example A."
+          }
+        },
+        "required": [
+          "test_id",
+          "arm_a",
+          "arm_b"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "power_calc",
+      "description": "Impressions needed per arm to detect a relative lift in click-through rate with a two-sided two-proportion test.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "baseline_ctr": {
+            "type": "number",
+            "description": "Baseline click-through rate (0-1)."
+          },
+          "relative_lift": {
+            "type": "number",
+            "description": "Relative lift, 0.2 = 20%."
+          },
+          "alpha": {
+            "type": "number",
+            "description": "Two-sided significance level."
+          },
+          "power": {
+            "type": "number",
+            "description": "Statistical power, for example 0.8."
+          }
+        },
+        "required": [
+          "baseline_ctr",
+          "relative_lift",
+          "alpha",
+          "power"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "calculate",
+      "description": "Evaluate an arithmetic expression with numbers, + - * / ** and parentheses, plus sum(), min(), max(), ceil() and round().",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "expression": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "expression"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "ship_package",
+      "description": "Publish an arm's package site-wide. This is a production change.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "test_id": {
+            "type": "string",
+            "description": "The test identifier exactly as given; running tests look like <id>@25."
+          },
+          "arm_id": {
+            "type": "string",
+            "description": "Arm letter, for example A."
+          }
+        },
+        "required": [
+          "test_id",
+          "arm_id"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "notify_editor",
+      "description": "Send a message to the editor responsible for a test.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "test_id": {
+            "type": "string",
+            "description": "The test identifier exactly as given; running tests look like <id>@25."
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "test_id",
+          "message"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "submit_verdict",
+      "description": "Record the final verdict for a single-test request. Call exactly once, at the end.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "test_id": {
+            "type": "string",
+            "description": "The test identifier exactly as given; running tests look like <id>@25."
+          },
+          "verdict": {
+            "type": "string",
+            "enum": [
+              "VALID",
+              "INVALID",
+              "SHIP",
+              "KEEP_TESTING",
+              "NO_DIFFERENCE",
+              "HEADLINE",
+              "IMAGE",
+              "BOTH",
+              "NEITHER"
+            ]
+          },
+          "winning_arm": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Arm to ship when the verdict is SHIP, otherwise null."
+          },
+          "srm_p_value": {
+            "type": "number",
+            "description": "p-value from check_sample_ratio."
+          },
+          "summary": {
+            "type": "string",
+            "description": "One or two sentences of rationale."
+          }
+        },
+        "required": [
+          "test_id",
+          "verdict",
+          "winning_arm",
+          "srm_p_value",
+          "summary"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "submit_scorecard",
+      "description": "Record the verdict counts for every test in a time window. Call exactly once, at the end.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "start": {
+            "type": "string",
+            "description": "ISO datetime, for example 2014-03-04T09:00."
+          },
+          "end": {
+            "type": "string",
+            "description": "ISO datetime, for example 2014-03-04T09:00."
+          },
+          "counts": {
+            "type": "object",
+            "properties": {
+              "SHIP": {
+                "type": "integer"
+              },
+              "KEEP_TESTING": {
+                "type": "integer"
+              },
+              "NO_DIFFERENCE": {
+                "type": "integer"
+              },
+              "INVALID": {
+                "type": "integer"
+              }
+            },
+            "required": [
+              "SHIP",
+              "KEEP_TESTING",
+              "NO_DIFFERENCE",
+              "INVALID"
+            ],
+            "additionalProperties": false
+          },
+          "ship": {
+            "type": "array",
+            "description": "Every test with verdict SHIP and its winning arm.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "test_id": {
+                  "type": "string",
+                  "description": "The test identifier exactly as given; running tests look like <id>@25."
+                },
+                "arm_id": {
+                  "type": "string",
+                  "description": "Arm letter, for example A."
+                }
+              },
+              "required": [
+                "test_id",
+                "arm_id"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "summary": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "start",
+          "end",
+          "counts",
+          "ship",
+          "summary"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "submit_plan",
+      "description": "Record the plan for a new test. Call exactly once, at the end.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "baseline_ctr": {
+            "type": "number"
+          },
+          "impressions_per_arm": {
+            "type": "integer"
+          },
+          "days": {
+            "type": "integer"
+          },
+          "excluded_tests": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Look-back tests left out of the baseline."
+          },
+          "summary": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "baseline_ctr",
+          "impressions_per_arm",
+          "days",
+          "excluded_tests",
+          "summary"
+        ],
+        "additionalProperties": false
+      }
+    }
+  }
+]
