@@ -1,0 +1,83 @@
+{
+  "overall": {
+    "baseline": 0.8296296296296296,
+    "candidate": 0.8888888888888888,
+    "gain": 0.059259259259259234,
+    "baseline_run_spread": 0.022831162973959138,
+    "baseline_tokens": 32848.68518518518,
+    "candidate_tokens": 33833.81851851852
+  },
+  "scenarios": [
+    {
+      "mode": "validity",
+      "baseline": 0.8666666666666667,
+      "candidate": 1.0,
+      "delta": 0.1333333333333333,
+      "lost_stable_cases": [],
+      "baseline_tokens": 4988.955555555555,
+      "candidate_tokens": 8888.933333333332,
+      "ok": true
+    },
+    {
+      "mode": "ship_decision",
+      "baseline": 0.8,
+      "candidate": 0.8,
+      "delta": -0.0,
+      "lost_stable_cases": [],
+      "baseline_tokens": 13894.822222222223,
+      "candidate_tokens": 13894.822222222223,
+      "ok": true
+    },
+    {
+      "mode": "early_look",
+      "baseline": 0.7777777777777778,
+      "candidate": 1.0,
+      "delta": 0.2222222222222222,
+      "lost_stable_cases": [],
+      "baseline_tokens": 11136.977777777778,
+      "candidate_tokens": 13147.8,
+      "ok": true
+    },
+    {
+      "mode": "attribution",
+      "baseline": 0.8888888888888888,
+      "candidate": 0.8888888888888888,
+      "delta": -0.0,
+      "lost_stable_cases": [],
+      "baseline_tokens": 13022.177777777777,
+      "candidate_tokens": 13022.177777777777,
+      "ok": true
+    },
+    {
+      "mode": "portfolio",
+      "baseline": 0.8666666666666667,
+      "candidate": 0.8666666666666667,
+      "delta": -0.0,
+      "lost_stable_cases": [],
+      "baseline_tokens": 111326.44444444444,
+      "candidate_tokens": 111326.44444444444,
+      "ok": true
+    },
+    {
+      "mode": "planning",
+      "baseline": 0.7777777777777778,
+      "candidate": 0.7777777777777778,
+      "delta": -0.0,
+      "lost_stable_cases": [],
+      "baseline_tokens": 42722.73333333333,
+      "candidate_tokens": 42722.73333333333,
+      "ok": true
+    }
+  ],
+  "checks": {
+    "overall_gain_exceeds_spread": true,
+    "no_scenario_regression": true,
+    "no_new_side_effect_violations": true,
+    "clean_evaluation": true
+  },
+  "accept": true,
+  "token_flags": [
+    "validity"
+  ],
+  "runtime_errors": 0
+}

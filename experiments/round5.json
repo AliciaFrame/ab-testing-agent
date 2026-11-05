@@ -1,0 +1,48 @@
+{
+  "_about": "Round-5 candidates from development failure review of routed-mai-r4 (after the user-approved batched portfolio). Each entry appends text to the task's current accepted prompt; all use default reasoning effort, because low effort cost accuracy in round 4. GPT-6 Sol proposes additional candidates from optimizer-split failures only.",
+  "planning": [
+    {
+      "name": "exponent_threshold_rule",
+      "hypothesis": "All 7 round-4 planning failures excluded exactly one extra test with p = 0.0024-0.03 (or an empty string); a no-tool-call scientific-notation rule should fix it without adding steps.",
+      "append": "{planning_threshold}"
+    },
+    {
+      "name": "exponent_rule_plus_list_check",
+      "hypothesis": "Same, plus one list-valued calculate check; more robust but adds tool steps.",
+      "append": "{planning_threshold}\n\n{planning_list_check}"
+    }
+  ],
+  "ship_decision": [
+    {
+      "name": "incident_gate_srm_order_pooled_ctr",
+      "hypothesis": "Case 008 (2013-08-13, incident) answered NO_DIFFERENCE 3/3; cases 006/013 compared arms before INVALID; case 011 pooled CTR wrong. Add the proven incident date check, the SRM exponent rule, a strict no-analysis-before-validity order, and calculate-based pooled CTR.",
+      "append": "{incident}\n\n{srm_threshold}\n\n{ship_order_and_ctr}"
+    },
+    {
+      "name": "incident_gate_only",
+      "hypothesis": "Minimal fix: the proven incident date check alone (fewest extra tokens).",
+      "append": "{incident}"
+    }
+  ],
+  "portfolio": [
+    {
+      "name": "sufficiency_list_check",
+      "hypothesis": "MAI's portfolio misses are KEEP_TESTING/NO_DIFFERENCE swaps on tests whose smallest arm is within 2-6% of the required sample. One list-valued calculate call should settle them.",
+      "append": "{portfolio_sufficiency}"
+    },
+    {
+      "name": "sufficiency_and_validity_lists",
+      "hypothesis": "Also settle incident and SRM decisions with list-valued calculate calls (one batching-era INVALID miss).",
+      "append": "{portfolio_sufficiency}\n\n{portfolio_validity_lists}"
+    }
+  ],
+  "_texts": {
+    "planning_threshold": "Threshold discipline for exclusions: write each look-back test's sample-ratio p-value in scientific notation d.ddde-N. It is below 0.001 only when N is 4 or more (for example 9.9e-4 or 2.4e-5). Values such as 2.4e-3 (0.0024), 3.3e-3, 2.9e-2 or 5.0e-2 are NOT below 0.001: those tests are VALID and stay in the baseline. Apart from incident-window starts, exclude only tests meeting that rule. excluded_tests must contain only real test_id strings, never empty strings or placeholders; use [] when nothing is excluded.",
+    "planning_list_check": "Before submitting, verify with ONE calculate call whose expression is a list [P1-0.001, P2-0.001, ...] using every look-back test's exact p_value in list_tests order. A test fails the sample-ratio rule only if its entry is negative. Make excluded_tests agree with this result and the incident-window rule.",
+    "incident": "Mandatory validity gate before any compare_arms or power_calc call:\nRead the actual started timestamp returned by get_test. Convert its YYYY-MM-DD date to the eight-digit integer YYYYMMDD by removing the hyphens. Call calculate with min(DATE-20130625, 20140110-DATE), replacing BOTH DATE placeholders with that actual eight-digit date integer. Use only arithmetic in the expression, not comparison operators. If the returned minimum is zero or positive, this is an incident-window test: verdict INVALID, even when sample-ratio p >= 0.001. A negative result means outside the incident window, but the sample-ratio rule still applies (INVALID when p < 0.001). Never claim a test started outside the incident without this check. For an INVALID test, never call compare_arms or power_calc; submit INVALID directly.",
+    "srm_threshold": "Sample-ratio threshold: write the p-value in scientific notation d.ddde-N. It is below 0.001 (INVALID) only when N is 4 or more, for example 8.66e-4. Values such as 1.4e-2 or 2.4e-3 are not below 0.001.",
+    "ship_order_and_ctr": "Strict order: get_test, check_sample_ratio, the incident calculate check, then decide validity. Only a VALID test may proceed to compare_arms. For the power check, compute baseline_ctr with calculate as (sum of clicks over ALL arms)/(sum of impressions over ALL arms), listing every arm's clicks and impressions explicitly in the expression.",
+    "portfolio_sufficiency": "Sample sufficiency: after the power_calc calls, settle every valid, non-SHIP test with ONE calculate call whose expression is a list with one entry per such test: [min(<impressions of every arm of test 1>) - <impressions_per_arm for test 1>, ...]. Zero or positive means NO_DIFFERENCE; negative means KEEP_TESTING. Never decide this by eye: smallest arms are often within a few percent of the requirement. Count NO_DIFFERENCE and KEEP_TESTING from this result.",
+    "portfolio_validity_lists": "Validity lists: after the check_sample_ratio calls, make ONE calculate call with [min(DATE-20130625, 20140110-DATE) for each test, DATE as YYYYMMDD]; zero or positive means INVALID (incident). Make ONE calculate call with [p-0.001 for each test]; negative means INVALID. Analyse outcomes only for tests that pass both."
+  }
+}

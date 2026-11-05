@@ -1,0 +1,792 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Routed agent: MAI, GPT-6 Sol and specialist optimization</title>
+<style>
+:root{--ink:#17243a;--muted:#607089;--line:#dce4ef;--accent:#5a42cf}
+*{box-sizing:border-box}body{margin:0;background:#f2f5fb;color:var(--ink);font:15px/1.6 system-ui,sans-serif}
+header{background:linear-gradient(125deg,#142c53,#4a39a4 65%,#16879b);color:white;padding:48px max(5vw,24px)}
+header p{max-width:900px;color:#e3e7ff}h1{font-size:clamp(28px,4vw,46px);line-height:1.15;margin:12px 0}
+main{max-width:1280px;margin:auto;padding:28px 24px}h2{margin:30px 0 12px}h3{margin:0 0 12px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px;margin-top:28px}
+.card{background:#ffffff18;border:1px solid #ffffff38;border-radius:16px;padding:20px}
+.card span,.card small{display:block}.card b{display:block;font-size:38px;line-height:1.4}
+.card small{color:#e0e6ff}nav{display:flex;gap:12px;flex-wrap:wrap;margin:0 0 24px}
+a{color:var(--accent)}.button,nav a{display:inline-block;background:white;border:1px solid var(--line);border-radius:8px;
+padding:9px 14px;text-decoration:none;margin:4px 5px 4px 0}
+article,section.panel,details{background:white;border:1px solid var(--line);border-radius:14px;padding:22px;margin:16px 0}
+.callout{padding:18px 22px;background:#e8e4ff;border-left:5px solid var(--accent);border-radius:8px}
+.scroll{overflow:auto}table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;padding:12px;border-bottom:1px solid var(--line);white-space:nowrap}th{color:var(--muted);font-size:12px}
+td:first-child{white-space:normal;min-width:170px}summary{cursor:pointer;font-weight:650}
+pre{overflow:auto;background:#f4f6fb;padding:16px;border-radius:8px;font-size:12px}
+.muted{color:var(--muted)}footer{padding:25px 0;color:var(--muted)}
+</style></head><body>
+<header><div>MAI AGENT BENCHMARK · MEASURED DEVELOPMENT RESULTS</div>
+<h1>One router. Six specialists.<br>MAI versus GPT-6 Sol.</h1>
+<p>Decision-1 selects the task; the selected model executes it. All accuracy scores come from
+the same deterministic six-check grader, not an LLM judge.</p><div class="cards"><div class='card'><span>MAI baseline</span><b>83.0%</b><small>Strict pass, routed specialists</small></div><div class='card'><span>Optimized MAI</span><b>94.8%</b><small>After round 5 · +11.9 pp vs baseline</small></div><div class='card'><span>GPT-6 Sol</span><b>97.4%</b><small>Same final prompts · 97.4% on baseline prompts</small></div><div class='card'><span>MAI tokens</span><b>8.49M</b><small>vs 8.87M baseline · 7.93M Sol</small></div></div></header>
+<main><nav><a href="#overall">Overall</a><a href="#tasks">By task</a><a href="#routing">Router & tokens</a>
+<a href="#method">Methodology</a><a href="#evidence">Evidence</a></nav>
+<div class="callout"><strong>Round 5 acceptance (vs round 4): ACCEPTED.</strong>
+Round 4 (vs round 3): ACCEPTED. Round 3 (vs baseline): ACCEPTED. Each decision uses improvement beyond baseline run-to-run spread,
+per-task regression checks, production-action checks, and zero unresolved runtime errors.</div>
+<section id="overall" class="panel"><h2>Matched overall comparison</h2>
+<p class="muted">90 development cases × 3 runs = 270 episodes per configuration.
+Total tokens include Decision-1 plus the specialist. Latency is observed end-to-end episode
+latency, including routing, tool execution, authentication and service retries.</p><div class='scroll'><table><tr><th>Configuration</th><th>Strict accuracy</th><th>Episodes</th><th>Total tokens</th><th>Tokens / episode</th><th>Mean latency</th><th>Median latency</th><th>P95 latency</th></tr><tr><td>Routed MAI baseline</td><td><strong>83.0%</strong></td><td>270</td><td>8,869,145</td><td>32,849</td><td>43.3s</td><td>28.7s</td><td>128.7s</td></tr><tr><td>Optimized MAI · round 3</td><td><strong>88.9%</strong></td><td>270</td><td>9,135,131</td><td>33,834</td><td>44.1s</td><td>29.0s</td><td>128.7s</td></tr><tr><td>Optimized MAI · round 4</td><td><strong>92.6%</strong></td><td>270</td><td>7,814,729</td><td>28,943</td><td>45.9s</td><td>36.7s</td><td>101.5s</td></tr><tr><td>Optimized MAI · round 5</td><td><strong>94.8%</strong></td><td>270</td><td>8,485,569</td><td>31,428</td><td>49.1s</td><td>40.4s</td><td>104.4s</td></tr><tr><td>Routed GPT-6 Sol</td><td><strong>97.4%</strong></td><td>270</td><td>6,417,050</td><td>23,767</td><td>27.9s</td><td>23.5s</td><td>50.9s</td></tr><tr><td>GPT-6 Sol · final prompts</td><td><strong>97.4%</strong></td><td>270</td><td>7,931,054</td><td>29,374</td><td>34.6s</td><td>32.9s</td><td>61.0s</td></tr></table></div></section>
+<section id="tasks"><h2>Accuracy, tokens and latency by task</h2><article><h3>Validity</h3><div class='scroll'><table><tr><th>Configuration</th><th>Strict accuracy</th><th>Episodes</th><th>Total tokens</th><th>Tokens / episode</th><th>Mean latency</th><th>Median latency</th><th>P95 latency</th></tr><tr><td>Routed MAI baseline</td><td><strong>86.7%</strong></td><td>45</td><td>224,503</td><td>4,989</td><td>13.4s</td><td>12.9s</td><td>19.1s</td></tr><tr><td>Optimized MAI · round 3</td><td><strong>100.0%</strong></td><td>45</td><td>400,002</td><td>8,889</td><td>18.6s</td><td>16.7s</td><td>36.6s</td></tr><tr><td>Optimized MAI · round 4</td><td><strong>100.0%</strong></td><td>45</td><td>342,194</td><td>7,604</td><td>27.5s</td><td>23.2s</td><td>57.0s</td></tr><tr><td>Optimized MAI · round 5</td><td><strong>100.0%</strong></td><td>45</td><td>342,194</td><td>7,604</td><td>27.5s</td><td>23.2s</td><td>57.0s</td></tr><tr><td>Routed GPT-6 Sol</td><td><strong>100.0%</strong></td><td>45</td><td>210,825</td><td>4,685</td><td>17.0s</td><td>15.6s</td><td>32.2s</td></tr><tr><td>GPT-6 Sol · final prompts</td><td><strong>100.0%</strong></td><td>45</td><td>315,863</td><td>7,019</td><td>22.1s</td><td>18.2s</td><td>60.6s</td></tr></table></div></article><article><h3>Ship Decision</h3><div class='scroll'><table><tr><th>Configuration</th><th>Strict accuracy</th><th>Episodes</th><th>Total tokens</th><th>Tokens / episode</th><th>Mean latency</th><th>Median latency</th><th>P95 latency</th></tr><tr><td>Routed MAI baseline</td><td><strong>80.0%</strong></td><td>45</td><td>625,267</td><td>13,895</td><td>25.4s</td><td>25.2s</td><td>37.2s</td></tr><tr><td>Optimized MAI · round 3</td><td><strong>80.0%</strong></td><td>45</td><td>625,267</td><td>13,895</td><td>25.4s</td><td>25.2s</td><td>37.2s</td></tr><tr><td>Optimized MAI · round 4</td><td><strong>86.7%</strong></td><td>45</td><td>788,545</td><td>17,523</td><td>39.2s</td><td>36.0s</td><td>67.6s</td></tr><tr><td>Optimized MAI · round 5</td><td><strong>88.9%</strong></td><td>45</td><td>841,829</td><td>18,707</td><td>43.5s</td><td>41.0s</td><td>70.2s</td></tr><tr><td>Routed GPT-6 Sol</td><td><strong>100.0%</strong></td><td>45</td><td>561,086</td><td>12,469</td><td>26.0s</td><td>23.1s</td><td>59.2s</td></tr><tr><td>GPT-6 Sol · final prompts</td><td><strong>100.0%</strong></td><td>45</td><td>1,004,665</td><td>22,326</td><td>24.8s</td><td>22.7s</td><td>47.9s</td></tr></table></div></article><article><h3>Early Look</h3><div class='scroll'><table><tr><th>Configuration</th><th>Strict accuracy</th><th>Episodes</th><th>Total tokens</th><th>Tokens / episode</th><th>Mean latency</th><th>Median latency</th><th>P95 latency</th></tr><tr><td>Routed MAI baseline</td><td><strong>77.8%</strong></td><td>45</td><td>501,164</td><td>11,137</td><td>24.9s</td><td>23.8s</td><td>39.0s</td></tr><tr><td>Optimized MAI · round 3</td><td><strong>100.0%</strong></td><td>45</td><td>591,651</td><td>13,148</td><td>24.2s</td><td>23.8s</td><td>33.9s</td></tr><tr><td>Optimized MAI · round 4</td><td><strong>100.0%</strong></td><td>45</td><td>591,651</td><td>13,148</td><td>24.2s</td><td>23.8s</td><td>33.9s</td></tr><tr><td>Optimized MAI · round 5</td><td><strong>100.0%</strong></td><td>45</td><td>591,651</td><td>13,148</td><td>24.2s</td><td>23.8s</td><td>33.9s</td></tr><tr><td>Routed GPT-6 Sol</td><td><strong>100.0%</strong></td><td>45</td><td>409,221</td><td>9,094</td><td>19.0s</td><td>18.6s</td><td>27.9s</td></tr><tr><td>GPT-6 Sol · final prompts</td><td><strong>100.0%</strong></td><td>45</td><td>527,832</td><td>11,730</td><td>39.1s</td><td>36.5s</td><td>66.5s</td></tr></table></div></article><article><h3>Attribution</h3><div class='scroll'><table><tr><th>Configuration</th><th>Strict accuracy</th><th>Episodes</th><th>Total tokens</th><th>Tokens / episode</th><th>Mean latency</th><th>Median latency</th><th>P95 latency</th></tr><tr><td>Routed MAI baseline</td><td><strong>88.9%</strong></td><td>45</td><td>585,998</td><td>13,022</td><td>29.3s</td><td>27.1s</td><td>47.4s</td></tr><tr><td>Optimized MAI · round 3</td><td><strong>88.9%</strong></td><td>45</td><td>585,998</td><td>13,022</td><td>29.3s</td><td>27.1s</td><td>47.4s</td></tr><tr><td>Optimized MAI · round 4</td><td><strong>100.0%</strong></td><td>45</td><td>863,288</td><td>19,184</td><td>38.9s</td><td>37.4s</td><td>60.7s</td></tr><tr><td>Optimized MAI · round 5</td><td><strong>100.0%</strong></td><td>45</td><td>863,288</td><td>19,184</td><td>38.9s</td><td>37.4s</td><td>60.7s</td></tr><tr><td>Routed GPT-6 Sol</td><td><strong>100.0%</strong></td><td>45</td><td>500,749</td><td>11,128</td><td>22.3s</td><td>19.1s</td><td>49.4s</td></tr><tr><td>GPT-6 Sol · final prompts</td><td><strong>100.0%</strong></td><td>45</td><td>633,115</td><td>14,069</td><td>30.7s</td><td>26.4s</td><td>54.3s</td></tr></table></div></article><article><h3>Portfolio</h3><div class='scroll'><table><tr><th>Configuration</th><th>Strict accuracy</th><th>Episodes</th><th>Total tokens</th><th>Tokens / episode</th><th>Mean latency</th><th>Median latency</th><th>P95 latency</th></tr><tr><td>Routed MAI baseline</td><td><strong>86.7%</strong></td><td>45</td><td>5,009,690</td><td>111,326</td><td>112.5s</td><td>99.3s</td><td>232.6s</td></tr><tr><td>Optimized MAI · round 3</td><td><strong>86.7%</strong></td><td>45</td><td>5,009,690</td><td>111,326</td><td>112.5s</td><td>99.3s</td><td>232.6s</td></tr><tr><td>Optimized MAI · round 4</td><td><strong>84.4%</strong></td><td>45</td><td>3,015,899</td><td>67,020</td><td>91.8s</td><td>89.5s</td><td>139.4s</td></tr><tr><td>Optimized MAI · round 5</td><td><strong>84.4%</strong></td><td>45</td><td>3,015,899</td><td>67,020</td><td>91.8s</td><td>89.5s</td><td>139.4s</td></tr><tr><td>Routed GPT-6 Sol</td><td><strong>84.4%</strong></td><td>45</td><td>2,849,965</td><td>63,333</td><td>42.5s</td><td>43.1s</td><td>48.1s</td></tr><tr><td>GPT-6 Sol · final prompts</td><td><strong>84.4%</strong></td><td>45</td><td>2,863,657</td><td>63,637</td><td>43.5s</td><td>42.8s</td><td>61.0s</td></tr></table></div></article><article><h3>Planning</h3><div class='scroll'><table><tr><th>Configuration</th><th>Strict accuracy</th><th>Episodes</th><th>Total tokens</th><th>Tokens / episode</th><th>Mean latency</th><th>Median latency</th><th>P95 latency</th></tr><tr><td>Routed MAI baseline</td><td><strong>77.8%</strong></td><td>45</td><td>1,922,523</td><td>42,723</td><td>54.2s</td><td>45.2s</td><td>124.0s</td></tr><tr><td>Optimized MAI · round 3</td><td><strong>77.8%</strong></td><td>45</td><td>1,922,523</td><td>42,723</td><td>54.2s</td><td>45.2s</td><td>124.0s</td></tr><tr><td>Optimized MAI · round 4</td><td><strong>84.4%</strong></td><td>45</td><td>2,213,152</td><td>49,181</td><td>53.7s</td><td>51.0s</td><td>83.0s</td></tr><tr><td>Optimized MAI · round 5</td><td><strong>95.6%</strong></td><td>45</td><td>2,830,708</td><td>62,905</td><td>68.5s</td><td>62.4s</td><td>98.9s</td></tr><tr><td>Routed GPT-6 Sol</td><td><strong>100.0%</strong></td><td>45</td><td>1,885,204</td><td>41,893</td><td>40.8s</td><td>33.6s</td><td>91.0s</td></tr><tr><td>GPT-6 Sol · final prompts</td><td><strong>100.0%</strong></td><td>45</td><td>2,585,922</td><td>57,465</td><td>47.3s</td><td>48.5s</td><td>66.0s</td></tr></table></div></article></section>
+<section id="routing" class="panel"><h2>Router accuracy and token attribution</h2><div class="scroll"><table>
+<tr><th>Configuration</th><th>Router accuracy</th><th>Router tokens</th><th>Specialist tokens</th>
+<th>Reasoning tokens</th><th>Mean routing latency</th></tr><tr><td>Routed MAI baseline</td><td>100.0%</td><td>89,790</td><td>8,779,355</td><td>1,539,072 (85% of output)</td><td>4.29s</td></tr><tr><td>Optimized MAI · round 3</td><td>100.0%</td><td>89,790</td><td>9,045,341</td><td>1,628,736 (85% of output)</td><td>3.78s</td></tr><tr><td>Optimized MAI · round 4</td><td>100.0%</td><td>89,790</td><td>7,724,939</td><td>1,369,792 (83% of output)</td><td>5.61s</td></tr><tr><td>Optimized MAI · round 5</td><td>100.0%</td><td>89,790</td><td>8,395,779</td><td>1,575,488 (84% of output)</td><td>5.82s</td></tr><tr><td>Routed GPT-6 Sol</td><td>100.0%</td><td>89,790</td><td>6,327,260</td><td>33,510 (12% of output)</td><td>5.20s</td></tr><tr><td>GPT-6 Sol · final prompts</td><td>100.0%</td><td>89,790</td><td>7,841,264</td><td>43,817 (14% of output)</td><td>5.81s</td></tr></table></div></section>
+<section class="panel"><h2>Transport rerun overhead</h2><p class="muted">
+Only failed infrastructure attempts are rerun; incorrect model answers are never rerun.
+The benchmark tables use retained episode attempts. This table adds the recorded discarded
+transport attempts, separate from prompt search and candidate-generation traffic.</p>
+<div class="scroll"><table><tr><th>Configuration</th><th>Extra transport tokens</th>
+<th>Cumulative failed-attempt latency</th><th>Tokens including failed attempts</th></tr>
+<tr><td>Routed MAI baseline</td><td>1,730,127</td><td>1,622.0s</td><td>10,599,272</td></tr><tr><td>Optimized MAI · round 3</td><td>1,730,127</td><td>1,617.5s</td><td>10,865,258</td></tr><tr><td>Optimized MAI · round 4</td><td>148,380</td><td>249.5s</td><td>7,963,109</td></tr><tr><td>Optimized MAI · round 5</td><td>268,129</td><td>419.1s</td><td>8,753,698</td></tr><tr><td>Routed GPT-6 Sol</td><td>37,466</td><td>36.0s</td><td>6,454,516</td></tr><tr><td>GPT-6 Sol · final prompts</td><td>199,005</td><td>286.3s</td><td>8,130,059</td></tr></table></div></section>
+<section id="method" class="panel"><h2>What this comparison does—and does not—show</h2>
+<p><strong>Controlled:</strong> identical development case/run keys, frozen Decision-1 router,
+same baseline specialist prompts and tool boundaries for MAI and GPT-6 Sol, four-worker initial
+baseline evaluations, max output 32,768 tokens, same tool-step limit and canonical grader.
+Actual provider-returned model names and policy hashes are checked before this report builds.</p>
+<p><strong>Optimization:</strong> task-specific prompt proposals from GPT-5.2, plus diagnostic
+variants derived from optimizer-split failures, are scored with the canonical grader.
+One diagnostic variant checks incident-window membership arithmetically through the existing
+calculate tool; no statistical tool or grader is changed. Search uses separate MAI capacity
+and an 8,192-token output limit for both its baseline and candidates. Selected prompts are
+checked at the matched 32,768-token limit on all 45 development
+episodes for that task. Changed specialists are rerun; unchanged specialists reuse their
+frozen baseline measurements, identified in the evidence below. Development data is used for
+selection, so optimized results are selection-set performance—not an unbiased final-test estimate.</p>
+<p>Validity candidate development was prefetched on isolated MAI capacity at two workers,
+overlapping baseline transport recovery. Candidate records retain their inference endpoint.
+Other changed-task development checks use the primary deployment. This further limits
+causal interpretation of latency differences; accuracy uses the same model version,
+prompts, tools, output limit and canonical checks.</p>
+<p><strong>Round 4:</strong> hypothesis-driven candidates from development failure analysis
+(<code>experiments/round4.json</code>): numeric checks via <code>calculate</code> for the
+0.001 traffic-split threshold, incident window, Holm and power inputs; batched tool calls for
+portfolio; and per-specialist <code>low</code> reasoning effort. GPT-5.2 also proposed one
+candidate where search failures existed. Candidates needed no fewer optimizer-split passes
+than their search baseline (or, when that baseline already passed every search case, went
+straight to development; this rule was added mid-round after attribution saturated), then were
+checked on all 45 development episodes for that task.
+A task change was kept for an accuracy gain, or for no accuracy loss with at least 10% fewer
+tokens. Ship decision and attribution ran on the isolated MAI deployment at two workers; other
+tasks on the primary deployment. Azure Resource Manager confirms both deployments serve
+MAI-Code-1.1-Flash version 2026-09-15; the isolated one reports its deployment name
+(<code>abtest-mai-flash</code>) as the returned model. Round-4 measurements reuse round-3 episodes for unchanged tasks.
+Selecting on development twice compounds selection bias; the final split remains sealed.</p>
+<p><strong>Round-4 portfolio override:</strong> batched portfolio tool calls cut portfolio tokens
+40% for one extra failed episode (84.4% vs 86.7%). The pre-set round-4 rule rejected it; the user
+explicitly accepted the trade. It is recorded as an override in the optimization manifest and
+stays within the documented per-task limits (drop at most 5 points, at most 3 stable cases lost).</p>
+<p><strong>Round 5:</strong> targeted fixes from a review of round-4 development failures
+(<code>experiments/round5.json</code>): a scientific-notation rule for the 0.001 threshold in
+planning, the proven incident date check for ship decision, and a list-valued sample-sufficiency
+check for portfolio, all at default reasoning effort. GPT-6 Sol replaced GPT-5.2 as the prompt
+proposer, seeing optimizer-split failures only. Same search gate and development acceptance as round 4.</p>
+<p><strong>Sol on final prompts:</strong> to keep the setup identical, GPT-6 Sol was rerun with
+the exact final specialist instructions and settings for every task whose prompt or
+settings changed. Unchanged tasks reuse Sol's baseline-prompt episodes. Policy hashes and runtime
+contracts are asserted equal between optimized MAI and this Sol configuration.</p>
+<p><strong>Operational latency:</strong> MAI and Sol have different deployment capacities.
+These are observed timings under the available service conditions, not capacity-normalized
+claims about intrinsic model speed. Total tokens describe the final benchmark episodes;
+SDK retries within an attempt are included in its latency. Discarded transport attempts
+are accounted for separately above. Search/generation and pilot traffic are separate
+experimental overhead. Unchanged-task retry overhead is reused with its baseline measurement.</p>
+<p><strong>Final split:</strong> sealed and not used for model selection or this comparison.
+No scenario labels or expected answers enter the router or specialist during execution.</p></section>
+<section id="evidence"><h2>Reproducible evidence</h2><a class='button' href='../runs/routed-mai-baseline/development/summary.json'>Routed MAI baseline: summary</a><a class='button' href='../runs/routed-mai-optimized/development/summary.json'>Optimized MAI · round 3: summary</a><a class='button' href='../runs/routed-mai-r4/development/summary.json'>Optimized MAI · round 4: summary</a><a class='button' href='../runs/routed-mai-r5/development/summary.json'>Optimized MAI · round 5: summary</a><a class='button' href='../runs/routed-gpt6-sol/development/summary.json'>Routed GPT-6 Sol: summary</a><a class='button' href='../runs/routed-gpt6-sol-r5/development/summary.json'>GPT-6 Sol · final prompts: summary</a>
+<a class="button" href="../runs/routed-mai-optimized/optimization.json">Optimization trace</a>
+<a class="button" href="../runs/decision1-router-v1/validation/summary.json">Router validation</a>
+<details><summary>Model identities, router hashes, policy hashes and reused measurements</summary>
+<pre>{
+  &quot;routed-mai-baseline&quot;: {
+    &quot;actual_inference_models&quot;: [
+      &quot;mai-code-flash-1-1&quot;
+    ],
+    &quot;router_hashes&quot;: [
+      &quot;cc5fb6767b48fe8b8af80a113572f464e04df9c795ef025e234ba6bb57d7d52e&quot;
+    ],
+    &quot;router_deployments&quot;: [
+      &quot;abtest-decision-1&quot;
+    ],
+    &quot;router_backends&quot;: [
+      &quot;decision1&quot;
+    ],
+    &quot;specialist_endpoints&quot;: [
+      &quot;https://att-hillclimb-resource.openai.azure.com/openai/v1/&quot;
+    ],
+    &quot;task_policy_hashes&quot;: {
+      &quot;validity&quot;: [
+        &quot;2deaf2f274dd1dd8bd7a2c62237c3da179ceefd140af75a511e762bcc50e5d75&quot;
+      ],
+      &quot;ship_decision&quot;: [
+        &quot;216a704db7f7742e2ccdf58f0473e5437e55a0521b15eb46d6d2f49d0e53ceef&quot;
+      ],
+      &quot;early_look&quot;: [
+        &quot;f89a7ce2bda899b5d4cdcd88aaa1b7c40bb826ce836b2558227181c9a88f07af&quot;
+      ],
+      &quot;attribution&quot;: [
+        &quot;a93146e20d1ace2108b3baf7b64bef1f9110eef43aed831f22b305006b60cd74&quot;
+      ],
+      &quot;portfolio&quot;: [
+        &quot;dd208a363b84486b30a94f8a6c8ab21f6c8088a2cdd32c0c186899c2434391e6&quot;
+      ],
+      &quot;planning&quot;: [
+        &quot;c044bc986a3f2450bc6b7a2e6c356f350c15818ea05056fa517e0ddf361da4af&quot;
+      ]
+    },
+    &quot;reasoning_effort_by_task&quot;: {
+      &quot;validity&quot;: [
+        &quot;default&quot;
+      ],
+      &quot;ship_decision&quot;: [
+        &quot;default&quot;
+      ],
+      &quot;early_look&quot;: [
+        &quot;default&quot;
+      ],
+      &quot;attribution&quot;: [
+        &quot;default&quot;
+      ],
+      &quot;portfolio&quot;: [
+        &quot;default&quot;
+      ],
+      &quot;planning&quot;: [
+        &quot;default&quot;
+      ]
+    },
+    &quot;reused_baseline_episodes&quot;: 0
+  },
+  &quot;routed-mai-optimized&quot;: {
+    &quot;actual_inference_models&quot;: [
+      &quot;mai-code-flash-1-1&quot;
+    ],
+    &quot;router_hashes&quot;: [
+      &quot;cc5fb6767b48fe8b8af80a113572f464e04df9c795ef025e234ba6bb57d7d52e&quot;
+    ],
+    &quot;router_deployments&quot;: [
+      &quot;abtest-decision-1&quot;
+    ],
+    &quot;router_backends&quot;: [
+      &quot;decision1&quot;
+    ],
+    &quot;specialist_endpoints&quot;: [
+      &quot;https://att-hillclimb-resource.openai.azure.com/openai/v1/&quot;
+    ],
+    &quot;task_policy_hashes&quot;: {
+      &quot;validity&quot;: [
+        &quot;82e9e4e9d42037484686c8cbfc215e5c2b3e5fbf5b4f36107c79600fa1cc8cc9&quot;
+      ],
+      &quot;ship_decision&quot;: [
+        &quot;216a704db7f7742e2ccdf58f0473e5437e55a0521b15eb46d6d2f49d0e53ceef&quot;
+      ],
+      &quot;early_look&quot;: [
+        &quot;e400a444beb46f54befe5edc05c1d5d699c6aab5dc9157eb844111515991edab&quot;
+      ],
+      &quot;attribution&quot;: [
+        &quot;a93146e20d1ace2108b3baf7b64bef1f9110eef43aed831f22b305006b60cd74&quot;
+      ],
+      &quot;portfolio&quot;: [
+        &quot;dd208a363b84486b30a94f8a6c8ab21f6c8088a2cdd32c0c186899c2434391e6&quot;
+      ],
+      &quot;planning&quot;: [
+        &quot;c044bc986a3f2450bc6b7a2e6c356f350c15818ea05056fa517e0ddf361da4af&quot;
+      ]
+    },
+    &quot;reasoning_effort_by_task&quot;: {
+      &quot;validity&quot;: [
+        &quot;default&quot;
+      ],
+      &quot;ship_decision&quot;: [
+        &quot;default&quot;
+      ],
+      &quot;early_look&quot;: [
+        &quot;default&quot;
+      ],
+      &quot;attribution&quot;: [
+        &quot;default&quot;
+      ],
+      &quot;portfolio&quot;: [
+        &quot;default&quot;
+      ],
+      &quot;planning&quot;: [
+        &quot;default&quot;
+      ]
+    },
+    &quot;reused_baseline_episodes&quot;: 180
+  },
+  &quot;routed-mai-r4&quot;: {
+    &quot;actual_inference_models&quot;: [
+      &quot;abtest-mai-flash&quot;,
+      &quot;mai-code-flash-1-1&quot;
+    ],
+    &quot;router_hashes&quot;: [
+      &quot;cc5fb6767b48fe8b8af80a113572f464e04df9c795ef025e234ba6bb57d7d52e&quot;
+    ],
+    &quot;router_deployments&quot;: [
+      &quot;abtest-decision-1&quot;
+    ],
+    &quot;router_backends&quot;: [
+      &quot;decision1&quot;
+    ],
+    &quot;specialist_endpoints&quot;: [
+      &quot;https://alicia-abtest-opt-resource.openai.azure.com/openai/v1/&quot;,
+      &quot;https://att-hillclimb-resource.openai.azure.com/openai/v1/&quot;
+    ],
+    &quot;task_policy_hashes&quot;: {
+      &quot;validity&quot;: [
+        &quot;82e9e4e9d42037484686c8cbfc215e5c2b3e5fbf5b4f36107c79600fa1cc8cc9&quot;
+      ],
+      &quot;ship_decision&quot;: [
+        &quot;2869760459be23a66141a2ed4f1af19d48a450cdcd069d9ba2ee9df31f519a4e&quot;
+      ],
+      &quot;early_look&quot;: [
+        &quot;e400a444beb46f54befe5edc05c1d5d699c6aab5dc9157eb844111515991edab&quot;
+      ],
+      &quot;attribution&quot;: [
+        &quot;518972abde8fde6068263ae81626f7dddd4bedc3e562ef2ec25df263fe3fc266&quot;
+      ],
+      &quot;portfolio&quot;: [
+        &quot;65a83ee023c881786adb7c152d0cda55e808b3b32316519de0b2600f5e88e771&quot;
+      ],
+      &quot;planning&quot;: [
+        &quot;6d444838307bc5cd4abe55d6cc420bbd86ce1e1abfa1f4fa29f78b247aff9ea5&quot;
+      ]
+    },
+    &quot;reasoning_effort_by_task&quot;: {
+      &quot;validity&quot;: [
+        &quot;low&quot;
+      ],
+      &quot;ship_decision&quot;: [
+        &quot;default&quot;
+      ],
+      &quot;early_look&quot;: [
+        &quot;default&quot;
+      ],
+      &quot;attribution&quot;: [
+        &quot;default&quot;
+      ],
+      &quot;portfolio&quot;: [
+        &quot;default&quot;
+      ],
+      &quot;planning&quot;: [
+        &quot;default&quot;
+      ]
+    },
+    &quot;reused_baseline_episodes&quot;: 0
+  },
+  &quot;routed-mai-r5&quot;: {
+    &quot;actual_inference_models&quot;: [
+      &quot;abtest-mai-flash&quot;,
+      &quot;mai-code-flash-1-1&quot;
+    ],
+    &quot;router_hashes&quot;: [
+      &quot;cc5fb6767b48fe8b8af80a113572f464e04df9c795ef025e234ba6bb57d7d52e&quot;
+    ],
+    &quot;router_deployments&quot;: [
+      &quot;abtest-decision-1&quot;
+    ],
+    &quot;router_backends&quot;: [
+      &quot;decision1&quot;
+    ],
+    &quot;specialist_endpoints&quot;: [
+      &quot;https://alicia-abtest-opt-resource.openai.azure.com/openai/v1/&quot;,
+      &quot;https://att-hillclimb-resource.openai.azure.com/openai/v1/&quot;
+    ],
+    &quot;task_policy_hashes&quot;: {
+      &quot;validity&quot;: [
+        &quot;82e9e4e9d42037484686c8cbfc215e5c2b3e5fbf5b4f36107c79600fa1cc8cc9&quot;
+      ],
+      &quot;ship_decision&quot;: [
+        &quot;9d5559847ce3d7aff55a562e7e2895bc5871bbe980c08f14a468999dfb9d4d7b&quot;
+      ],
+      &quot;early_look&quot;: [
+        &quot;e400a444beb46f54befe5edc05c1d5d699c6aab5dc9157eb844111515991edab&quot;
+      ],
+      &quot;attribution&quot;: [
+        &quot;518972abde8fde6068263ae81626f7dddd4bedc3e562ef2ec25df263fe3fc266&quot;
+      ],
+      &quot;portfolio&quot;: [
+        &quot;65a83ee023c881786adb7c152d0cda55e808b3b32316519de0b2600f5e88e771&quot;
+      ],
+      &quot;planning&quot;: [
+        &quot;9abe5e0464c38565da6c7f1f0c34b80becf1f5be24078b4ca1d3c06b9e5be04f&quot;
+      ]
+    },
+    &quot;reasoning_effort_by_task&quot;: {
+      &quot;validity&quot;: [
+        &quot;low&quot;
+      ],
+      &quot;ship_decision&quot;: [
+        &quot;default&quot;
+      ],
+      &quot;early_look&quot;: [
+        &quot;default&quot;
+      ],
+      &quot;attribution&quot;: [
+        &quot;default&quot;
+      ],
+      &quot;portfolio&quot;: [
+        &quot;default&quot;
+      ],
+      &quot;planning&quot;: [
+        &quot;default&quot;
+      ]
+    },
+    &quot;reused_baseline_episodes&quot;: 0
+  },
+  &quot;routed-gpt6-sol&quot;: {
+    &quot;actual_inference_models&quot;: [
+      &quot;gpt-6-sol&quot;
+    ],
+    &quot;router_hashes&quot;: [
+      &quot;cc5fb6767b48fe8b8af80a113572f464e04df9c795ef025e234ba6bb57d7d52e&quot;
+    ],
+    &quot;router_deployments&quot;: [
+      &quot;abtest-decision-1&quot;
+    ],
+    &quot;router_backends&quot;: [
+      &quot;decision1&quot;
+    ],
+    &quot;specialist_endpoints&quot;: [
+      &quot;https://att-hillclimb-resource.openai.azure.com/openai/v1/&quot;
+    ],
+    &quot;task_policy_hashes&quot;: {
+      &quot;validity&quot;: [
+        &quot;2deaf2f274dd1dd8bd7a2c62237c3da179ceefd140af75a511e762bcc50e5d75&quot;
+      ],
+      &quot;ship_decision&quot;: [
+        &quot;216a704db7f7742e2ccdf58f0473e5437e55a0521b15eb46d6d2f49d0e53ceef&quot;
+      ],
+      &quot;early_look&quot;: [
+        &quot;f89a7ce2bda899b5d4cdcd88aaa1b7c40bb826ce836b2558227181c9a88f07af&quot;
+      ],
+      &quot;attribution&quot;: [
+        &quot;a93146e20d1ace2108b3baf7b64bef1f9110eef43aed831f22b305006b60cd74&quot;
+      ],
+      &quot;portfolio&quot;: [
+        &quot;dd208a363b84486b30a94f8a6c8ab21f6c8088a2cdd32c0c186899c2434391e6&quot;
+      ],
+      &quot;planning&quot;: [
+        &quot;c044bc986a3f2450bc6b7a2e6c356f350c15818ea05056fa517e0ddf361da4af&quot;
+      ]
+    },
+    &quot;reasoning_effort_by_task&quot;: {
+      &quot;validity&quot;: [
+        &quot;default&quot;
+      ],
+      &quot;ship_decision&quot;: [
+        &quot;default&quot;
+      ],
+      &quot;early_look&quot;: [
+        &quot;default&quot;
+      ],
+      &quot;attribution&quot;: [
+        &quot;default&quot;
+      ],
+      &quot;portfolio&quot;: [
+        &quot;default&quot;
+      ],
+      &quot;planning&quot;: [
+        &quot;default&quot;
+      ]
+    },
+    &quot;reused_baseline_episodes&quot;: 0
+  },
+  &quot;routed-gpt6-sol-r5&quot;: {
+    &quot;actual_inference_models&quot;: [
+      &quot;gpt-6-sol&quot;
+    ],
+    &quot;router_hashes&quot;: [
+      &quot;cc5fb6767b48fe8b8af80a113572f464e04df9c795ef025e234ba6bb57d7d52e&quot;
+    ],
+    &quot;router_deployments&quot;: [
+      &quot;abtest-decision-1&quot;
+    ],
+    &quot;router_backends&quot;: [
+      &quot;decision1&quot;
+    ],
+    &quot;specialist_endpoints&quot;: [
+      &quot;https://att-hillclimb-resource.openai.azure.com/openai/v1/&quot;
+    ],
+    &quot;task_policy_hashes&quot;: {
+      &quot;validity&quot;: [
+        &quot;82e9e4e9d42037484686c8cbfc215e5c2b3e5fbf5b4f36107c79600fa1cc8cc9&quot;
+      ],
+      &quot;ship_decision&quot;: [
+        &quot;9d5559847ce3d7aff55a562e7e2895bc5871bbe980c08f14a468999dfb9d4d7b&quot;
+      ],
+      &quot;early_look&quot;: [
+        &quot;e400a444beb46f54befe5edc05c1d5d699c6aab5dc9157eb844111515991edab&quot;
+      ],
+      &quot;attribution&quot;: [
+        &quot;518972abde8fde6068263ae81626f7dddd4bedc3e562ef2ec25df263fe3fc266&quot;
+      ],
+      &quot;portfolio&quot;: [
+        &quot;65a83ee023c881786adb7c152d0cda55e808b3b32316519de0b2600f5e88e771&quot;
+      ],
+      &quot;planning&quot;: [
+        &quot;9abe5e0464c38565da6c7f1f0c34b80becf1f5be24078b4ca1d3c06b9e5be04f&quot;
+      ]
+    },
+    &quot;reasoning_effort_by_task&quot;: {
+      &quot;validity&quot;: [
+        &quot;low&quot;
+      ],
+      &quot;ship_decision&quot;: [
+        &quot;default&quot;
+      ],
+      &quot;early_look&quot;: [
+        &quot;default&quot;
+      ],
+      &quot;attribution&quot;: [
+        &quot;default&quot;
+      ],
+      &quot;portfolio&quot;: [
+        &quot;default&quot;
+      ],
+      &quot;planning&quot;: [
+        &quot;default&quot;
+      ]
+    },
+    &quot;reused_baseline_episodes&quot;: 0
+  }
+}</pre></details>
+<details><summary>Canonical acceptance checks and per-task changes</summary><pre>{
+  &quot;round_3_vs_baseline&quot;: {
+    &quot;overall&quot;: {
+      &quot;baseline&quot;: 0.8296296296296296,
+      &quot;candidate&quot;: 0.8888888888888888,
+      &quot;gain&quot;: 0.059259259259259234,
+      &quot;baseline_run_spread&quot;: 0.022831162973959138,
+      &quot;baseline_tokens&quot;: 32848.68518518518,
+      &quot;candidate_tokens&quot;: 33833.81851851852
+    },
+    &quot;scenarios&quot;: [
+      {
+        &quot;mode&quot;: &quot;validity&quot;,
+        &quot;baseline&quot;: 0.8666666666666667,
+        &quot;candidate&quot;: 1.0,
+        &quot;delta&quot;: 0.1333333333333333,
+        &quot;lost_stable_cases&quot;: [],
+        &quot;baseline_tokens&quot;: 4988.955555555555,
+        &quot;candidate_tokens&quot;: 8888.933333333332,
+        &quot;ok&quot;: true
+      },
+      {
+        &quot;mode&quot;: &quot;ship_decision&quot;,
+        &quot;baseline&quot;: 0.8,
+        &quot;candidate&quot;: 0.8,
+        &quot;delta&quot;: -0.0,
+        &quot;lost_stable_cases&quot;: [],
+        &quot;baseline_tokens&quot;: 13894.822222222223,
+        &quot;candidate_tokens&quot;: 13894.822222222223,
+        &quot;ok&quot;: true
+      },
+      {
+        &quot;mode&quot;: &quot;early_look&quot;,
+        &quot;baseline&quot;: 0.7777777777777778,
+        &quot;candidate&quot;: 1.0,
+        &quot;delta&quot;: 0.2222222222222222,
+        &quot;lost_stable_cases&quot;: [],
+        &quot;baseline_tokens&quot;: 11136.977777777778,
+        &quot;candidate_tokens&quot;: 13147.8,
+        &quot;ok&quot;: true
+      },
+      {
+        &quot;mode&quot;: &quot;attribution&quot;,
+        &quot;baseline&quot;: 0.8888888888888888,
+        &quot;candidate&quot;: 0.8888888888888888,
+        &quot;delta&quot;: -0.0,
+        &quot;lost_stable_cases&quot;: [],
+        &quot;baseline_tokens&quot;: 13022.177777777777,
+        &quot;candidate_tokens&quot;: 13022.177777777777,
+        &quot;ok&quot;: true
+      },
+      {
+        &quot;mode&quot;: &quot;portfolio&quot;,
+        &quot;baseline&quot;: 0.8666666666666667,
+        &quot;candidate&quot;: 0.8666666666666667,
+        &quot;delta&quot;: -0.0,
+        &quot;lost_stable_cases&quot;: [],
+        &quot;baseline_tokens&quot;: 111326.44444444444,
+        &quot;candidate_tokens&quot;: 111326.44444444444,
+        &quot;ok&quot;: true
+      },
+      {
+        &quot;mode&quot;: &quot;planning&quot;,
+        &quot;baseline&quot;: 0.7777777777777778,
+        &quot;candidate&quot;: 0.7777777777777778,
+        &quot;delta&quot;: -0.0,
+        &quot;lost_stable_cases&quot;: [],
+        &quot;baseline_tokens&quot;: 42722.73333333333,
+        &quot;candidate_tokens&quot;: 42722.73333333333,
+        &quot;ok&quot;: true
+      }
+    ],
+    &quot;checks&quot;: {
+      &quot;overall_gain_exceeds_spread&quot;: true,
+      &quot;no_scenario_regression&quot;: true,
+      &quot;no_new_side_effect_violations&quot;: true,
+      &quot;clean_evaluation&quot;: true
+    },
+    &quot;accept&quot;: true,
+    &quot;token_flags&quot;: [
+      &quot;validity&quot;
+    ],
+    &quot;runtime_errors&quot;: 0
+  },
+  &quot;round_4_vs_round_3&quot;: {
+    &quot;overall&quot;: {
+      &quot;baseline&quot;: 0.8888888888888888,
+      &quot;candidate&quot;: 0.9259259259259259,
+      &quot;gain&quot;: 0.03703703703703709,
+      &quot;baseline_run_spread&quot;: 0.024002743327436536,
+      &quot;baseline_tokens&quot;: 33833.81851851852,
+      &quot;candidate_tokens&quot;: 28943.44074074074
+    },
+    &quot;scenarios&quot;: [
+      {
+        &quot;mode&quot;: &quot;validity&quot;,
+        &quot;baseline&quot;: 1.0,
+        &quot;candidate&quot;: 1.0,
+        &quot;delta&quot;: -0.0,
+        &quot;lost_stable_cases&quot;: [],
+        &quot;baseline_tokens&quot;: 8888.933333333332,
+        &quot;candidate_tokens&quot;: 7604.311111111111,
+        &quot;ok&quot;: true
+      },
+      {
+        &quot;mode&quot;: &quot;ship_decision&quot;,
+        &quot;baseline&quot;: 0.8,
+        &quot;candidate&quot;: 0.8666666666666667,
+        &quot;delta&quot;: 0.06666666666666665,
+        &quot;lost_stable_cases&quot;: [],
+        &quot;baseline_tokens&quot;: 13894.822222222223,
+        &quot;candidate_tokens&quot;: 17523.222222222223,
+        &quot;ok&quot;: true
+      },
+      {
+        &quot;mode&quot;: &quot;early_look&quot;,
+        &quot;baseline&quot;: 1.0,
+        &quot;candidate&quot;: 1.0,
+        &quot;delta&quot;: -0.0,
+        &quot;lost_stable_cases&quot;: [],
+        &quot;baseline_tokens&quot;: 13147.8,
+        &quot;candidate_tokens&quot;: 13147.8,
+        &quot;ok&quot;: true
+      },
+      {
+        &quot;mode&quot;: &quot;attribution&quot;,
+        &quot;baseline&quot;: 0.8888888888888888,
+        &quot;candidate&quot;: 1.0,
+        &quot;delta&quot;: 0.11111111111111116,
+        &quot;lost_stable_cases&quot;: [],
+        &quot;baseline_tokens&quot;: 13022.177777777777,
+        &quot;candidate_tokens&quot;: 19184.17777777778,
+        &quot;ok&quot;: true
+      },
+      {
+        &quot;mode&quot;: &quot;portfolio&quot;,
+        &quot;baseline&quot;: 0.8666666666666667,
+        &quot;candidate&quot;: 0.8444444444444444,
+        &quot;delta&quot;: -0.022222222222222254,
+        &quot;lost_stable_cases&quot;: [],
+        &quot;baseline_tokens&quot;: 111326.44444444444,
+        &quot;candidate_tokens&quot;: 67019.97777777778,
+        &quot;ok&quot;: true
+      },
+      {
+        &quot;mode&quot;: &quot;planning&quot;,
+        &quot;baseline&quot;: 0.7777777777777778,
+        &quot;candidate&quot;: 0.8444444444444444,
+        &quot;delta&quot;: 0.06666666666666665,
+        &quot;lost_stable_cases&quot;: [],
+        &quot;baseline_tokens&quot;: 42722.73333333333,
+        &quot;candidate_tokens&quot;: 49181.15555555555,
+        &quot;ok&quot;: true
+      }
+    ],
+    &quot;checks&quot;: {
+      &quot;overall_gain_exceeds_spread&quot;: true,
+      &quot;no_scenario_regression&quot;: true,
+      &quot;no_new_side_effect_violations&quot;: true,
+      &quot;clean_evaluation&quot;: true
+    },
+    &quot;accept&quot;: true,
+    &quot;token_flags&quot;: [],
+    &quot;runtime_errors&quot;: 0
+  },
+  &quot;round_5_vs_round_4&quot;: {
+    &quot;overall&quot;: {
+      &quot;baseline&quot;: 0.9259259259259259,
+      &quot;candidate&quot;: 0.9481481481481482,
+      &quot;gain&quot;: 0.022222222222222254,
+      &quot;baseline_run_spread&quot;: 0.018885257457751038,
+      &quot;baseline_tokens&quot;: 28943.44074074074,
+      &quot;candidate_tokens&quot;: 31428.033333333333
+    },
+    &quot;scenarios&quot;: [
+      {
+        &quot;mode&quot;: &quot;validity&quot;,
+        &quot;baseline&quot;: 1.0,
+        &quot;candidate&quot;: 1.0,
+        &quot;delta&quot;: -0.0,
+        &quot;lost_stable_cases&quot;: [],
+        &quot;baseline_tokens&quot;: 7604.311111111111,
+        &quot;candidate_tokens&quot;: 7604.311111111111,
+        &quot;ok&quot;: true
+      },
+      {
+        &quot;mode&quot;: &quot;ship_decision&quot;,
+        &quot;baseline&quot;: 0.8666666666666667,
+        &quot;candidate&quot;: 0.8888888888888888,
+        &quot;delta&quot;: 0.022222222222222143,
+        &quot;lost_stable_cases&quot;: [],
+        &quot;baseline_tokens&quot;: 17523.222222222223,
+        &quot;candidate_tokens&quot;: 18707.31111111111,
+        &quot;ok&quot;: true
+      },
+      {
+        &quot;mode&quot;: &quot;early_look&quot;,
+        &quot;baseline&quot;: 1.0,
+        &quot;candidate&quot;: 1.0,
+        &quot;delta&quot;: -0.0,
+        &quot;lost_stable_cases&quot;: [],
+        &quot;baseline_tokens&quot;: 13147.8,
+        &quot;candidate_tokens&quot;: 13147.8,
+        &quot;ok&quot;: true
+      },
+      {
+        &quot;mode&quot;: &quot;attribution&quot;,
+        &quot;baseline&quot;: 1.0,
+        &quot;candidate&quot;: 1.0,
+        &quot;delta&quot;: -0.0,
+        &quot;lost_stable_cases&quot;: [],
+        &quot;baseline_tokens&quot;: 19184.17777777778,
+        &quot;candidate_tokens&quot;: 19184.17777777778,
+        &quot;ok&quot;: true
+      },
+      {
+        &quot;mode&quot;: &quot;portfolio&quot;,
+        &quot;baseline&quot;: 0.8444444444444444,
+        &quot;candidate&quot;: 0.8444444444444444,
+        &quot;delta&quot;: -0.0,
+        &quot;lost_stable_cases&quot;: [],
+        &quot;baseline_tokens&quot;: 67019.97777777778,
+        &quot;candidate_tokens&quot;: 67019.97777777778,
+        &quot;ok&quot;: true
+      },
+      {
+        &quot;mode&quot;: &quot;planning&quot;,
+        &quot;baseline&quot;: 0.8444444444444444,
+        &quot;candidate&quot;: 0.9555555555555556,
+        &quot;delta&quot;: 0.11111111111111116,
+        &quot;lost_stable_cases&quot;: [],
+        &quot;baseline_tokens&quot;: 49181.15555555555,
+        &quot;candidate_tokens&quot;: 62904.62222222222,
+        &quot;ok&quot;: true
+      }
+    ],
+    &quot;checks&quot;: {
+      &quot;overall_gain_exceeds_spread&quot;: true,
+      &quot;no_scenario_regression&quot;: true,
+      &quot;no_new_side_effect_violations&quot;: true,
+      &quot;clean_evaluation&quot;: true
+    },
+    &quot;accept&quot;: true,
+    &quot;token_flags&quot;: [],
+    &quot;runtime_errors&quot;: 0
+  },
+  &quot;final_vs_baseline&quot;: {
+    &quot;overall&quot;: {
+      &quot;baseline&quot;: 0.8296296296296296,
+      &quot;candidate&quot;: 0.9481481481481482,
+      &quot;gain&quot;: 0.11851851851851858,
+      &quot;baseline_run_spread&quot;: 0.022831162973959138,
+      &quot;baseline_tokens&quot;: 32848.68518518518,
+      &quot;candidate_tokens&quot;: 31428.033333333333
+    },
+    &quot;scenarios&quot;: [
+      {
+        &quot;mode&quot;: &quot;validity&quot;,
+        &quot;baseline&quot;: 0.8666666666666667,
+        &quot;candidate&quot;: 1.0,
+        &quot;delta&quot;: 0.1333333333333333,
+        &quot;lost_stable_cases&quot;: [],
+        &quot;baseline_tokens&quot;: 4988.955555555555,
+        &quot;candidate_tokens&quot;: 7604.311111111111,
+        &quot;ok&quot;: true
+      },
+      {
+        &quot;mode&quot;: &quot;ship_decision&quot;,
+        &quot;baseline&quot;: 0.8,
+        &quot;candidate&quot;: 0.8888888888888888,
+        &quot;delta&quot;: 0.0888888888888888,
+        &quot;lost_stable_cases&quot;: [],
+        &quot;baseline_tokens&quot;: 13894.822222222223,
+        &quot;candidate_tokens&quot;: 18707.31111111111,
+        &quot;ok&quot;: true
+      },
+      {
+        &quot;mode&quot;: &quot;early_look&quot;,
+        &quot;baseline&quot;: 0.7777777777777778,
+        &quot;candidate&quot;: 1.0,
+        &quot;delta&quot;: 0.2222222222222222,
+        &quot;lost_stable_cases&quot;: [],
+        &quot;baseline_tokens&quot;: 11136.977777777778,
+        &quot;candidate_tokens&quot;: 13147.8,
+        &quot;ok&quot;: true
+      },
+      {
+        &quot;mode&quot;: &quot;attribution&quot;,
+        &quot;baseline&quot;: 0.8888888888888888,
+        &quot;candidate&quot;: 1.0,
+        &quot;delta&quot;: 0.11111111111111116,
+        &quot;lost_stable_cases&quot;: [],
+        &quot;baseline_tokens&quot;: 13022.177777777777,
+        &quot;candidate_tokens&quot;: 19184.17777777778,
+        &quot;ok&quot;: true
+      },
+      {
+        &quot;mode&quot;: &quot;portfolio&quot;,
+        &quot;baseline&quot;: 0.8666666666666667,
+        &quot;candidate&quot;: 0.8444444444444444,
+        &quot;delta&quot;: -0.022222222222222254,
+        &quot;lost_stable_cases&quot;: [],
+        &quot;baseline_tokens&quot;: 111326.44444444444,
+        &quot;candidate_tokens&quot;: 67019.97777777778,
+        &quot;ok&quot;: true
+      },
+      {
+        &quot;mode&quot;: &quot;planning&quot;,
+        &quot;baseline&quot;: 0.7777777777777778,
+        &quot;candidate&quot;: 0.9555555555555556,
+        &quot;delta&quot;: 0.1777777777777778,
+        &quot;lost_stable_cases&quot;: [],
+        &quot;baseline_tokens&quot;: 42722.73333333333,
+        &quot;candidate_tokens&quot;: 62904.62222222222,
+        &quot;ok&quot;: true
+      }
+    ],
+    &quot;checks&quot;: {
+      &quot;overall_gain_exceeds_spread&quot;: true,
+      &quot;no_scenario_regression&quot;: true,
+      &quot;no_new_side_effect_violations&quot;: true,
+      &quot;clean_evaluation&quot;: true
+    },
+    &quot;accept&quot;: true,
+    &quot;token_flags&quot;: [
+      &quot;validity&quot;
+    ],
+    &quot;runtime_errors&quot;: 0
+  }
+}</pre></details>
+</section><footer>Sources: recorded local episode trajectories and provider token usage.
+No projected accuracy, invented measurements, or cross-dataset score substitutions.</footer>
+</main></body></html>

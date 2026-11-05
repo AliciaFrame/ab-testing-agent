@@ -1,0 +1,83 @@
+{
+  "_about": "Round-4 hypothesis-driven candidates from development failure analysis of routed-mai-optimized. Each entry appends text (with {placeholders} from _texts) to the task's current accepted prompt and/or sets reasoning effort. Scored only by the canonical grader.",
+  "planning": [
+    {
+      "name": "numeric_exclusions",
+      "hypothesis": "All 10 planning failures excluded tests with p between 0.002 and 0.057; force the 0.001 threshold and incident check through calculate.",
+      "append": "{planning_numeric}"
+    },
+    {
+      "name": "numeric_exclusions_low_effort",
+      "hypothesis": "Same fix with reduced reasoning to cut the 8.2K output tokens per episode.",
+      "append": "{planning_numeric}",
+      "reasoning_effort": "low"
+    }
+  ],
+  "ship_decision": [
+    {
+      "name": "numeric_gate_holm_power",
+      "hypothesis": "Failures: incident-window tests analysed or called NO_DIFFERENCE; power alpha 0.05 instead of 0.05/K; pooled CTR off. Compute each decision with calculate.",
+      "append": "{incident}\n\n{ship_numeric}"
+    },
+    {
+      "name": "numeric_gate_holm_power_low_effort",
+      "hypothesis": "Same fix with reduced reasoning.",
+      "append": "{incident}\n\n{ship_numeric}",
+      "reasoning_effort": "low"
+    }
+  ],
+  "attribution": [
+    {
+      "name": "numeric_gate_holm",
+      "hypothesis": "Failures: incident-window tests answered IMAGE/NEITHER or analysed; one HEADLINE/IMAGE swap. Gate with calculate and evaluate Holm numerically.",
+      "append": "{incident}\n\n{attribution_numeric}"
+    },
+    {
+      "name": "numeric_gate_holm_low_effort",
+      "hypothesis": "Same fix with reduced reasoning.",
+      "append": "{incident}\n\n{attribution_numeric}",
+      "reasoning_effort": "low"
+    }
+  ],
+  "portfolio": [
+    {
+      "name": "batched_calls_low_effort",
+      "hypothesis": "Portfolio uses 11 model turns vs Sol 7.5 and 85% reasoning output; batch independent calls and reduce reasoning.",
+      "append": "{batching}",
+      "reasoning_effort": "low"
+    },
+    {
+      "name": "batched_numeric_low_effort",
+      "hypothesis": "Also fix the 1-2 test KEEP_TESTING/NO_DIFFERENCE miscounts with a numeric sufficiency check.",
+      "append": "{batching}\n\n{portfolio_numeric}",
+      "reasoning_effort": "low"
+    },
+    {
+      "name": "batched_calls",
+      "hypothesis": "Added after low effort cost 13 points: isolate the batching effect at default reasoning effort.",
+      "append": "{batching}"
+    }
+  ],
+  "validity": [
+    {
+      "name": "low_effort",
+      "hypothesis": "Validity is at 100%; test whether reduced reasoning keeps accuracy with fewer tokens.",
+      "reasoning_effort": "low"
+    }
+  ],
+  "early_look": [
+    {
+      "name": "low_effort",
+      "hypothesis": "Early look is at 100%; test whether reduced reasoning keeps accuracy with fewer tokens.",
+      "reasoning_effort": "low"
+    }
+  ],
+  "_texts": {
+    "incident": "Mandatory validity gate before any compare_arms or power_calc call:\nRead the actual started timestamp returned by get_test. Convert its YYYY-MM-DD date to the eight-digit integer YYYYMMDD by removing the hyphens. Call calculate with min(DATE-20130625, 20140110-DATE), replacing BOTH DATE placeholders with that actual eight-digit date integer. Use only arithmetic in the expression, not comparison operators. If the returned minimum is zero or positive, this is an incident-window test: verdict INVALID, even when sample-ratio p >= 0.001. A negative result means outside the incident window, but the sample-ratio rule still applies (INVALID when p < 0.001). Never claim a test started outside the incident without this check. For an INVALID test, never call compare_arms or power_calc; submit INVALID directly.",
+    "planning_numeric": "Mandatory numeric exclusion check before computing the baseline:\nAfter check_sample_ratio has been called for every look-back test, make ONE calculate call whose expression is a list with one entry per look-back test, in list_tests order: [P1-0.001, P2-0.001, ...], replacing each P with that test's exact p_value from check_sample_ratio (scientific notation such as 2.4e-4 is allowed). Make a second calculate call with a list of min(DATE-20130625, 20140110-DATE) per look-back test, where DATE is that test's start date as the eight-digit integer YYYYMMDD. Exclude a test only if its first entry is negative (p < 0.001) or its second entry is zero or positive (incident window). A p-value such as 0.003, 0.01 or 0.04 is above 0.001: that test is VALID and must stay in the baseline. Do not apply any 0.05 threshold here. excluded_tests must contain exactly the tests flagged by these two calculations, and the pooled baseline must use every other look-back test.",
+    "ship_numeric": "Numeric decision checks (use calculate; never compare decimals mentally):\n- Holm: with K = number_of_arms - 1 leader comparisons, sort the compare_arms p-values ascending and call calculate on the list [p1-0.05/K, p2-0.05/(K-1), ..., pK-0.05/1]. Entries that are zero or negative before the first positive entry are rejections; stop at the first positive entry. SHIP only if every entry is zero or negative.\n- Power inputs: compute baseline_ctr with calculate as (sum of clicks over ALL arms)/(sum of impressions over ALL arms), not just the leader pair. Compute alpha with calculate as 0.05/K. Never pass alpha=0.05 when the test has more than two arms.\n- Sample sufficiency: call calculate with min(<impressions of every arm>) - <impressions_per_arm from power_calc>. Zero or positive means NO_DIFFERENCE; negative means KEEP_TESTING.",
+    "attribution_numeric": "Numeric decision checks (use calculate; never compare decimals mentally):\nWith M = the number of compared pairs, sort all pair p-values ascending and call calculate on the list [p1-0.05/M, p2-0.05/(M-1), ..., pM-0.05/1]. Entries that are zero or negative before the first positive entry are rejected pairs; stop at the first positive entry. A rejected pair with the same image but different headlines is a headline effect; a rejected pair with the same headline but different images is an image effect. Both kinds rejected means BOTH; none rejected means NEITHER.",
+    "batching": "Efficiency: issue independent tool calls together in the same turn instead of one per turn. After list_tests, call check_sample_ratio for every listed test in one turn. Then, in one turn, call compare_arms for every needed leader comparison across all valid tests, and then all needed power_calc calls together. Never re-fetch data you already have. Keep a compact running tally instead of restating earlier results.",
+    "portfolio_numeric": "Numeric checks with calculate (one list-valued call per check type across tests, never compare decimals mentally): incident list [min(DATE-20130625, 20140110-DATE) per test, DATE as YYYYMMDD], zero or positive means INVALID; sample-ratio list [p-0.001 per test], negative means INVALID; for each valid non-SHIP test, min(<impressions of every arm>) - <impressions_per_arm from power_calc>: zero or positive means NO_DIFFERENCE, negative means KEEP_TESTING. Count totals from these results."
+  }
+}

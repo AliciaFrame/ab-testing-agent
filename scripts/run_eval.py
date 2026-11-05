@@ -8,6 +8,9 @@ Example:
 
 import argparse
 import json
+import math
+import os
+import re
 import sys
 import time
 from concurrent.futures import ThreadPoolExecutor
@@ -29,10 +32,13 @@ def run_one(case, run):
     try:
         result = agent.run_episode({"messages": case["messages"]})
         record.update(output_text=result["output_text"], output_tools=result["output_tools"],
-                      calls=result["calls"], error=None)
+                      calls=result["calls"], routing=result.get("routing"),
+                      policy_contract=result.get("policy_contract"), error=None)
     except Exception as error:  # noqa: BLE001 -- runtime errors count as zero, never retried
         record.update(output_text=None, output_tools=[], calls=getattr(error, "calls", []),
                       error=f"{type(error).__name__}: {error}")
+        cause = error.__cause__ or error
+        record["error_http_status"] = getattr(getattr(cause, "response", None), "status_code", None)
     record["latency_s"] = round(time.time() - started, 2)
     checks = grader.check(record, case)
     record["checks"] = checks
@@ -46,6 +52,14 @@ def run_one(case, run):
     usage = [c.get("raw_usage") or {} for c in record["calls"]]
     record["input_tokens"] = sum(u.get("input_tokens", 0) for u in usage)
     record["output_tokens"] = sum(u.get("output_tokens", 0) for u in usage)
+    record["routing_input_tokens"] = sum(
+        (c.get("raw_usage") or {}).get("input_tokens", 0)
+        for c in record["calls"] if c.get("purpose") == "routing"
+    )
+    record["routing_correct"] = (
+        record.get("routing", {}).get("specialist") == record["mode"]
+        if record.get("routing") else None
+    )
     return record
 
 
@@ -58,22 +72,64 @@ def summarize(records):
            "mean_latency_s": sum(r["latency_s"] for r in records) / n,
            "mean_input_tokens": sum(r["input_tokens"] for r in records) / n,
            "mean_output_tokens": sum(r["output_tokens"] for r in records) / n}
+    out["total_input_tokens"] = sum(r["input_tokens"] for r in records)
+    out["total_output_tokens"] = sum(r["output_tokens"] for r in records)
+    out["total_tokens"] = out["total_input_tokens"] + out["total_output_tokens"]
+    out["total_latency_s"] = sum(r["latency_s"] for r in records)
+    ordered = sorted(r["latency_s"] for r in records)
+    out["median_latency_s"] = (
+        (ordered[(n - 1) // 2] + ordered[n // 2]) / 2
+    )
+    out["p95_latency_s"] = ordered[min(n - 1, math.ceil(0.95 * n) - 1)]
+    routed = [r for r in records if r.get("routing_correct") is not None]
+    out["routing_accuracy"] = (
+        sum(r["routing_correct"] for r in routed) / len(routed) if routed else None
+    )
+    out["usage_complete"] = all(
+        bool(r["calls"]) and all(c.get("raw_usage") is not None for c in r["calls"])
+        for r in records if not r["error"]
+    )
+    prior = [attempt for r in records for attempt in r.get("prior_transport_attempts", [])]
+    out["transport_overhead_tokens"] = sum(
+        a["input_tokens"] + a["output_tokens"] for a in prior
+    )
+    out["transport_overhead_latency_s"] = sum(a["latency_s"] for a in prior)
+    out["all_attempt_tokens"] = out["total_tokens"] + out["transport_overhead_tokens"]
     for check in CHECKS:
         out[f"check_{check}"] = sum(r["checks"][check] for r in records) / n
     return out
 
 
 TRANSPORT_ERRORS = ("RateLimitError", "APIConnectionError", "APITimeoutError",
-                    "InternalServerError")
+                    "InternalServerError", "ConnectTimeout", "ReadTimeout", "ConnectError",
+                    "ReadError", "WriteTimeout", "PoolTimeout")
 
 
 def is_transport_error(record):
-    return bool(record["error"]) and any(name in record["error"] for name in TRANSPORT_ERRORS)
+    if not record["error"]:
+        return False
+    status = record.get("error_http_status")
+    return (
+        any(name in record["error"] for name in TRANSPORT_ERRORS)
+        or type(status) is int and (status == 429 or 500 <= status <= 599)
+        or bool(re.search(
+            r"HTTPStatusError: (?:Client|Server) error '(?:429|5\d\d)\b", record["error"]
+        ))
+    )
+
+
+def retain_transport_history(previous, record):
+    record["transport_reruns"] = previous.get("transport_reruns", 0) + 1
+    record["prior_transport_attempts"] = previous.get("prior_transport_attempts", []) + [
+        {key: previous[key] for key in ("error", "latency_s", "input_tokens", "output_tokens")}
+    ]
+    return record
 
 
 def write_summary(out_dir, args, records):
     summary = {"label": args.label, "split": args.split, "runs": args.runs,
-               "model": agent.policy_contract()["model"], "overall": summarize(records),
+               "model": os.getenv("MAI_MODEL_OVERRIDE") or os.environ["MAI_MODEL_DEPLOYMENT_NAME"],
+               "router": os.getenv("MAI_ROUTER", "off"), "overall": summarize(records),
                "transport_reruns": sum(r.get("transport_reruns", 0) for r in records)}
     for mode in sorted({r["mode"] for r in records}):
         summary[mode] = summarize([r for r in records if r["mode"] == mode])
@@ -96,8 +152,9 @@ def rerun_transport_errors(args, cases, out_dir):
             fresh = pool.map(lambda i: run_one(by_id[records[i]["case_id"]], records[i]["run"]),
                              todo)
             for i, record in zip(todo, fresh):
-                record["transport_reruns"] = records[i].get("transport_reruns", 0) + 1
-                records[i] = record
+                with (out_dir / "transport-failures.jsonl").open("a", encoding="utf-8") as sink:
+                    sink.write(json.dumps(records[i]) + "\n")
+                records[i] = retain_transport_history(records[i], record)
         path.write_text("".join(json.dumps(r) + "\n" for r in records), encoding="utf-8")
     write_summary(out_dir, args, records)
 
@@ -109,12 +166,15 @@ def main():
     parser.add_argument("--label", required=True)
     parser.add_argument("--workers", type=int, default=3)
     parser.add_argument("--limit", type=int)
+    parser.add_argument("--mode", choices=list(grader.SUBMIT_TOOL))
     parser.add_argument("--rerun-transport-errors", action="store_true",
                         help="Only re-run episodes in an existing run that failed on transport")
     parser.add_argument("--max-reruns", type=int, default=3)
     args = parser.parse_args()
     path = ROOT / "data" / "cases" / f"{args.split}.jsonl"
     cases = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines()]
+    if args.mode:
+        cases = [case for case in cases if case["expected"]["mode"] == args.mode]
     cases = cases[: args.limit] if args.limit else cases
     out_dir = ROOT / "runs" / args.label / args.split
     if args.rerun_transport_errors:

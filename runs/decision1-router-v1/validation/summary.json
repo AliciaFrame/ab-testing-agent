@@ -1,0 +1,194 @@
+{
+  "rules": {
+    "benchmark": {
+      "cases": 90,
+      "correct": 69,
+      "accuracy": 0.7666666666666667,
+      "errors": 0,
+      "total_tokens": 0,
+      "median_latency_s": 0.0,
+      "mean_latency_s": 2.5555555555555554e-05,
+      "confusion": {
+        "attribution->attribution": 10,
+        "attribution->ambiguous": 5,
+        "early_look->early_look": 15,
+        "ship_decision->ship_decision": 11,
+        "ship_decision->ambiguous": 4,
+        "validity->validity": 8,
+        "validity->ambiguous": 7,
+        "portfolio->portfolio": 10,
+        "portfolio->ship_decision": 5,
+        "planning->planning": 15
+      },
+      "by_task": {
+        "attribution": {
+          "cases": 15,
+          "accuracy": 0.6666666666666666
+        },
+        "early_look": {
+          "cases": 15,
+          "accuracy": 1.0
+        },
+        "planning": {
+          "cases": 15,
+          "accuracy": 1.0
+        },
+        "portfolio": {
+          "cases": 15,
+          "accuracy": 0.6666666666666666
+        },
+        "ship_decision": {
+          "cases": 15,
+          "accuracy": 0.7333333333333333
+        },
+        "validity": {
+          "cases": 15,
+          "accuracy": 0.5333333333333333
+        }
+      }
+    },
+    "paraphrases": {
+      "cases": 10,
+      "correct": 4,
+      "accuracy": 0.4,
+      "errors": 0,
+      "total_tokens": 0,
+      "median_latency_s": 0.0,
+      "mean_latency_s": 0.0,
+      "confusion": {
+        "planning->planning": 1,
+        "portfolio->ambiguous": 1,
+        "attribution->ambiguous": 1,
+        "validity->validity": 1,
+        "early_look->ship_decision": 1,
+        "ship_decision->ambiguous": 1,
+        "ambiguous->ambiguous": 2,
+        "ambiguous->planning": 1,
+        "validity->planning": 1
+      },
+      "by_task": {
+        "ambiguous": {
+          "cases": 3,
+          "accuracy": 0.6666666666666666
+        },
+        "attribution": {
+          "cases": 1,
+          "accuracy": 0.0
+        },
+        "early_look": {
+          "cases": 1,
+          "accuracy": 0.0
+        },
+        "planning": {
+          "cases": 1,
+          "accuracy": 1.0
+        },
+        "portfolio": {
+          "cases": 1,
+          "accuracy": 0.0
+        },
+        "ship_decision": {
+          "cases": 1,
+          "accuracy": 0.0
+        },
+        "validity": {
+          "cases": 2,
+          "accuracy": 0.5
+        }
+      }
+    }
+  },
+  "decision1": {
+    "benchmark": {
+      "cases": 90,
+      "correct": 90,
+      "accuracy": 1.0,
+      "errors": 0,
+      "total_tokens": 29884,
+      "median_latency_s": 2.7346500000000002,
+      "mean_latency_s": 2.9175366666666664,
+      "confusion": {
+        "attribution->attribution": 15,
+        "early_look->early_look": 15,
+        "ship_decision->ship_decision": 15,
+        "validity->validity": 15,
+        "portfolio->portfolio": 15,
+        "planning->planning": 15
+      },
+      "by_task": {
+        "attribution": {
+          "cases": 15,
+          "accuracy": 1.0
+        },
+        "early_look": {
+          "cases": 15,
+          "accuracy": 1.0
+        },
+        "planning": {
+          "cases": 15,
+          "accuracy": 1.0
+        },
+        "portfolio": {
+          "cases": 15,
+          "accuracy": 1.0
+        },
+        "ship_decision": {
+          "cases": 15,
+          "accuracy": 1.0
+        },
+        "validity": {
+          "cases": 15,
+          "accuracy": 1.0
+        }
+      }
+    },
+    "paraphrases": {
+      "cases": 10,
+      "correct": 10,
+      "accuracy": 1.0,
+      "errors": 0,
+      "total_tokens": 2750,
+      "median_latency_s": 2.7691,
+      "mean_latency_s": 2.77779,
+      "confusion": {
+        "planning->planning": 1,
+        "portfolio->portfolio": 1,
+        "attribution->attribution": 1,
+        "validity->validity": 2,
+        "early_look->early_look": 1,
+        "ship_decision->ship_decision": 1,
+        "ambiguous->ambiguous": 3
+      },
+      "by_task": {
+        "ambiguous": {
+          "cases": 3,
+          "accuracy": 1.0
+        },
+        "attribution": {
+          "cases": 1,
+          "accuracy": 1.0
+        },
+        "early_look": {
+          "cases": 1,
+          "accuracy": 1.0
+        },
+        "planning": {
+          "cases": 1,
+          "accuracy": 1.0
+        },
+        "portfolio": {
+          "cases": 1,
+          "accuracy": 1.0
+        },
+        "ship_decision": {
+          "cases": 1,
+          "accuracy": 1.0
+        },
+        "validity": {
+          "cases": 2,
+          "accuracy": 1.0
+        }
+      }
+    }
+  }
+}

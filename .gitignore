@@ -10,3 +10,40 @@ cloud.json
 
 data/prepared/*.jsonl
 
+agent/.azure/
+
+# Recorded runs: only the hill-climb stages and router validation are committed (summary + gzipped episodes).
+/runs/*
+!/runs/baseline/
+!/runs/opt-r2-cand1/
+!/runs/routed-mai-baseline/
+!/runs/routed-mai-optimized/
+!/runs/routed-mai-r4/
+!/runs/routed-mai-r5/
+!/runs/routed-gpt6-sol/
+!/runs/routed-gpt6-sol-r5/
+!/runs/decision1-router-v1/
+/runs/*/development/episodes.jsonl
+/runs/*/development/*.pre-rerun.jsonl
+/runs/*/development/transport-failures.jsonl
+# Optimization rounds: keep the selected prompts, manifest and development results; drop per-candidate search folders.
+/runs/routed-mai-optimized/*
+/runs/routed-mai-r4/*
+/runs/routed-mai-r5/*
+!/runs/routed-mai-optimized/development/
+!/runs/routed-mai-optimized/instructions/
+!/runs/routed-mai-optimized/optimization.json
+!/runs/routed-mai-r4/development/
+!/runs/routed-mai-r4/instructions/
+!/runs/routed-mai-r4/optimization.json
+!/runs/routed-mai-r5/development/
+!/runs/routed-mai-r5/instructions/
+!/runs/routed-mai-r5/optimization.json
+
+# RFT service state and calibration logs
+rft/state/
+rft/calibration/*.log
+
+rft/jobs/monitor.log
+rft/jobs/*/evaluate.log
+rft/jobs/*/evaluate.err

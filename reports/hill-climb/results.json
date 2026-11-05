@@ -1,0 +1,242 @@
+{
+ "baseline": {
+  "overall": {
+   "pass": 80.0,
+   "tokens": 50.060603703703705
+  },
+  "validity": {
+   "pass": 84.44444444444444,
+   "tokens": 7.852044444444445
+  },
+  "ship_decision": {
+   "pass": 86.66666666666667,
+   "tokens": 16.47691111111111
+  },
+  "early_look": {
+   "pass": 77.77777777777777,
+   "tokens": 12.541933333333333
+  },
+  "attribution": {
+   "pass": 88.88888888888889,
+   "tokens": 14.741644444444445
+  },
+  "portfolio": {
+   "pass": 80.0,
+   "tokens": 202.92844444444444
+  },
+  "planning": {
+   "pass": 62.22222222222222,
+   "tokens": 45.82264444444444
+  }
+ },
+ "opt-r2-cand1": {
+  "overall": {
+   "pass": 81.11111111111111,
+   "tokens": 55.404300000000006
+  },
+  "validity": {
+   "pass": 77.77777777777777,
+   "tokens": 9.973377777777777
+  },
+  "ship_decision": {
+   "pass": 84.44444444444444,
+   "tokens": 18.615866666666665
+  },
+  "early_look": {
+   "pass": 73.33333333333333,
+   "tokens": 15.066622222222222
+  },
+  "attribution": {
+   "pass": 91.11111111111111,
+   "tokens": 17.143
+  },
+  "portfolio": {
+   "pass": 75.55555555555556,
+   "tokens": 216.5736222222222
+  },
+  "planning": {
+   "pass": 84.44444444444444,
+   "tokens": 55.053311111111114
+  }
+ },
+ "routed-mai-baseline": {
+  "overall": {
+   "pass": 82.96296296296296,
+   "tokens": 32.84868518518518
+  },
+  "validity": {
+   "pass": 86.66666666666667,
+   "tokens": 4.988955555555555
+  },
+  "ship_decision": {
+   "pass": 80.0,
+   "tokens": 13.894822222222222
+  },
+  "early_look": {
+   "pass": 77.77777777777777,
+   "tokens": 11.136977777777778
+  },
+  "attribution": {
+   "pass": 88.88888888888889,
+   "tokens": 13.022177777777777
+  },
+  "portfolio": {
+   "pass": 86.66666666666667,
+   "tokens": 111.32644444444443
+  },
+  "planning": {
+   "pass": 77.77777777777777,
+   "tokens": 42.72273333333333
+  }
+ },
+ "routed-mai-optimized": {
+  "overall": {
+   "pass": 88.88888888888889,
+   "tokens": 33.83381851851852
+  },
+  "validity": {
+   "pass": 100.0,
+   "tokens": 8.888933333333332
+  },
+  "ship_decision": {
+   "pass": 80.0,
+   "tokens": 13.894822222222222
+  },
+  "early_look": {
+   "pass": 100.0,
+   "tokens": 13.1478
+  },
+  "attribution": {
+   "pass": 88.88888888888889,
+   "tokens": 13.022177777777777
+  },
+  "portfolio": {
+   "pass": 86.66666666666667,
+   "tokens": 111.32644444444443
+  },
+  "planning": {
+   "pass": 77.77777777777777,
+   "tokens": 42.72273333333333
+  }
+ },
+ "routed-mai-r4": {
+  "overall": {
+   "pass": 92.5925925925926,
+   "tokens": 28.94344074074074
+  },
+  "validity": {
+   "pass": 100.0,
+   "tokens": 7.6043111111111115
+  },
+  "ship_decision": {
+   "pass": 86.66666666666667,
+   "tokens": 17.523222222222223
+  },
+  "early_look": {
+   "pass": 100.0,
+   "tokens": 13.1478
+  },
+  "attribution": {
+   "pass": 100.0,
+   "tokens": 19.18417777777778
+  },
+  "portfolio": {
+   "pass": 84.44444444444444,
+   "tokens": 67.01997777777778
+  },
+  "planning": {
+   "pass": 84.44444444444444,
+   "tokens": 49.181155555555556
+  }
+ },
+ "routed-mai-r5": {
+  "overall": {
+   "pass": 94.81481481481481,
+   "tokens": 31.42803333333333
+  },
+  "validity": {
+   "pass": 100.0,
+   "tokens": 7.6043111111111115
+  },
+  "ship_decision": {
+   "pass": 88.88888888888889,
+   "tokens": 18.70731111111111
+  },
+  "early_look": {
+   "pass": 100.0,
+   "tokens": 13.1478
+  },
+  "attribution": {
+   "pass": 100.0,
+   "tokens": 19.18417777777778
+  },
+  "portfolio": {
+   "pass": 84.44444444444444,
+   "tokens": 67.01997777777778
+  },
+  "planning": {
+   "pass": 95.55555555555556,
+   "tokens": 62.90462222222222
+  }
+ },
+ "routed-gpt6-sol-r5": {
+  "overall": {
+   "pass": 97.4074074074074,
+   "tokens": 29.374274074074073
+  },
+  "validity": {
+   "pass": 100.0,
+   "tokens": 7.019177777777778
+  },
+  "ship_decision": {
+   "pass": 100.0,
+   "tokens": 22.32588888888889
+  },
+  "early_look": {
+   "pass": 100.0,
+   "tokens": 11.7296
+  },
+  "attribution": {
+   "pass": 100.0,
+   "tokens": 14.069222222222223
+  },
+  "portfolio": {
+   "pass": 84.44444444444444,
+   "tokens": 63.63682222222222
+  },
+  "planning": {
+   "pass": 100.0,
+   "tokens": 57.464933333333335
+  }
+ },
+ "routed-gpt6-sol": {
+  "overall": {
+   "pass": 97.4074074074074,
+   "tokens": 23.76685185185185
+  },
+  "validity": {
+   "pass": 100.0,
+   "tokens": 4.685
+  },
+  "ship_decision": {
+   "pass": 100.0,
+   "tokens": 12.468577777777778
+  },
+  "early_look": {
+   "pass": 100.0,
+   "tokens": 9.0938
+  },
+  "attribution": {
+   "pass": 100.0,
+   "tokens": 11.127755555555556
+  },
+  "portfolio": {
+   "pass": 84.44444444444444,
+   "tokens": 63.33255555555556
+  },
+  "planning": {
+   "pass": 100.0,
+   "tokens": 41.89342222222222
+  }
+ }
+}

@@ -20,6 +20,8 @@ from domain import TOOL_DEFINITIONS, execute_tool
 from evaluation_auth import authorize_capture, failure_details, redact_trace
 from openai import OpenAI
 from workload import decode_input, model_messages, skill_catalog
+import router
+import specialists
 
 ROOT = Path(__file__).resolve().parent
 
@@ -57,7 +59,20 @@ def client():
             yield api
 
 
-def configuration():
+def configuration(specialist=None):
+    if specialist:
+        default = OptimizationConfig(
+            instructions=specialists.instructions(specialist),
+            model=os.environ["MAI_MODEL_DEPLOYMENT_NAME"],
+            tool_definitions=specialists.tools(specialist),
+        )
+        target = os.getenv("MAI_OPTIMIZATION_SPECIALIST")
+        if not target:
+            if os.getenv("OPTIMIZATION_CONFIG") or os.getenv("OPTIMIZATION_CANDIDATE_ID"):
+                raise ValueError("Specialist optimization requires MAI_OPTIMIZATION_SPECIALIST")
+            return default
+        if target != specialist:
+            return default
     with DefaultAzureCredential(process_timeout=60) as credential:
         configured = load_config(
             config_dir=os.getenv("OPTIMIZATION_LOCAL_DIR", str(ROOT)),
@@ -70,8 +85,12 @@ def configuration():
         and (configured is None or configured.candidate_id != candidate)
     ):
         raise RuntimeError(f"Requested optimization candidate {candidate} was not loaded")
+    if specialist:
+        return configured or default
     return configured or OptimizationConfig(
-        instructions=(ROOT / "instructions.md").read_text(encoding="utf-8"),
+        instructions=Path(os.getenv("MAI_INSTRUCTIONS_PATH", ROOT / "instructions.md")).read_text(
+            encoding="utf-8"
+        ),
         model=os.environ["MAI_MODEL_DEPLOYMENT_NAME"],
         tool_definitions=json.loads((ROOT / "tools.json").read_text(encoding="utf-8")),
         skills=[Skill(**item) for item in skill_catalog(ROOT)],
@@ -87,8 +106,8 @@ def response_tools(definitions):
     ]
 
 
-def policy_contract():
-    config = configuration()
+def policy_contract(specialist=None):
+    config = configuration(specialist)
     explicit = os.getenv("MAI_MODEL_OVERRIDE")
     configured = config.model
     model = explicit or configured or os.getenv("MAI_MODEL_DEPLOYMENT_NAME")
@@ -100,19 +119,27 @@ def policy_contract():
     if config.skills_dir:
         for path in sorted(Path(config.skills_dir).rglob("SKILL.md")):
             instructions += "\n\n" + path.read_text(encoding="utf-8")
+    definitions = response_tools(
+        config.tool_definitions if config.tool_definitions is not None else TOOL_DEFINITIONS
+    )
+    if specialist:
+        instructions = specialists.common_instructions() + "\n\n" + instructions
+        definitions = [t for t in definitions if t.get("name") in specialists.TOOLS[specialist]]
     return {
         "model": model,
         "model_override": explicit,
         "endpoint": os.environ["MAI_OPENAI_BASE_URL"],
         "instructions": instructions,
-        "tools": response_tools(
-            config.tool_definitions if config.tool_definitions is not None else TOOL_DEFINITIONS
-        ),
+        "tools": definitions,
+        "specialist": specialist,
+        "policy_sha256": hashlib.sha256(instructions.encode()).hexdigest(),
         "temperature": config.temperature,
         "max_tool_steps": int(os.getenv("MAI_MAX_TOOL_STEPS", "200")),
         "max_output_tokens": int(os.getenv("MAI_MAX_OUTPUT_TOKENS", "131072")),
         "request_timeout_seconds": request_timeout(),
-        "reasoning_effort": reasoning_effort(),
+        "reasoning_effort": (
+            specialists.settings(specialist).get("reasoning_effort") if specialist else None
+        ) or reasoning_effort(),
         "domain_sha256": hashlib.sha256((ROOT / "domain.py").read_bytes()).hexdigest(),
     }
 
@@ -134,7 +161,21 @@ def run_episode(item):
 
 
 def _run_episode(item, calls, api):
-    policy = policy_contract()
+    routing = None
+    specialist = os.getenv("MAI_SPECIALIST") or None
+    if specialist and specialist not in specialists.TOOLS:
+        raise ValueError(f"Unknown specialist: {specialist}")
+    if not specialist and os.getenv("MAI_ROUTER", "off") != "off":
+        routing = router.route(item)
+        calls.append(routing)
+        if routing["specialist"] == "ambiguous":
+            return {
+                "output_text": "Please specify one task: validity, winner decision, early look, "
+                "headline/image attribution, scorecard, or test planning.",
+                "output_tools": [], "calls": calls, "routing": routing, "policy_contract": {},
+            }
+        specialist = routing["specialist"]
+    policy = policy_contract(specialist)
     instructions, model = policy["instructions"], policy["model"]
     inputs = list(item["messages"])
     if inputs[0]["role"] == "system" and inputs[0]["content"].strip() == instructions.strip():
@@ -191,6 +232,7 @@ def _run_episode(item, calls, api):
                 "output_tools": trace,
                 "calls": calls,
                 "policy_contract": policy,
+                "routing": routing,
             }
         for call in tool_calls:
             try:
@@ -199,8 +241,16 @@ def _run_episode(item, calls, api):
                 arguments = call.arguments
                 result = {"error": f"Arguments are not valid JSON: {error}"}
             else:
-                result = execute_tool(call.name, arguments)
-            trace.append({"name": call.name, "arguments": arguments, "output": result})
+                allowed = {tool["name"] for tool in policy["tools"]}
+                result = (
+                    {"error": f"Tool {call.name} is not available to this specialist"}
+                    if specialist and call.name not in allowed
+                    else execute_tool(call.name, arguments)
+                )
+            trace.append(
+                {"name": call.name, "arguments": arguments, "output": result,
+                 "call_id": call.call_id}
+            )
             inputs.append(
                 {
                     "type": "function_call_output",
@@ -253,6 +303,24 @@ async def handler(request, context, _cancellation_signal):
     async def events():
         yield stream.emit_created()
         yield stream.emit_in_progress()
+        # Tools run server-side; report each completed call and its result so evaluators
+        # (including Agent Optimizer judges) can see the workflow, not just the final text.
+        if not capture and os.getenv("MAI_EMIT_TOOL_ITEMS", "1") == "1":
+            for index, tool in enumerate(result["output_tools"]):
+                call_id = tool.get("call_id") or f"call_{index}"
+                arguments = (
+                    tool["arguments"]
+                    if isinstance(tool["arguments"], str)
+                    else json.dumps(tool["arguments"])
+                )
+                function_call = stream.add_output_item_function_call(tool["name"], call_id)
+                yield function_call.emit_added()
+                for event in function_call.arguments(arguments):
+                    yield event
+                yield function_call.emit_done()
+                function_output = stream.add_output_item_function_call_output(call_id)
+                yield function_output.emit_added()
+                yield function_output.emit_done(json.dumps(tool["output"]))
         message = stream.add_output_item_message()
         yield message.emit_added()
         text = message.add_text_content()
