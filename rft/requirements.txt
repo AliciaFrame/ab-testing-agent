@@ -1,0 +1,6 @@
+starlette==1.7.0
+hypercorn>=0.17,<1
+pandas==2.3.3
+pyarrow==24.0.0
+numpy==2.5.0
+scipy==1.17.1

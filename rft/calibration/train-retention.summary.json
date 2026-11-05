@@ -1,0 +1,98 @@
+{
+ "rollouts": 60,
+ "errors": 0,
+ "parity_mismatches": 0,
+ "overall": {
+  "episodes": 60,
+  "strict_pass": 0.9333333333333333,
+  "acc_fail_rate_at_1": 0.06666666666666667,
+  "eff_fail_rate_at_0.9": 0.5166666666666667,
+  "mean_acc": 0.9758333333333333,
+  "mean_eff": 0.8652551166666667,
+  "tool_calls_p50": 5.5,
+  "tool_calls_max": 22,
+  "turns_max": 9,
+  "output_tokens_mean": 2876.483333333333,
+  "input_tokens_mean": 11668.233333333334
+ },
+ "by_mode_effort": {
+  "attribution/low": {
+   "episodes": 10,
+   "strict_pass": 0.8,
+   "acc_fail_rate_at_1": 0.2,
+   "eff_fail_rate_at_0.9": 0.2,
+   "mean_acc": 0.93,
+   "mean_eff": 0.877914,
+   "tool_calls_p50": 9.0,
+   "tool_calls_max": 20,
+   "turns_max": 7,
+   "output_tokens_mean": 1979.6,
+   "input_tokens_mean": 12537.4
+  },
+  "attribution/medium": {
+   "episodes": 10,
+   "strict_pass": 1.0,
+   "acc_fail_rate_at_1": 0.0,
+   "eff_fail_rate_at_0.9": 0.5,
+   "mean_acc": 1.0,
+   "mean_eff": 0.8880553999999999,
+   "tool_calls_p50": 10.0,
+   "tool_calls_max": 22,
+   "turns_max": 9,
+   "output_tokens_mean": 6291.9,
+   "input_tokens_mean": 15287.9
+  },
+  "early_look/low": {
+   "episodes": 10,
+   "strict_pass": 0.8,
+   "acc_fail_rate_at_1": 0.2,
+   "eff_fail_rate_at_0.9": 0.2,
+   "mean_acc": 0.925,
+   "mean_eff": 0.8728669,
+   "tool_calls_p50": 7.0,
+   "tool_calls_max": 11,
+   "turns_max": 6,
+   "output_tokens_mean": 1896.9,
+   "input_tokens_mean": 11939.7
+  },
+  "early_look/medium": {
+   "episodes": 10,
+   "strict_pass": 1.0,
+   "acc_fail_rate_at_1": 0.0,
+   "eff_fail_rate_at_0.9": 0.6,
+   "mean_acc": 1.0,
+   "mean_eff": 0.8948404,
+   "tool_calls_p50": 6.5,
+   "tool_calls_max": 9,
+   "turns_max": 7,
+   "output_tokens_mean": 3884.2,
+   "input_tokens_mean": 11640
+  },
+  "validity/low": {
+   "episodes": 10,
+   "strict_pass": 1.0,
+   "acc_fail_rate_at_1": 0.0,
+   "eff_fail_rate_at_0.9": 0.6,
+   "mean_acc": 1.0,
+   "mean_eff": 0.865354,
+   "tool_calls_p50": 4.0,
+   "tool_calls_max": 5,
+   "turns_max": 5,
+   "output_tokens_mean": 1051.4,
+   "input_tokens_mean": 9200.7
+  },
+  "validity/medium": {
+   "episodes": 10,
+   "strict_pass": 1.0,
+   "acc_fail_rate_at_1": 0.0,
+   "eff_fail_rate_at_0.9": 1.0,
+   "mean_acc": 1.0,
+   "mean_eff": 0.7925,
+   "tool_calls_p50": 4.0,
+   "tool_calls_max": 5,
+   "turns_max": 6,
+   "output_tokens_mean": 2154.9,
+   "input_tokens_mean": 9403.7
+  }
+ }
+}

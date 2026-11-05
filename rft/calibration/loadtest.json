@@ -1,0 +1,9 @@
+{
+ "episodes": 60,
+ "tool_calls": 1114,
+ "requests_per_second": 20.4,
+ "tool_failures": 0,
+ "output_mismatches": 83,
+ "grade_mismatches": 0,
+ "concurrency": 32
+}

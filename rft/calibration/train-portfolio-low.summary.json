@@ -1,0 +1,33 @@
+{
+ "rollouts": 15,
+ "errors": 0,
+ "parity_mismatches": 0,
+ "overall": {
+  "episodes": 15,
+  "strict_pass": 0.8666666666666667,
+  "acc_fail_rate_at_1": 0.13333333333333333,
+  "eff_fail_rate_at_0.9": 0.3333333333333333,
+  "mean_acc": 0.9466666666666667,
+  "mean_eff": 0.8616201333333333,
+  "tool_calls_p50": 71,
+  "tool_calls_max": 106,
+  "turns_max": 26,
+  "output_tokens_mean": 12748.733333333334,
+  "input_tokens_mean": 68336.66666666667
+ },
+ "by_mode_effort": {
+  "portfolio/low": {
+   "episodes": 15,
+   "strict_pass": 0.8666666666666667,
+   "acc_fail_rate_at_1": 0.13333333333333333,
+   "eff_fail_rate_at_0.9": 0.3333333333333333,
+   "mean_acc": 0.9466666666666667,
+   "mean_eff": 0.8616201333333333,
+   "tool_calls_p50": 71,
+   "tool_calls_max": 106,
+   "turns_max": 26,
+   "output_tokens_mean": 12748.733333333334,
+   "input_tokens_mean": 68336.66666666667
+  }
+ }
+}

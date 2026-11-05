@@ -1,0 +1,164 @@
+{
+ "job": "abtest-rft-low",
+ "job_id": "ftjob-6a29caf7dd7b4b70b222031c2e101876",
+ "status": "running",
+ "fine_tuned_model": null,
+ "error": null,
+ "latest_metrics": {
+  "step": 1,
+  "train_mean_reward": 0.9416015625000002,
+  "completion_tokens_mean": 2682.621212121212,
+  "usage": {
+   "samples": {
+    "train_reasoning_tokens_mean": 307.07733952049495,
+    "train_reasoning_tokens_count": 1293
+   }
+  },
+  "sampling_duration": 10.590417204533393,
+  "training_duration": 0.388459723846366,
+  "total_duration": 10.978876928379758,
+  "reasoning_tokens_mean": 307.07733952049495,
+  "errors": {
+   "graders": [
+    {
+     "name": "grader-77d38d475898",
+     "type": "endpoint",
+     "errors": {
+      "train_sample_parse_error_mean": 0,
+      "train_sample_parse_error_count": 0,
+      "train_invalid_variable_error_mean": 0,
+      "train_invalid_variable_error_count": 0,
+      "train_other_error_mean": 0.030303030303030304,
+      "train_other_error_count": 8
+     }
+    }
+   ]
+  },
+  "scores": {
+   "graders": [
+    {
+     "name": "grader-77d38d475898",
+     "type": "endpoint",
+     "train_reward_mean": 0.9654296875000001
+    }
+   ]
+  },
+  "timing": {
+   "graders": [
+    {
+     "name": "grader-77d38d475898",
+     "type": "endpoint",
+     "timing": {
+      "train_execution_latency_mean": 0.942036449813796,
+      "train_execution_latency_count": 264
+     }
+    }
+   ]
+  },
+  "train_tool_calls_to_list_tests": 0.6893939393939394,
+  "train_token_usage_mean_list_tests": 2380.3511904761904,
+  "train_latency_list_tests": 0.5847510774054259,
+  "train_error_count_list_tests": 0,
+  "train_tool_calls_to_get_test": 0.36363636363636365,
+  "train_token_usage_mean_get_test": 427.6666666666667,
+  "train_latency_get_test": 0.829815760759781,
+  "train_error_count_get_test": 0,
+  "train_tool_calls_to_check_sample_ratio": 11.473484848484848,
+  "train_token_usage_mean_check_sample_ratio": 62.86742424242424,
+  "train_latency_check_sample_ratio": 0.8023827765188771,
+  "train_error_count_check_sample_ratio": 0,
+  "train_tool_calls_to_compare_arms": 5.534090909090909,
+  "train_token_usage_mean_compare_arms": 118.52777777777777,
+  "train_latency_compare_arms": 0.6598339095835399,
+  "train_error_count_compare_arms": 0,
+  "train_tool_calls_to_power_calc": 1.9886363636363635,
+  "train_token_usage_mean_power_calc": 10,
+  "train_latency_power_calc": 0.5329912277153371,
+  "train_error_count_power_calc": 0,
+  "train_tool_calls_to_calculate": 2.477272727272727,
+  "train_token_usage_mean_calculate": 39.72687224669603,
+  "train_latency_calculate": 0.5275682957399593,
+  "train_error_count_calculate": 0,
+  "train_tool_calls_to_ship_package": 0.12121212121212122,
+  "train_token_usage_mean_ship_package": 32,
+  "train_latency_ship_package": 0.5534662367194869,
+  "train_error_count_ship_package": 0,
+  "train_tool_calls_to_notify_editor": 0,
+  "train_error_count_notify_editor": 0,
+  "train_tool_calls_to_submit_verdict": 0.36363636363636365,
+  "train_token_usage_mean_submit_verdict": 7,
+  "train_latency_submit_verdict": 0.5449366788325278,
+  "train_error_count_submit_verdict": 0,
+  "train_tool_calls_to_submit_scorecard": 0.15151515151515152,
+  "train_token_usage_mean_submit_scorecard": 7,
+  "train_latency_submit_scorecard": 0.4808516848741419,
+  "train_error_count_submit_scorecard": 0,
+  "train_tool_calls_to_submit_plan": 0.48484848484848486,
+  "train_token_usage_mean_submit_plan": 7,
+  "train_latency_submit_plan": 0.5288652748527056,
+  "train_error_count_submit_plan": 0
+ },
+ "checkpoints": [],
+ "events": [
+  {
+   "created_at": 1793852576,
+   "message": "Step 1: training mean reward=0.9416015625000002"
+  },
+  {
+   "created_at": 1793851994,
+   "message": "Created results file: file-b8a31e1ab06d400a9d376ac58b907eaa"
+  },
+  {
+   "created_at": 1793851928,
+   "message": "Step 0: training mean reward="
+  },
+  {
+   "created_at": 1793851309,
+   "message": "Created Eval=eval_6aebffabec3c8191acfcf88d8aa48b45 to evaluate outputs on the validation dataset during finetuning."
+  },
+  {
+   "created_at": 1793851309,
+   "message": "Created Eval=eval_6aebffabec3c8191acfcf88d8aa48b45 to evaluate outputs on the validation dataset during finetuning."
+  },
+  {
+   "created_at": 1793850136,
+   "message": "Training started."
+  },
+  {
+   "created_at": 1793849959,
+   "message": "Job queued, waiting for GPUs."
+  },
+  {
+   "created_at": 1793849488,
+   "message": "Finetuning started."
+  },
+  {
+   "created_at": 1793849488,
+   "message": "Data Import started."
+  },
+  {
+   "created_at": 1793849472,
+   "message": "Job started."
+  },
+  {
+   "created_at": 1793849461,
+   "message": "Preprocessing completed for file validation file."
+  },
+  {
+   "created_at": 1793849324,
+   "message": "Preprocessing running for file validation file."
+  },
+  {
+   "created_at": 1793849085,
+   "message": "Preprocessing completed for file training file."
+  },
+  {
+   "created_at": 1793848603,
+   "message": "Preprocessing running for file training file."
+  },
+  {
+   "created_at": 1793848520,
+   "message": "Job enqueued. Waiting for jobs ahead to complete."
+  }
+ ]
+}

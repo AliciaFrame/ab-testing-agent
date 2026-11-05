@@ -1,0 +1,46 @@
+{
+ "rollouts": 60,
+ "errors": 0,
+ "parity_mismatches": 0,
+ "overall": {
+  "episodes": 60,
+  "strict_pass": 0.9,
+  "acc_fail_rate_at_1": 0.1,
+  "eff_fail_rate_at_0.9": 0.35,
+  "mean_acc": 0.965,
+  "mean_eff": 0.8877868166666667,
+  "tool_calls_p50": 8.5,
+  "tool_calls_max": 13,
+  "turns_max": 9,
+  "output_tokens_mean": 2371.366666666667,
+  "input_tokens_mean": 17807.716666666667
+ },
+ "by_mode_effort": {
+  "ship_decision/low": {
+   "episodes": 30,
+   "strict_pass": 0.9666666666666667,
+   "acc_fail_rate_at_1": 0.03333333333333333,
+   "eff_fail_rate_at_0.9": 0.06666666666666667,
+   "mean_acc": 0.9816666666666667,
+   "mean_eff": 0.9551553666666667,
+   "tool_calls_p50": 8.5,
+   "tool_calls_max": 13,
+   "turns_max": 9,
+   "output_tokens_mean": 1588.9333333333334,
+   "input_tokens_mean": 18134.333333333332
+  },
+  "ship_decision/medium": {
+   "episodes": 30,
+   "strict_pass": 0.8333333333333334,
+   "acc_fail_rate_at_1": 0.16666666666666666,
+   "eff_fail_rate_at_0.9": 0.6333333333333333,
+   "mean_acc": 0.9483333333333334,
+   "mean_eff": 0.8204182666666667,
+   "tool_calls_p50": 8.5,
+   "tool_calls_max": 13,
+   "turns_max": 8,
+   "output_tokens_mean": 3153.8,
+   "input_tokens_mean": 17481.1
+  }
+ }
+}

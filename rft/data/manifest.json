@@ -1,0 +1,53 @@
+{
+ "seed": 20261104,
+ "train_per_mode": {
+  "planning": 30,
+  "ship_decision": 30,
+  "portfolio": 15,
+  "validity": 5,
+  "early_look": 5,
+  "attribution": 5
+ },
+ "valid_per_mode": {
+  "planning": 3,
+  "ship_decision": 3,
+  "portfolio": 3,
+  "validity": 2,
+  "early_look": 2,
+  "attribution": 2
+ },
+ "train_rows": 90,
+ "valid_rows": 15,
+ "calibration_on_train_rows": {
+  "planning/medium": {
+   "rollouts": 30,
+   "acc_below_1": 1,
+   "eff_below_0.9": 15
+  },
+  "portfolio/medium": {
+   "rollouts": 14,
+   "acc_below_1": 1,
+   "eff_below_0.9": 9
+  },
+  "ship_decision/medium": {
+   "rollouts": 30,
+   "acc_below_1": 5,
+   "eff_below_0.9": 19
+  },
+  "ship_decision/low": {
+   "rollouts": 28,
+   "acc_below_1": 1,
+   "eff_below_0.9": 1
+  }
+ },
+ "files": {
+  "train.jsonl": {
+   "sha256": "8a6ee55e8800d8e5ed0231e52a3eab7897b3dafa64377eeb1c7d1972929f2112"
+  },
+  "valid.jsonl": {
+   "sha256": "662f8dcb7d1a4c0429a42c575f73523323714caceea684f39be0a1b450ec69ef"
+  }
+ },
+ "heldout_test_overlap": [],
+ "max_row_bytes": 12325
+}

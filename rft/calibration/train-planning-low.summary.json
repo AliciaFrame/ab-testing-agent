@@ -1,0 +1,33 @@
+{
+ "rollouts": 30,
+ "errors": 0,
+ "parity_mismatches": 0,
+ "overall": {
+  "episodes": 30,
+  "strict_pass": 0.8666666666666667,
+  "acc_fail_rate_at_1": 0.13333333333333333,
+  "eff_fail_rate_at_0.9": 0.26666666666666666,
+  "mean_acc": 0.9733333333333334,
+  "mean_eff": 0.9159400666666667,
+  "tool_calls_p50": 22.0,
+  "tool_calls_max": 32,
+  "turns_max": 12,
+  "output_tokens_mean": 5302.6,
+  "input_tokens_mean": 50379
+ },
+ "by_mode_effort": {
+  "planning/low": {
+   "episodes": 30,
+   "strict_pass": 0.8666666666666667,
+   "acc_fail_rate_at_1": 0.13333333333333333,
+   "eff_fail_rate_at_0.9": 0.26666666666666666,
+   "mean_acc": 0.9733333333333334,
+   "mean_eff": 0.9159400666666667,
+   "tool_calls_p50": 22.0,
+   "tool_calls_max": 32,
+   "turns_max": 12,
+   "output_tokens_mean": 5302.6,
+   "input_tokens_mean": 50379
+  }
+ }
+}
