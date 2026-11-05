@@ -1,0 +1,33 @@
+{
+ "rollouts": 10,
+ "errors": 0,
+ "parity_mismatches": 0,
+ "overall": {
+  "episodes": 10,
+  "strict_pass": 1.0,
+  "acc_fail_rate_at_1": 0.0,
+  "eff_fail_rate_at_0.9": 0.1,
+  "mean_acc": 1.0,
+  "mean_eff": 0.9625551999999999,
+  "tool_calls_p50": 61.0,
+  "tool_calls_max": 95,
+  "turns_max": 51,
+  "output_tokens_mean": 10994.3,
+  "input_tokens_mean": 372856.6
+ },
+ "by_mode_effort": {
+  "portfolio/medium": {
+   "episodes": 10,
+   "strict_pass": 1.0,
+   "acc_fail_rate_at_1": 0.0,
+   "eff_fail_rate_at_0.9": 0.1,
+   "mean_acc": 1.0,
+   "mean_eff": 0.9625551999999999,
+   "tool_calls_p50": 61.0,
+   "tool_calls_max": 95,
+   "turns_max": 51,
+   "output_tokens_mean": 10994.3,
+   "input_tokens_mean": 372856.6
+  }
+ }
+}
