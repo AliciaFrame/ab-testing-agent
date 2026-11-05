@@ -4,9 +4,189 @@
  "status": "running",
  "fine_tuned_model": null,
  "error": null,
- "latest_metrics": null,
+ "latest_metrics": {
+  "step": 5,
+  "train_mean_reward": 0.9067557543174343,
+  "full_valid_mean_reward": 0.8834195933333334,
+  "full_valid_mean_parse_error": 0,
+  "completion_tokens_mean": 3302.9198473282445,
+  "usage": {
+   "samples": {
+    "train_reasoning_tokens_mean": 389.6890192791283,
+    "valid_reasoning_tokens_mean": 362.7871064467766,
+    "train_reasoning_tokens_count": 1193,
+    "valid_reasoning_tokens_count": 667
+   }
+  },
+  "sampling_duration": 16.20609139640195,
+  "training_duration": 0.3623025395752241,
+  "eval_duration": 6.604423696439093,
+  "total_duration": 23.172817632416262,
+  "reasoning_tokens_mean": 389.6890192791283,
+  "errors": {
+   "graders": [
+    {
+     "name": "grader-b6be79562e9b",
+     "type": "endpoint",
+     "errors": {
+      "train_sample_parse_error_mean": 0,
+      "train_sample_parse_error_count": 0,
+      "train_invalid_variable_error_mean": 0,
+      "train_invalid_variable_error_count": 0,
+      "train_other_error_mean": 0.030534351145038167,
+      "train_other_error_count": 8,
+      "valid_sample_parse_error_mean": 0,
+      "valid_sample_parse_error_count": 0,
+      "valid_invalid_variable_error_mean": 0,
+      "valid_invalid_variable_error_count": 0,
+      "valid_other_error_mean": 0.006666666666666667,
+      "valid_other_error_count": 1
+     }
+    }
+   ]
+  },
+  "scores": {
+   "graders": [
+    {
+     "name": "grader-b6be79562e9b",
+     "type": "endpoint",
+     "train_reward_mean": 0.9307226181102362,
+     "valid_reward_mean": 0.8893485838926172
+    }
+   ]
+  },
+  "timing": {
+   "graders": [
+    {
+     "name": "grader-b6be79562e9b",
+     "type": "endpoint",
+     "timing": {
+      "train_execution_latency_mean": 0.7083079997478551,
+      "train_execution_latency_count": 262,
+      "valid_execution_latency_mean": 0.7120661176741123,
+      "valid_execution_latency_count": 150
+     }
+    }
+   ]
+  },
+  "train_tool_calls_to_list_tests": 0.5152671755725191,
+  "train_token_usage_mean_list_tests": 2144.902985074627,
+  "train_latency_list_tests": 0.5530533814566461,
+  "train_error_count_list_tests": 0,
+  "valid_tool_calls_to_list_tests": 0.4,
+  "valid_token_usage_mean_list_tests": 2369,
+  "valid_latency_list_tests": 0.5502824715649088,
+  "valid_error_count_list_tests": 0,
+  "train_tool_calls_to_get_test": 0.48854961832061067,
+  "train_token_usage_mean_get_test": 418.75,
+  "train_latency_get_test": 0.5864010994919227,
+  "train_error_count_get_test": 0,
+  "valid_tool_calls_to_get_test": 0.6,
+  "valid_token_usage_mean_get_test": 465.6666666666667,
+  "valid_latency_get_test": 0.589993234227101,
+  "valid_error_count_get_test": 0,
+  "train_tool_calls_to_check_sample_ratio": 8.408396946564885,
+  "train_token_usage_mean_check_sample_ratio": 62.958015267175576,
+  "train_latency_check_sample_ratio": 0.6325984892278966,
+  "train_error_count_check_sample_ratio": 0,
+  "valid_tool_calls_to_check_sample_ratio": 7.213333333333333,
+  "valid_token_usage_mean_check_sample_ratio": 62.96,
+  "valid_latency_check_sample_ratio": 0.5965768781366447,
+  "valid_error_count_check_sample_ratio": 0,
+  "train_tool_calls_to_compare_arms": 14.732824427480915,
+  "train_token_usage_mean_compare_arms": 117.00751879699249,
+  "train_latency_compare_arms": 0.6283546830072326,
+  "train_error_count_compare_arms": 0,
+  "valid_tool_calls_to_compare_arms": 9.933333333333334,
+  "valid_token_usage_mean_compare_arms": 115.89690721649484,
+  "valid_latency_compare_arms": 0.5331293284297758,
+  "valid_error_count_compare_arms": 0,
+  "train_tool_calls_to_power_calc": 3.9083969465648853,
+  "train_token_usage_mean_power_calc": 10,
+  "train_latency_power_calc": 0.5429519671043663,
+  "train_error_count_power_calc": 0,
+  "valid_tool_calls_to_power_calc": 2.3133333333333335,
+  "valid_token_usage_mean_power_calc": 10,
+  "valid_latency_power_calc": 0.5250213415494986,
+  "valid_error_count_power_calc": 0,
+  "train_tool_calls_to_calculate": 1.683206106870229,
+  "train_token_usage_mean_calculate": 23.112299465240643,
+  "train_latency_calculate": 0.5218800968206662,
+  "train_error_count_calculate": 0,
+  "valid_tool_calls_to_calculate": 1.36,
+  "valid_token_usage_mean_calculate": 47.79207920792079,
+  "valid_latency_calculate": 0.5185122989984875,
+  "valid_error_count_calculate": 0,
+  "train_tool_calls_to_ship_package": 0.12213740458015267,
+  "train_token_usage_mean_ship_package": 32,
+  "train_latency_ship_package": 0.5197513497550972,
+  "train_error_count_ship_package": 0,
+  "valid_tool_calls_to_ship_package": 0.06666666666666667,
+  "valid_token_usage_mean_ship_package": 31,
+  "valid_latency_ship_package": 0.529271608311683,
+  "valid_error_count_ship_package": 0,
+  "train_tool_calls_to_notify_editor": 0,
+  "train_error_count_notify_editor": 0,
+  "valid_tool_calls_to_notify_editor": 0.06666666666666667,
+  "valid_token_usage_mean_notify_editor": 26,
+  "valid_latency_notify_editor": 0.5216295898891985,
+  "valid_error_count_notify_editor": 0,
+  "train_tool_calls_to_submit_verdict": 0.48854961832061067,
+  "train_token_usage_mean_submit_verdict": 7,
+  "train_latency_submit_verdict": 0.5179072192913736,
+  "train_error_count_submit_verdict": 0,
+  "valid_tool_calls_to_submit_verdict": 0.6,
+  "valid_token_usage_mean_submit_verdict": 7,
+  "valid_latency_submit_verdict": 0.5458355276534955,
+  "valid_error_count_submit_verdict": 0,
+  "train_tool_calls_to_submit_scorecard": 0.26717557251908397,
+  "train_token_usage_mean_submit_scorecard": 7,
+  "train_latency_submit_scorecard": 0.48527671946212647,
+  "train_error_count_submit_scorecard": 0,
+  "valid_tool_calls_to_submit_scorecard": 0.2,
+  "valid_token_usage_mean_submit_scorecard": 7,
+  "valid_latency_submit_scorecard": 0.4926294439782699,
+  "valid_error_count_submit_scorecard": 0,
+  "train_tool_calls_to_submit_plan": 0.24427480916030533,
+  "train_token_usage_mean_submit_plan": 7,
+  "train_latency_submit_plan": 0.5105313399399165,
+  "train_error_count_submit_plan": 0,
+  "valid_tool_calls_to_submit_plan": 0.2,
+  "valid_token_usage_mean_submit_plan": 7,
+  "valid_latency_submit_plan": 0.5207937637654444,
+  "valid_error_count_submit_plan": 0,
+  "valid_reasoning_tokens_mean": 362.7871064467766
+ },
  "checkpoints": [],
  "events": [
+  {
+   "created_at": 1793884780,
+   "message": "Step 5: training mean reward=0.9067557543174343"
+  },
+  {
+   "created_at": 1793881386,
+   "message": "Step 1: training mean reward=0.874631392844742"
+  },
+  {
+   "created_at": 1793880784,
+   "message": "Created results file: file-12c72085e839447c93f2609ae6131418"
+  },
+  {
+   "created_at": 1793880750,
+   "message": "Step 0: training mean reward="
+  },
+  {
+   "created_at": 1793880196,
+   "message": "Created Eval=eval_6aec7082a1ac8191828da6db281f5e8c to evaluate outputs on the validation dataset during finetuning."
+  },
+  {
+   "created_at": 1793880196,
+   "message": "Created Eval=eval_6aec7082a1ac8191828da6db281f5e8c to evaluate outputs on the validation dataset during finetuning."
+  },
+  {
+   "created_at": 1793879103,
+   "message": "Training started."
+  },
   {
    "created_at": 1793850018,
    "message": "Job queued, waiting for GPUs."
@@ -38,10 +218,6 @@
   {
    "created_at": 1793849204,
    "message": "Preprocessing running for file training file."
-  },
-  {
-   "created_at": 1793848521,
-   "message": "Job enqueued. Waiting for jobs ahead to complete."
   }
  ]
 }

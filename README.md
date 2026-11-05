@@ -27,14 +27,18 @@ from the original rules, split by task.
 | Decision-1 router + six task specialists | 83.0% | 32.8k |
 | + incident date checks (round 3) | 88.9% | 33.8k |
 | + prompt fixes, batched portfolio (round 4) | 92.6% | 28.9k |
-| **+ threshold rules (round 5, deployed)** | **94.8%** | **31.4k** |
+| + threshold rules (round 5) | 94.8% | 31.4k |
+| **+ RFT, efficiency reward (deployed v9)** | **99.3%** | 54.2k |
+| RFT model except portfolio (option, not deployed) | 96.7% | 35.1k |
 | GPT-6 Sol, same router, prompts and tools | 97.4% | 29.4k |
 
-- **Matches Sol** on validity, early look, headline vs image (100%) and portfolio (84.4%).
-- **Remaining gaps:** ship decision 88.9% vs 100%, planning 95.6% vs 100%.
-- **Tokens:** MAI spends about 85% of its output on reasoning (Sol about 12%). Lowering
-  reasoning effort in the prompt cost accuracy, so it is used only for validity. RFT is the next
-  lever ([rft/](rft/README.md), in progress).
+- **RFT passes Sol:** the fine-tuned MAI scores 99.3% vs 97.4%, with ship decision and
+  portfolio at 100%. Only 2 of 270 episodes fail (one attribution, one planning).
+- **But it costs tokens:** output tokens fell sharply (portfolio 18.1k to 10.3k), but the model
+  stopped batching tool calls, so portfolio input nearly tripled. Total: 54.2k per episode vs
+  31.4k for v8 and 29.4k for Sol. Keeping the base model for portfolio gives 96.7% at 35.1k.
+- **Low reasoning effort** cut tokens but cost accuracy in both prompting and RFT (RFT at low
+  effort: portfolio 57.8%), so it is used only for validity.
 - **Caveat:** prompts were selected on the development split, so these are selection-set
   scores. The final split (150 cases) is sealed and has not been run.
 
@@ -45,7 +49,8 @@ share, model identities, policy hashes and every acceptance check.
 
 ## The best agent
 
-Hosted Foundry agent `ab-testing-agent` **version 8**. Each request goes through two stages:
+Hosted Foundry agent `ab-testing-agent` **version 9**: the round-5 specialists on the RFT model
+`abtest-rft-eff` (version 8 is the same agent on base MAI-Code-1.1-Flash). Each request goes through two stages:
 
 1. **Router.** [`agent/router.py`](agent/router.py) asks **Microsoft Decision-1** (preview) to pick one
    of six tasks or "ambiguous", from the request text and the referenced tests' status only.
@@ -79,6 +84,7 @@ python scripts\run_eval.py --split development --runs 3 --label my-run --workers
 | Round 3 | Validity and early look check incident-window membership with `calculate` instead of comparing dates by eye. | [manifest](runs/routed-mai-optimized/optimization.json) |
 | Round 4 | Failure analysis plus GPT-5.2 proposals ([experiments](experiments/round4.json)): new planning and ship-decision prompts, numeric incident and Holm checks for attribution, low effort for validity, batched portfolio tool calls (-40% portfolio tokens for one extra failure, accepted as a recorded user decision). | [manifest](runs/routed-mai-r4/optimization.json) |
 | Round 5 | Targeted the remaining near-threshold number comparisons ([experiments](experiments/round5.json)): a scientific-notation rule and list check for planning's 0.001 exclusion threshold, the incident date check for ship decision. GPT-6 Sol proposed alternatives; none beat the targeted fixes. | [manifest](runs/routed-mai-r5/optimization.json) |
+| RFT | Reinforcement fine-tuning on the train split with the canonical grader as reward, times an efficiency factor that only pays for correct answers ([rft/](rft/README.md)). Four configurations; the efficiency reward at medium effort won. | [evaluation](rft/jobs/abtest-rft-eff/evaluation.json) |
 
 Candidates are searched on the optimizer split, then accepted on all 45 development episodes of
 their task by [`scripts/optimize_specialists.py`](scripts/optimize_specialists.py); a round is

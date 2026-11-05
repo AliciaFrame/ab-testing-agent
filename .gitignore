@@ -47,3 +47,4 @@ rft/calibration/*.log
 rft/jobs/monitor.log
 rft/jobs/*/evaluate.log
 rft/jobs/*/evaluate.err
+!/runs/rft-eff/

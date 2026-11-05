@@ -1,0 +1,398 @@
+{
+  "version": "9",
+  "case_id": "development-portfolio-000",
+  "response_status": "completed",
+  "output_text": "Scorecard submitted.\n\nSummary: SHIP 1, KEEP_TESTING 11, NO_DIFFERENCE 0, INVALID 0.\n\nShip:\n- 54e7b5fd313135001a880000 / A\n\nAll 12 tests were valid (none invalid by sample ratio or incident window). Only one test met the Holm-adjusted leader-vs-others criterion for a ship verdict; the remaining tests were underpowered relative to the required impressions for a NO_DIFFERENCE call, so they stayed KEEP_TESTING.",
+  "output_tools": [
+    {
+      "name": "list_tests",
+      "arguments": "{\"start\": \"2015-02-20T22:00\", \"end\": \"2015-02-21T02:00\"}",
+      "output": "{\"count\": 12, \"truncated\": false, \"tests\": [{\"test_id\": \"54e7b2db3131350028650000\", \"started\": \"2015-02-20T22:19:57\", \"arms\": [{\"arm_id\": \"A\", \"impressions\": 3533, \"clicks\": 15}, {\"arm_id\": \"B\", \"impressions\": 3500, \"clicks\": 30}, {\"arm_id\": \"C\", \"impressions\": 3588, \"clicks\": 25}, {\"arm_id\": \"D\", \"impressions\": 3628, \"clicks\": 25}]}, {\"test_id\": \"54e7b337646238002c850000\", \"started\": \"2015-02-20T22:20:45\", \"arms\": [{\"arm_id\": \"A\", \"impressions\": 3589, \"clicks\": 36}, {\"arm_id\": \"B\", \"impressions\": 3475, \"clicks\": 48}, {\"arm_id\": \"C\", \"impressions\": 3532, \"clicks\": 32}, {\"arm_id\": \"D\", \"impressions\": 3533, \"clicks\": 46}, {\"arm_id\": \"E\", \"impressions\": 3676, \"clicks\": 32}]}, {\"test_id\": \"54e7b3b2646238001c6a0000\", \"started\": \"2015-02-20T22:22:42\", \"arms\": [{\"arm_id\": \"A\", \"impressions\": 3641, \"clicks\": 84}, {\"arm_id\": \"B\", \"impressions\": 3538, \"clicks\": 114}, {\"arm_id\": \"C\", \"impressions\": 3571, \"clicks\": 111}, {\"arm_id\": \"D\", \"impressions\": 3546, \"clicks\": 90}]}, {\"test_id\": \"54e7b35c313135000c7e0000\", \"started\": \"2015-02-20T22:31:51\", \"arms\": [{\"arm_id\": \"A\", \"impressions\": 3640, \"clicks\": 45}, {\"arm_id\": \"B\", \"impressions\": 3508, \"clicks\": 30}, {\"arm_id\": \"C\", \"impressions\": 3615, \"clicks\": 30}, {\"arm_id\": \"D\", \"impressions\": 3568, \"clicks\": 44}, {\"arm_id\": \"E\", \"impressions\": 3520, \"clicks\": 38}, {\"arm_id\": \"F\", \"impressions\": 3489, \"clicks\": 23}]}, {\"test_id\": \"54e7b5fd313135001a880000\", \"started\": \"2015-02-20T22:36:34\", \"arms\": [{\"arm_id\": \"A\", \"impressions\": 3570, \"clicks\": 53}, {\"arm_id\": \"B\", \"impressions\": 3618, \"clicks\": 27}]}, {\"test_id\": \"54e7c005646238002c980000\", \"started\": \"2015-02-20T23:15:39\", \"arms\": [{\"arm_id\": \"A\", \"impressions\": 3518, \"clicks\": 47}, {\"arm_id\": \"B\", \"impressions\": 3493, \"clicks\": 20}, {\"arm_id\": \"C\", \"impressions\": 3593, \"clicks\": 54}, {\"arm_id\": \"D\", \"impressions\": 3530, \"clicks\": 26}, {\"arm_id\": \"E\", \"impressions\": 3626, \"clicks\": 21}]}, {\"test_id\": \"54e78c6d313135001a2f0000\", \"started\": \"2015-02-20T23:19:34\", \"arms\": [{\"arm_id\": \"A\", \"impressions\": 3457, \"clicks\": 36}, {\"arm_id\": \"B\", \"impressions\": 3510, \"clicks\": 18}, {\"arm_id\": \"C\", \"impressions\": 3624, \"clicks\": 35}, {\"arm_id\": \"D\", \"impressions\": 3523, \"clicks\": 20}, {\"arm_id\": \"E\", \"impressions\": 3586, \"clicks\": 39}, {\"arm_id\": \"F\", \"impressions\": 3594, \"clicks\": 37}]}, {\"test_id\": \"54e7c0e6313135000c910000\", \"started\": \"2015-02-20T23:19:34\", \"arms\": [{\"arm_id\": \"A\", \"impressions\": 3531, \"clicks\": 11}, {\"arm_id\": \"B\", \"impressions\": 3619, \"clicks\": 9}, {\"arm_id\": \"C\", \"impressions\": 3579, \"clicks\": 7}, {\"arm_id\": \"D\", \"impressions\": 3544, \"clicks\": 6}, {\"arm_id\": \"E\", \"impressions\": 3515, \"clicks\": 10}]}, {\"test_id\": \"54e7c352303465001a040000\", \"started\": \"2015-02-20T23:29:22\", \"arms\": [{\"arm_id\": \"A\", \"impressions\": 3611, \"clicks\": 43}, {\"arm_id\": \"B\", \"impressions\": 3507, \"clicks\": 35}, {\"arm_id\": \"C\", \"impressions\": 3636, \"clicks\": 61}, {\"arm_id\": \"D\", \"impressions\": 3471, \"clicks\": 35}, {\"arm_id\": \"E\", \"impressions\": 3579, \"clicks\": 37}, {\"arm_id\": \"F\", \"impressions\": 3489, \"clicks\": 46}, {\"arm_id\": \"G\", \"impressions\": 3573, \"clicks\": 29}]}, {\"test_id\": \"54e7c5673034650028120000\", \"started\": \"2015-02-20T23:38:15\", \"arms\": [{\"arm_id\": \"A\", \"impressions\": 3634, \"clicks\": 50}, {\"arm_id\": \"B\", \"impressions\": 3448, \"clicks\": 39}, {\"arm_id\": \"C\", \"impressions\": 3555, \"clicks\": 69}, {\"arm_id\": \"D\", \"impressions\": 3580, \"clicks\": 48}, {\"arm_id\": \"E\", \"impressions\": 3534, \"clicks\": 80}, {\"arm_id\": \"F\", \"impressions\": 3609, \"clicks\": 21}, {\"arm_id\": \"G\", \"impressions\": 3464, \"clicks\": 42}]}, {\"test_id\": \"54e7cb30303465000c160000\", \"started\": \"2015-02-21T00:02:56\", \"arms\": [{\"arm_id\": \"A\", \"impressions\": 3536, \"clicks\": 22}, {\"arm_id\": \"B\", \"impressions\": 3625, \"clicks\": 20}, {\"arm_id\": \"C\", \"impressions\": 3536, \"clicks\": 23}, {\"arm_id\": \"D\", \"impressions\": 3521, \"clicks\": 32}, {\"arm_id\": \"E\", \"impressions\": 3538, \"clicks\": 20}]}, {\"test_id\": \"54e7cf0e3234300028170000\", \"started\": \"2015-02-21T00:19:31\", \"arms\": [{\"arm_id\": \"A\", \"impressions\": 3456, \"clicks\": 14}, {\"arm_id\": \"B\", \"impressions\": 3595, \"clicks\": 23}, {\"arm_id\": \"C\", \"impressions\": 3619, \"clicks\": 21}, {\"arm_id\": \"D\", \"impressions\": 3492, \"clicks\": 21}, {\"arm_id\": \"E\", \"impressions\": 3565, \"clicks\": 29}]}]}"
+    },
+    {
+      "name": "check_sample_ratio",
+      "arguments": "{\"test_id\": \"54e7b2db3131350028650000\"}",
+      "output": "{\"test_id\": \"54e7b2db3131350028650000\", \"chi2\": 2.7277001894869817, \"df\": 3, \"p_value\": 0.43554044371203615, \"expected_per_arm\": 3562.25}"
+    },
+    {
+      "name": "check_sample_ratio",
+      "arguments": "{\"test_id\": \"54e7b337646238002c850000\"}",
+      "output": "{\"test_id\": \"54e7b337646238002c850000\", \"chi2\": 6.4672844706543104, \"df\": 4, \"p_value\": 0.16686343356198632, \"expected_per_arm\": 3561.0}"
+    },
+    {
+      "name": "check_sample_ratio",
+      "arguments": "{\"test_id\": \"54e7b3b2646238001c6a0000\"}",
+      "output": "{\"test_id\": \"54e7b3b2646238001c6a0000\", \"chi2\": 1.8405148293228875, \"df\": 3, \"p_value\": 0.606158389774696, \"expected_per_arm\": 3574.0}"
+    },
+    {
+      "name": "check_sample_ratio",
+      "arguments": "{\"test_id\": \"54e7b35c313135000c7e0000\"}",
+      "output": "{\"test_id\": \"54e7b35c313135000c7e0000\", \"chi2\": 5.276663542642924, \"df\": 5, \"p_value\": 0.38305700940005305, \"expected_per_arm\": 3556.6666666666665}"
+    },
+    {
+      "name": "check_sample_ratio",
+      "arguments": "{\"test_id\": \"54e7b5fd313135001a880000\"}",
+      "output": "{\"test_id\": \"54e7b5fd313135001a880000\", \"chi2\": 0.32053422370617696, \"df\": 1, \"p_value\": 0.5712867728379064, \"expected_per_arm\": 3594.0}"
+    },
+    {
+      "name": "check_sample_ratio",
+      "arguments": "{\"test_id\": \"54e7c005646238002c980000\"}",
+      "output": "{\"test_id\": \"54e7c005646238002c980000\", \"chi2\": 3.4566441441441444, \"df\": 4, \"p_value\": 0.48450124526434035, \"expected_per_arm\": 3552.0}"
+    },
+    {
+      "name": "check_sample_ratio",
+      "arguments": "{\"test_id\": \"54e78c6d313135001a2f0000\"}",
+      "output": "{\"test_id\": \"54e78c6d313135001a2f0000\", \"chi2\": 5.545224006762468, \"df\": 5, \"p_value\": 0.35301238464973655, \"expected_per_arm\": 3549.0}"
+    },
+    {
+      "name": "check_sample_ratio",
+      "arguments": "{\"test_id\": \"54e7c0e6313135000c910000\"}",
+      "output": "{\"test_id\": \"54e7c0e6313135000c910000\", \"chi2\": 1.949404092646728, \"df\": 4, \"p_value\": 0.7450644740692876, \"expected_per_arm\": 3557.6}"
+    },
+    {
+      "name": "check_sample_ratio",
+      "arguments": "{\"test_id\": \"54e7c352303465001a040000\"}",
+      "output": "{\"test_id\": \"54e7c352303465001a040000\", \"chi2\": 6.829807769645299, \"df\": 6, \"p_value\": 0.33687378788506234, \"expected_per_arm\": 3552.285714285714}"
+    },
+    {
+      "name": "check_sample_ratio",
+      "arguments": "{\"test_id\": \"54e7c5673034650028120000\"}",
+      "output": "{\"test_id\": \"54e7c5673034650028120000\", \"chi2\": 8.296406703190462, \"df\": 6, \"p_value\": 0.21718208729437682, \"expected_per_arm\": 3546.285714285714}"
+    },
+    {
+      "name": "check_sample_ratio",
+      "arguments": "{\"test_id\": \"54e7cb30303465000c160000\"}",
+      "output": "{\"test_id\": \"54e7cb30303465000c160000\", \"chi2\": 1.9697003829691373, \"df\": 4, \"p_value\": 0.7413319706167507, \"expected_per_arm\": 3551.2}"
+    },
+    {
+      "name": "check_sample_ratio",
+      "arguments": "{\"test_id\": \"54e7cf0e3234300028170000\"}",
+      "output": "{\"test_id\": \"54e7cf0e3234300028170000\", \"chi2\": 5.388729057370114, \"df\": 4, \"p_value\": 0.249684796531919, \"expected_per_arm\": 3545.4}"
+    },
+    {
+      "name": "compare_arms",
+      "arguments": "{\"test_id\": \"54e7b2db3131350028650000\", \"arm_a\": \"B\", \"arm_b\": \"A\"}",
+      "output": "{\"test_id\": \"54e7b2db3131350028650000\", \"arm_a\": \"B\", \"arm_b\": \"A\", \"ctr_a\": 0.008571428571428572, \"ctr_b\": 0.0042456835550523635, \"absolute_difference\": 0.004325745016376208, \"relative_lift\": 1.018857142857143, \"z\": 2.274858356871581, \"p_value\": 0.022914428147850486}"
+    },
+    {
+      "name": "compare_arms",
+      "arguments": "{\"test_id\": \"54e7b2db3131350028650000\", \"arm_a\": \"B\", \"arm_b\": \"C\"}",
+      "output": "{\"test_id\": \"54e7b2db3131350028650000\", \"arm_a\": \"B\", \"arm_b\": \"C\", \"ctr_a\": 0.008571428571428572, \"ctr_b\": 0.006967670011148272, \"absolute_difference\": 0.0016037585602802999, \"relative_lift\": 0.23017142857142864, \"z\": 0.7693242601302519, \"p_value\": 0.4417008387580288}"
+    },
+    {
+      "name": "compare_arms",
+      "arguments": "{\"test_id\": \"54e7b2db3131350028650000\", \"arm_a\": \"B\", \"arm_b\": \"D\"}",
+      "output": "{\"test_id\": \"54e7b2db3131350028650000\", \"arm_a\": \"B\", \"arm_b\": \"D\", \"ctr_a\": 0.008571428571428572, \"ctr_b\": 0.006890848952590959, \"absolute_difference\": 0.0016805796188376129, \"relative_lift\": 0.24388571428571437, \"z\": 0.8106388722243484, \"p_value\": 0.4175730867453086}"
+    },
+    {
+      "name": "compare_arms",
+      "arguments": "{\"test_id\": \"54e7b337646238002c850000\", \"arm_a\": \"B\", \"arm_b\": \"A\"}",
+      "output": "{\"test_id\": \"54e7b337646238002c850000\", \"arm_a\": \"B\", \"arm_b\": \"A\", \"ctr_a\": 0.01381294964028777, \"ctr_b\": 0.010030649205906938, \"absolute_difference\": 0.0037823004343808322, \"relative_lift\": 0.37707434052757793, \"z\": 1.4661491305915215, \"p_value\": 0.1426076634811666}"
+    },
+    {
+      "name": "compare_arms",
+      "arguments": "{\"test_id\": \"54e7b337646238002c850000\", \"arm_a\": \"B\", \"arm_b\": \"C\"}",
+      "output": "{\"test_id\": \"54e7b337646238002c850000\", \"arm_a\": \"B\", \"arm_b\": \"C\", \"ctr_a\": 0.01381294964028777, \"ctr_b\": 0.009060022650056626, \"absolute_difference\": 0.004752926990231145, \"relative_lift\": 0.5246043165467625, \"z\": 1.872394541981172, \"p_value\": 0.061152039589234625}"
+    },
+    {
+      "name": "compare_arms",
+      "arguments": "{\"test_id\": \"54e7b337646238002c850000\", \"arm_a\": \"B\", \"arm_b\": \"D\"}",
+      "output": "{\"test_id\": \"54e7b337646238002c850000\", \"arm_a\": \"B\", \"arm_b\": \"D\", \"ctr_a\": 0.01381294964028777, \"ctr_b\": 0.013020096235493914, \"absolute_difference\": 0.000792853404793856, \"relative_lift\": 0.06089458867688464, \"z\": 0.2884765735050586, \"p_value\": 0.7729819603001878}"
+    },
+    {
+      "name": "compare_arms",
+      "arguments": "{\"test_id\": \"54e7b337646238002c850000\", \"arm_a\": \"B\", \"arm_b\": \"E\"}",
+      "output": "{\"test_id\": \"54e7b337646238002c850000\", \"arm_a\": \"B\", \"arm_b\": \"E\", \"ctr_a\": 0.01381294964028777, \"ctr_b\": 0.008705114254624592, \"absolute_difference\": 0.005107835385663178, \"relative_lift\": 0.5867625899280576, \"z\": 2.0525796799611857, \"p_value\": 0.04011335996468202}"
+    },
+    {
+      "name": "compare_arms",
+      "arguments": "{\"test_id\": \"54e7b3b2646238001c6a0000\", \"arm_a\": \"B\", \"arm_b\": \"A\"}",
+      "output": "{\"test_id\": \"54e7b3b2646238001c6a0000\", \"arm_a\": \"B\", \"arm_b\": \"A\", \"ctr_a\": 0.0322215941209723, \"ctr_b\": 0.023070585004119747, \"absolute_difference\": 0.009151009116852554, \"relative_lift\": 0.3966526689816684, \"z\": 2.367002977902235, \"p_value\": 0.017932788520506587}"
+    },
+    {
+      "name": "compare_arms",
+      "arguments": "{\"test_id\": \"54e7b3b2646238001c6a0000\", \"arm_a\": \"B\", \"arm_b\": \"C\"}",
+      "output": "{\"test_id\": \"54e7b3b2646238001c6a0000\", \"arm_a\": \"B\", \"arm_b\": \"C\", \"ctr_a\": 0.0322215941209723, \"ctr_b\": 0.03108373004760571, \"absolute_difference\": 0.0011378640733665894, \"relative_lift\": 0.03660641987380262, \"z\": 0.27400393003681445, \"p_value\": 0.7840816014701749}"
+    },
+    {
+      "name": "compare_arms",
+      "arguments": "{\"test_id\": \"54e7b3b2646238001c6a0000\", \"arm_a\": \"B\", \"arm_b\": \"D\"}",
+      "output": "{\"test_id\": \"54e7b3b2646238001c6a0000\", \"arm_a\": \"B\", \"arm_b\": \"D\", \"ctr_a\": 0.0322215941209723, \"ctr_b\": 0.025380710659898477, \"absolute_difference\": 0.006840883461073824, \"relative_lift\": 0.26953080836630866, \"z\": 1.721434273065276, \"p_value\": 0.08517204949915658}"
+    },
+    {
+      "name": "compare_arms",
+      "arguments": "{\"test_id\": \"54e7b35c313135000c7e0000\", \"arm_a\": \"A\", \"arm_b\": \"B\"}",
+      "output": "{\"test_id\": \"54e7b35c313135000c7e0000\", \"arm_a\": \"A\", \"arm_b\": \"B\", \"ctr_a\": 0.012362637362637362, \"ctr_b\": 0.00855188141391106, \"absolute_difference\": 0.0038107559487263014, \"relative_lift\": 0.4456043956043955, \"z\": 1.5807072004658997, \"p_value\": 0.11394500124188661}"
+    },
+    {
+      "name": "compare_arms",
+      "arguments": "{\"test_id\": \"54e7b35c313135000c7e0000\", \"arm_a\": \"A\", \"arm_b\": \"C\"}",
+      "output": "{\"test_id\": \"54e7b35c313135000c7e0000\", \"arm_a\": \"A\", \"arm_b\": \"C\", \"ctr_a\": 0.012362637362637362, \"ctr_b\": 0.008298755186721992, \"absolute_difference\": 0.00406388217591537, \"relative_lift\": 0.4896978021978021, \"z\": 1.7110858709116206, \"p_value\": 0.08706526202941538}"
+    },
+    {
+      "name": "compare_arms",
+      "arguments": "{\"test_id\": \"54e7b35c313135000c7e0000\", \"arm_a\": \"A\", \"arm_b\": \"D\"}",
+      "output": "{\"test_id\": \"54e7b35c313135000c7e0000\", \"arm_a\": \"A\", \"arm_b\": \"D\", \"ctr_a\": 0.012362637362637362, \"ctr_b\": 0.01233183856502242, \"absolute_difference\": 3.079879761494139e-05, \"relative_lift\": 0.0024975024975025205, \"z\": 0.01183858415912956, \"p_value\": 0.9905543971149877}"
+    },
+    {
+      "name": "compare_arms",
+      "arguments": "{\"test_id\": \"54e7b35c313135000c7e0000\", \"arm_a\": \"A\", \"arm_b\": \"E\"}",
+      "output": "{\"test_id\": \"54e7b35c313135000c7e0000\", \"arm_a\": \"A\", \"arm_b\": \"E\", \"ctr_a\": 0.012362637362637362, \"ctr_b\": 0.010795454545454546, \"absolute_difference\": 0.0015671828171828165, \"relative_lift\": 0.14517061885482932, \"z\": 0.6193477326983743, \"p_value\": 0.5356873056192268}"
+    },
+    {
+      "name": "compare_arms",
+      "arguments": "{\"test_id\": \"54e7b35c313135000c7e0000\", \"arm_a\": \"A\", \"arm_b\": \"F\"}",
+      "output": "{\"test_id\": \"54e7b35c313135000c7e0000\", \"arm_a\": \"A\", \"arm_b\": \"F\", \"ctr_a\": 0.012362637362637362, \"ctr_b\": 0.006592146746918888, \"absolute_difference\": 0.005770490615718474, \"relative_lift\": 0.875358337314859, \"z\": 2.505766858347728, \"p_value\": 0.012218615661281311}"
+    },
+    {
+      "name": "compare_arms",
+      "arguments": "{\"test_id\": \"54e7b5fd313135001a880000\", \"arm_a\": \"A\", \"arm_b\": \"B\"}",
+      "output": "{\"test_id\": \"54e7b5fd313135001a880000\", \"arm_a\": \"A\", \"arm_b\": \"B\", \"ctr_a\": 0.01484593837535014, \"ctr_b\": 0.007462686567164179, \"absolute_difference\": 0.00738325180818596, \"relative_lift\": 0.9893557422969187, \"z\": 2.9833307250734915, \"p_value\": 0.0028512970815169542}"
+    },
+    {
+      "name": "compare_arms",
+      "arguments": "{\"test_id\": \"54e7c005646238002c980000\", \"arm_a\": \"C\", \"arm_b\": \"A\"}",
+      "output": "{\"test_id\": \"54e7c005646238002c980000\", \"arm_a\": \"C\", \"arm_b\": \"A\", \"ctr_a\": 0.015029223490119677, \"ctr_b\": 0.01335986355884025, \"absolute_difference\": 0.0016693599312794273, \"relative_lift\": 0.12495336677108565, \"z\": 0.5948016365370498, \"p_value\": 0.5519760735168161}"
+    },
+    {
+      "name": "compare_arms",
+      "arguments": "{\"test_id\": \"54e7c005646238002c980000\", \"arm_a\": \"C\", \"arm_b\": \"B\"}",
+      "output": "{\"test_id\": \"54e7c005646238002c980000\", \"arm_a\": \"C\", \"arm_b\": \"B\", \"ctr_a\": 0.015029223490119677, \"ctr_b\": 0.005725737188663041, \"absolute_difference\": 0.009303486301456637, \"relative_lift\": 1.6248538825494017, \"z\": 3.851566355346592, \"p_value\": 0.00011736471840445513}"
+    },
+    {
+      "name": "compare_arms",
+      "arguments": "{\"test_id\": \"54e7c005646238002c980000\", \"arm_a\": \"C\", \"arm_b\": \"D\"}",
+      "output": "{\"test_id\": \"54e7c005646238002c980000\", \"arm_a\": \"C\", \"arm_b\": \"D\", \"ctr_a\": 0.015029223490119677, \"ctr_b\": 0.0073654390934844195, \"absolute_difference\": 0.0076637843966352575, \"relative_lift\": 1.0405061123124022, \"z\": 3.068787907173918, \"p_value\": 0.0021492911923944387}"
+    },
+    {
+      "name": "compare_arms",
+      "arguments": "{\"test_id\": \"54e7c005646238002c980000\", \"arm_a\": \"C\", \"arm_b\": \"E\"}",
+      "output": "{\"test_id\": \"54e7c005646238002c980000\", \"arm_a\": \"C\", \"arm_b\": \"E\", \"ctr_a\": 0.015029223490119677, \"ctr_b\": 0.005791505791505791, \"absolute_difference\": 0.009237717698613885, \"relative_lift\": 1.5950459226273308, \"z\": 3.870297602996995, \"p_value\": 0.00010870257262272237}"
+    },
+    {
+      "name": "compare_arms",
+      "arguments": "{\"test_id\": \"54e78c6d313135001a2f0000\", \"arm_a\": \"E\", \"arm_b\": \"A\"}",
+      "output": "{\"test_id\": \"54e78c6d313135001a2f0000\", \"arm_a\": \"E\", \"arm_b\": \"A\", \"ctr_a\": 0.010875627440044618, \"ctr_b\": 0.01041365345675441, \"absolute_difference\": 0.00046197398329020714, \"relative_lift\": 0.04436233500650684, \"z\": 0.18882804302842832, \"p_value\": 0.8502275920529894}"
+    },
+    {
+      "name": "compare_arms",
+      "arguments": "{\"test_id\": \"54e78c6d313135001a2f0000\", \"arm_a\": \"E\", \"arm_b\": \"B\"}",
+      "output": "{\"test_id\": \"54e78c6d313135001a2f0000\", \"arm_a\": \"E\", \"arm_b\": \"B\", \"ctr_a\": 0.010875627440044618, \"ctr_b\": 0.005128205128205128, \"absolute_difference\": 0.005747422311839489, \"relative_lift\": 1.1207473508087005, \"z\": 2.7117253648612043, \"p_value\": 0.006693402374813795}"
+    },
+    {
+      "name": "compare_arms",
+      "arguments": "{\"test_id\": \"54e78c6d313135001a2f0000\", \"arm_a\": \"E\", \"arm_b\": \"C\"}",
+      "output": "{\"test_id\": \"54e78c6d313135001a2f0000\", \"arm_a\": \"E\", \"arm_b\": \"C\", \"ctr_a\": 0.010875627440044618, \"ctr_b\": 0.009657836644591612, \"absolute_difference\": 0.0012177907954530054, \"relative_lift\": 0.1260935383634769, \"z\": 0.5129750896962408, \"p_value\": 0.6079687457989007}"
+    },
+    {
+      "name": "compare_arms",
+      "arguments": "{\"test_id\": \"54e78c6d313135001a2f0000\", \"arm_a\": \"E\", \"arm_b\": \"D\"}",
+      "output": "{\"test_id\": \"54e78c6d313135001a2f0000\", \"arm_a\": \"E\", \"arm_b\": \"D\", \"ctr_a\": 0.010875627440044618, \"ctr_b\": 0.005676979846721544, \"absolute_difference\": 0.005198647593323074, \"relative_lift\": 0.9157417735638594, \"z\": 2.415658483548793, \"p_value\": 0.01570678549773311}"
+    },
+    {
+      "name": "compare_arms",
+      "arguments": "{\"test_id\": \"54e78c6d313135001a2f0000\", \"arm_a\": \"E\", \"arm_b\": \"F\"}",
+      "output": "{\"test_id\": \"54e78c6d313135001a2f0000\", \"arm_a\": \"E\", \"arm_b\": \"F\", \"ctr_a\": 0.010875627440044618, \"ctr_b\": 0.010294936004451864, \"absolute_difference\": 0.0005806914355927541, \"relative_lift\": 0.05640554106811779, \"z\": 0.2404050295818718, \"p_value\": 0.8100162794825417}"
+    },
+    {
+      "name": "compare_arms",
+      "arguments": "{\"test_id\": \"54e7c0e6313135000c910000\", \"arm_a\": \"A\", \"arm_b\": \"B\"}",
+      "output": "{\"test_id\": \"54e7c0e6313135000c910000\", \"arm_a\": \"A\", \"arm_b\": \"B\", \"ctr_a\": 0.003115264797507788, \"ctr_b\": 0.0024868748273003593, \"absolute_difference\": 0.0006283899702074288, \"relative_lift\": 0.2526825891311872, \"z\": 0.5029972991185716, \"p_value\": 0.6149661710741579}"
+    },
+    {
+      "name": "compare_arms",
+      "arguments": "{\"test_id\": \"54e7c0e6313135000c910000\", \"arm_a\": \"A\", \"arm_b\": \"C\"}",
+      "output": "{\"test_id\": \"54e7c0e6313135000c910000\", \"arm_a\": \"A\", \"arm_b\": \"C\", \"ctr_a\": 0.003115264797507788, \"ctr_b\": 0.0019558535903883767, \"absolute_difference\": 0.0011594112071194114, \"relative_lift\": 0.5927903871829104, \"z\": 0.97270553323112, \"p_value\": 0.3306996744245402}"
+    },
+    {
+      "name": "compare_arms",
+      "arguments": "{\"test_id\": \"54e7c0e6313135000c910000\", \"arm_a\": \"A\", \"arm_b\": \"D\"}",
+      "output": "{\"test_id\": \"54e7c0e6313135000c910000\", \"arm_a\": \"A\", \"arm_b\": \"D\", \"ctr_a\": 0.003115264797507788, \"ctr_b\": 0.001693002257336343, \"absolute_difference\": 0.001422262540171445, \"relative_lift\": 0.8400830737279336, \"z\": 1.2217248890585364, \"p_value\": 0.22181168090094017}"
+    },
+    {
+      "name": "compare_arms",
+      "arguments": "{\"test_id\": \"54e7c0e6313135000c910000\", \"arm_a\": \"A\", \"arm_b\": \"E\"}",
+      "output": "{\"test_id\": \"54e7c0e6313135000c910000\", \"arm_a\": \"A\", \"arm_b\": \"E\", \"ctr_a\": 0.003115264797507788, \"ctr_b\": 0.002844950213371266, \"absolute_difference\": 0.00027031458413652194, \"relative_lift\": 0.09501557632398745, \"z\": 0.208122727506883, \"p_value\": 0.8351331417041363}"
+    },
+    {
+      "name": "compare_arms",
+      "arguments": "{\"test_id\": \"54e7c352303465001a040000\", \"arm_a\": \"C\", \"arm_b\": \"A\"}",
+      "output": "{\"test_id\": \"54e7c352303465001a040000\", \"arm_a\": \"C\", \"arm_b\": \"A\", \"ctr_a\": 0.016776677667766776, \"ctr_b\": 0.011908058709498754, \"absolute_difference\": 0.004868618958268022, \"relative_lift\": 0.40885076879780996, \"z\": 1.742423032813053, \"p_value\": 0.08143444849131032}"
+    },
+    {
+      "name": "compare_arms",
+      "arguments": "{\"test_id\": \"54e7c352303465001a040000\", \"arm_a\": \"C\", \"arm_b\": \"B\"}",
+      "output": "{\"test_id\": \"54e7c352303465001a040000\", \"arm_a\": \"C\", \"arm_b\": \"B\", \"ctr_a\": 0.016776677667766776, \"ctr_b\": 0.00998003992015968, \"absolute_difference\": 0.0067966377476070955, \"relative_lift\": 0.681023102310231, \"z\": 2.493885534709376, \"p_value\": 0.012635328362937128}"
+    },
+    {
+      "name": "compare_arms",
+      "arguments": "{\"test_id\": \"54e7c352303465001a040000\", \"arm_a\": \"C\", \"arm_b\": \"D\"}",
+      "output": "{\"test_id\": \"54e7c352303465001a040000\", \"arm_a\": \"C\", \"arm_b\": \"D\", \"ctr_a\": 0.016776677667766776, \"ctr_b\": 0.010083549409392106, \"absolute_difference\": 0.00669312825837467, \"relative_lift\": 0.6637670909948137, \"z\": 2.4433515006593653, \"p_value\": 0.014551556801440997}"
+    },
+    {
+      "name": "compare_arms",
+      "arguments": "{\"test_id\": \"54e7c352303465001a040000\", \"arm_a\": \"C\", \"arm_b\": \"E\"}",
+      "output": "{\"test_id\": \"54e7c352303465001a040000\", \"arm_a\": \"C\", \"arm_b\": \"E\", \"ctr_a\": 0.016776677667766776, \"ctr_b\": 0.010338083263481419, \"absolute_difference\": 0.0064385944042853575, \"relative_lift\": 0.6228034965658729, \"z\": 2.3623296518724297, \"p_value\": 0.018160485508374232}"
+    },
+    {
+      "name": "compare_arms",
+      "arguments": "{\"test_id\": \"54e7c352303465001a040000\", \"arm_a\": \"C\", \"arm_b\": \"F\"}",
+      "output": "{\"test_id\": \"54e7c352303465001a040000\", \"arm_a\": \"C\", \"arm_b\": \"F\", \"ctr_a\": 0.016776677667766776, \"ctr_b\": 0.013184293493837776, \"absolute_difference\": 0.0035923841739290002, \"relative_lift\": 0.2724745300617018, \"z\": 1.2463472506828448, \"p_value\": 0.21263693790377425}"
+    },
+    {
+      "name": "compare_arms",
+      "arguments": "{\"test_id\": \"54e7c352303465001a040000\", \"arm_a\": \"C\", \"arm_b\": \"G\"}",
+      "output": "{\"test_id\": \"54e7c352303465001a040000\", \"arm_a\": \"C\", \"arm_b\": \"G\", \"ctr_a\": 0.016776677667766776, \"ctr_b\": 0.00811642877134061, \"absolute_difference\": 0.008660248896426167, \"relative_lift\": 1.0670023898941619, \"z\": 3.311048793528541, \"p_value\": 0.0009294700010393627}"
+    },
+    {
+      "name": "compare_arms",
+      "arguments": "{\"test_id\": \"54e7c5673034650028120000\", \"arm_a\": \"E\", \"arm_b\": \"A\"}",
+      "output": "{\"test_id\": \"54e7c5673034650028120000\", \"arm_a\": \"E\", \"arm_b\": \"A\", \"ctr_a\": 0.022637238256932653, \"ctr_b\": 0.01375894331315355, \"absolute_difference\": 0.008878294943779104, \"relative_lift\": 0.6452744765138653, \"z\": 2.8161643311532067, \"p_value\": 0.004860080026648436}"
+    },
+    {
+      "name": "compare_arms",
+      "arguments": "{\"test_id\": \"54e7c5673034650028120000\", \"arm_a\": \"E\", \"arm_b\": \"B\"}",
+      "output": "{\"test_id\": \"54e7c5673034650028120000\", \"arm_a\": \"E\", \"arm_b\": \"B\", \"ctr_a\": 0.022637238256932653, \"ctr_b\": 0.01131090487238979, \"absolute_difference\": 0.011326333384542862, \"relative_lift\": 1.0013640387154819, \"z\": 3.655659050641114, \"p_value\": 0.00025652210482447936}"
+    },
+    {
+      "name": "compare_arms",
+      "arguments": "{\"test_id\": \"54e7c5673034650028120000\", \"arm_a\": \"E\", \"arm_b\": \"C\"}",
+      "output": "{\"test_id\": \"54e7c5673034650028120000\", \"arm_a\": \"E\", \"arm_b\": \"C\", \"ctr_a\": 0.022637238256932653, \"ctr_b\": 0.019409282700421943, \"absolute_difference\": 0.00322795555651071, \"relative_lift\": 0.16630988410718223, \"z\": 0.947327709001214, \"p_value\": 0.3434718154742967}"
+    },
+    {
+      "name": "compare_arms",
+      "arguments": "{\"test_id\": \"54e7c5673034650028120000\", \"arm_a\": \"E\", \"arm_b\": \"D\"}",
+      "output": "{\"test_id\": \"54e7c5673034650028120000\", \"arm_a\": \"E\", \"arm_b\": \"D\", \"ctr_a\": 0.022637238256932653, \"ctr_b\": 0.013407821229050279, \"absolute_difference\": 0.009229417027882374, \"relative_lift\": 0.6883606866628937, \"z\": 2.928105435111043, \"p_value\": 0.0034103437671121656}"
+    },
+    {
+      "name": "compare_arms",
+      "arguments": "{\"test_id\": \"54e7c5673034650028120000\", \"arm_a\": \"E\", \"arm_b\": \"F\"}",
+      "output": "{\"test_id\": \"54e7c5673034650028120000\", \"arm_a\": \"E\", \"arm_b\": \"F\", \"ctr_a\": 0.022637238256932653, \"ctr_b\": 0.005818786367414797, \"absolute_difference\": 0.016818451889517857, \"relative_lift\": 2.8903710890128544, \"z\": 6.019277403801405, \"p_value\": 1.7519739982944513e-09}"
+    },
+    {
+      "name": "compare_arms",
+      "arguments": "{\"test_id\": \"54e7c5673034650028120000\", \"arm_a\": \"E\", \"arm_b\": \"G\"}",
+      "output": "{\"test_id\": \"54e7c5673034650028120000\", \"arm_a\": \"E\", \"arm_b\": \"G\", \"ctr_a\": 0.022637238256932653, \"ctr_b\": 0.01212471131639723, \"absolute_difference\": 0.010512526940535423, \"relative_lift\": 0.8670331743336834, \"z\": 3.359452119997386, \"p_value\": 0.0007809718302011258}"
+    },
+    {
+      "name": "compare_arms",
+      "arguments": "{\"test_id\": \"54e7cb30303465000c160000\", \"arm_a\": \"D\", \"arm_b\": \"A\"}",
+      "output": "{\"test_id\": \"54e7cb30303465000c160000\", \"arm_a\": \"D\", \"arm_b\": \"A\", \"ctr_a\": 0.009088327179778472, \"ctr_b\": 0.006221719457013574, \"absolute_difference\": 0.0028666077227648976, \"relative_lift\": 0.4607420412589399, \"z\": 1.3817469763020924, \"p_value\": 0.16704940494251863}"
+    },
+    {
+      "name": "compare_arms",
+      "arguments": "{\"test_id\": \"54e7cb30303465000c160000\", \"arm_a\": \"D\", \"arm_b\": \"B\"}",
+      "output": "{\"test_id\": \"54e7cb30303465000c160000\", \"arm_a\": \"D\", \"arm_b\": \"B\", \"ctr_a\": 0.009088327179778472, \"ctr_b\": 0.005517241379310344, \"absolute_difference\": 0.0035710858004681274, \"relative_lift\": 0.6472593013348481, \"z\": 1.7757079738507633, \"p_value\": 0.07578106243582672}"
+    },
+    {
+      "name": "compare_arms",
+      "arguments": "{\"test_id\": \"54e7cb30303465000c160000\", \"arm_a\": \"D\", \"arm_b\": \"C\"}",
+      "output": "{\"test_id\": \"54e7cb30303465000c160000\", \"arm_a\": \"D\", \"arm_b\": \"C\", \"ctr_a\": 0.009088327179778472, \"ctr_b\": 0.006504524886877828, \"absolute_difference\": 0.0025838022929006435, \"relative_lift\": 0.3972315177259424, \"z\": 1.2341446950759283, \"p_value\": 0.21714899133277865}"
+    },
+    {
+      "name": "compare_arms",
+      "arguments": "{\"test_id\": \"54e7cb30303465000c160000\", \"arm_a\": \"D\", \"arm_b\": \"E\"}",
+      "output": "{\"test_id\": \"54e7cb30303465000c160000\", \"arm_a\": \"D\", \"arm_b\": \"E\", \"ctr_a\": 0.009088327179778472, \"ctr_b\": 0.005652911249293386, \"absolute_difference\": 0.0034354159304850855, \"relative_lift\": 0.6077250781028116, \"z\": 1.6876994637883604, \"p_value\": 0.09146893479066959}"
+    },
+    {
+      "name": "compare_arms",
+      "arguments": "{\"test_id\": \"54e7cf0e3234300028170000\", \"arm_a\": \"E\", \"arm_b\": \"A\"}",
+      "output": "{\"test_id\": \"54e7cf0e3234300028170000\", \"arm_a\": \"E\", \"arm_b\": \"A\", \"ctr_a\": 0.008134642356241234, \"ctr_b\": 0.004050925925925926, \"absolute_difference\": 0.004083716430315308, \"relative_lift\": 1.0080945702264075, \"z\": 2.192663501959501, \"p_value\": 0.0283316322157477}"
+    },
+    {
+      "name": "compare_arms",
+      "arguments": "{\"test_id\": \"54e7cf0e3234300028170000\", \"arm_a\": \"E\", \"arm_b\": \"B\"}",
+      "output": "{\"test_id\": \"54e7cf0e3234300028170000\", \"arm_a\": \"E\", \"arm_b\": \"B\", \"ctr_a\": 0.008134642356241234, \"ctr_b\": 0.006397774687065368, \"absolute_difference\": 0.0017368676691758653, \"relative_lift\": 0.2714799682907494, \"z\": 0.8654202943599167, \"p_value\": 0.3868081461079421}"
+    },
+    {
+      "name": "compare_arms",
+      "arguments": "{\"test_id\": \"54e7cf0e3234300028170000\", \"arm_a\": \"E\", \"arm_b\": \"C\"}",
+      "output": "{\"test_id\": \"54e7cf0e3234300028170000\", \"arm_a\": \"E\", \"arm_b\": \"C\", \"ctr_a\": 0.008134642356241234, \"ctr_b\": 0.005802707930367505, \"absolute_difference\": 0.0023319344258737286, \"relative_lift\": 0.40187003272557253, \"z\": 1.1886992800816365, \"p_value\": 0.23455802402081816}"
+    },
+    {
+      "name": "compare_arms",
+      "arguments": "{\"test_id\": \"54e7cf0e3234300028170000\", \"arm_a\": \"E\", \"arm_b\": \"D\"}",
+      "output": "{\"test_id\": \"54e7cf0e3234300028170000\", \"arm_a\": \"E\", \"arm_b\": \"D\", \"ctr_a\": 0.008134642356241234, \"ctr_b\": 0.006013745704467354, \"absolute_difference\": 0.0021208966517738794, \"relative_lift\": 0.3526748146663993, \"z\": 1.0620510408608015, \"p_value\": 0.288212514551604}"
+    },
+    {
+      "name": "power_calc",
+      "arguments": "{\"baseline_ctr\": 0.00667, \"relative_lift\": 0.5, \"alpha\": 0.016666666666666666, \"power\": 0.8}",
+      "output": "{\"impressions_per_arm\": 15564}"
+    },
+    {
+      "name": "power_calc",
+      "arguments": "{\"baseline_ctr\": 0.01089, \"relative_lift\": 0.5, \"alpha\": 0.0125, \"power\": 0.8}",
+      "output": "{\"impressions_per_arm\": 10099}"
+    },
+    {
+      "name": "power_calc",
+      "arguments": "{\"baseline_ctr\": 0.02792, \"relative_lift\": 0.5, \"alpha\": 0.016666666666666666, \"power\": 0.8}",
+      "output": "{\"impressions_per_arm\": 3618}"
+    },
+    {
+      "name": "power_calc",
+      "arguments": "{\"baseline_ctr\": 0.00984, \"relative_lift\": 0.5, \"alpha\": 0.01, \"power\": 0.8}",
+      "output": "{\"impressions_per_arm\": 11722}"
+    },
+    {
+      "name": "power_calc",
+      "arguments": "{\"baseline_ctr\": 0.00946, \"relative_lift\": 0.5, \"alpha\": 0.0125, \"power\": 0.8}",
+      "output": "{\"impressions_per_arm\": 11647}"
+    },
+    {
+      "name": "power_calc",
+      "arguments": "{\"baseline_ctr\": 0.00869, \"relative_lift\": 0.5, \"alpha\": 0.01, \"power\": 0.8}",
+      "output": "{\"impressions_per_arm\": 13293}"
+    },
+    {
+      "name": "power_calc",
+      "arguments": "{\"baseline_ctr\": 0.00242, \"relative_lift\": 0.5, \"alpha\": 0.0125, \"power\": 0.8}",
+      "output": "{\"impressions_per_arm\": 45939}"
+    },
+    {
+      "name": "power_calc",
+      "arguments": "{\"baseline_ctr\": 0.0115, \"relative_lift\": 0.5, \"alpha\": 0.008333333333333333, \"power\": 0.8}",
+      "output": "{\"impressions_per_arm\": 10378}"
+    },
+    {
+      "name": "power_calc",
+      "arguments": "{\"baseline_ctr\": 0.0143, \"relative_lift\": 0.5, \"alpha\": 0.008333333333333333, \"power\": 0.8}",
+      "output": "{\"impressions_per_arm\": 8316}"
+    },
+    {
+      "name": "power_calc",
+      "arguments": "{\"baseline_ctr\": 0.00659, \"relative_lift\": 0.5, \"alpha\": 0.0125, \"power\": 0.8}",
+      "output": "{\"impressions_per_arm\": 16781}"
+    },
+    {
+      "name": "power_calc",
+      "arguments": "{\"baseline_ctr\": 0.00609, \"relative_lift\": 0.5, \"alpha\": 0.0125, \"power\": 0.8}",
+      "output": "{\"impressions_per_arm\": 18170}"
+    },
+    {
+      "name": "submit_scorecard",
+      "arguments": "{\"start\": \"2015-02-20T22:00\", \"end\": \"2015-02-21T02:00\", \"counts\": {\"SHIP\": 1, \"KEEP_TESTING\": 11, \"NO_DIFFERENCE\": 0, \"INVALID\": 0}, \"ship\": [{\"test_id\": \"54e7b5fd313135001a880000\", \"arm_id\": \"A\"}], \"summary\": \"Scorecard for tests started from 2015-02-20T22:00 through 2015-02-21T02:00. 12 tests were checked; all passed the sample-ratio check and were valid. One test (54e7b5fd313135001a880000) was SHIP on arm A after Holm-adjusted leader-vs-others comparisons. The remaining 11 valid tests did not meet the Holm criterion for SHIP and did not have enough impressions to declare NO_DIFFERENCE, so they were KEEP_TESTING.\"}",
+      "output": "{\"status\": \"recorded\"}"
+    }
+  ],
+  "usage": {
+    "input_tokens": 260243,
+    "input_tokens_details": {
+      "cache_write_tokens": null,
+      "cached_tokens": 211456
+    },
+    "output_tokens": 10211,
+    "output_tokens_details": {
+      "reasoning_tokens": 6976
+    },
+    "total_tokens": 270454
+  },
+  "checks": {
+    "submitted": true,
+    "answer": true,
+    "detail": true,
+    "workflow": true,
+    "side_effects": true,
+    "report": true
+  }
+}

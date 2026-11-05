@@ -27,7 +27,8 @@ STEPS = [
     ("routed", "Decision-1\nrouter + 6\nspecialists", "Router + 6 specialists", "routed-mai-baseline"),
     ("routed", "+ incident\ndate checks", "+ incident date checks", "routed-mai-optimized"),
     ("routed", "+ prompt fixes,\nbatched\nportfolio", "+ prompt fixes, batched portfolio", "routed-mai-r4"),
-    ("routed", "+ threshold\nrules\n(deployed)", "+ threshold rules (deployed v8)", "routed-mai-r5"),
+    ("routed", "+ threshold\nrules", "+ threshold rules (v8)", "routed-mai-r5"),
+    ("routed", "+ RFT, efficiency\nreward\n(deployed v9)", "+ RFT, efficiency reward (deployed v9)", "rft-eff"),
 ]
 SEGMENTS = {"single": "One agent, one shared prompt", "routed": "Decision-1 router + six task specialists"}
 SOL = ("GPT-6 Sol, same router and prompts", "routed-gpt6-sol-r5")
@@ -100,8 +101,8 @@ def chart(m: dict, w: int = 1180, h: int = 540) -> str:
                  f'fill="{MUTED}">{esc(SEGMENTS[seg])}</text>')
     o.append(f'<line x1="{mid:.1f}" x2="{mid:.1f}" y1="{T - 36}" y2="{B + 4}" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4 4"/>')
     o.append(f'<line x1="{mid + 8:.1f}" x2="{R}" y1="{y(sol):.1f}" y2="{y(sol):.1f}" stroke="{RED}" stroke-width="2" '
-             f'stroke-dasharray="7 6" opacity="0.85"/><text x="{R - 4}" y="{y(sol) - 7:.1f}" font-size="13" text-anchor="end" '
-             f'fill="{RED}" font-weight="600">{sol:.1f}%</text>')
+             f'stroke-dasharray="7 6" opacity="0.85"/><text x="{mid + 12:.1f}" y="{y(sol) - 7:.1f}" font-size="13" '
+             f'fill="{RED}" font-weight="600">GPT-6 Sol {sol:.1f}%</text>')
     values = [m[s[3]]["overall"]["pass"] for s in STEPS]
     for seg in ((0, split), (split, len(STEPS))):
         pts = " ".join(f"{xs[i]:.1f},{y(values[i]):.1f}" for i in range(*seg))

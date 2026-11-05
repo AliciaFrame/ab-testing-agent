@@ -1,15 +1,268 @@
 {
  "job": "abtest-rft-acc-gs",
  "job_id": "ftjob-66799c54831c4c1a8097dcda9e05d55a",
- "status": "pending",
- "fine_tuned_model": null,
+ "status": "succeeded",
+ "fine_tuned_model": "MAI-Code-1.1-Flash-2026-09-15.ft-66799c54831c4c1a8097dcda9e05d55a-abtest-rft-acc-gs",
  "error": null,
- "latest_metrics": null,
- "checkpoints": [],
+ "latest_metrics": {
+  "step": 7,
+  "train_mean_reward": 0.8994308035714287,
+  "full_valid_mean_reward": 0.9200000000000002,
+  "full_valid_mean_parse_error": 0,
+  "completion_tokens_mean": 4889.810810810811,
+  "usage": {
+   "samples": {
+    "train_reasoning_tokens_mean": 525.3115577889447,
+    "valid_reasoning_tokens_mean": 379.70259208731244,
+    "train_reasoning_tokens_count": 1393,
+    "valid_reasoning_tokens_count": 733
+   }
+  },
+  "sampling_duration": 23.525595813244582,
+  "training_duration": 0.34512158719201885,
+  "eval_duration": 7.873270068876446,
+  "total_duration": 31.743987469313044,
+  "reasoning_tokens_mean": 525.3115577889447,
+  "errors": {
+   "graders": [
+    {
+     "name": "grader-84937f677aaf",
+     "type": "endpoint",
+     "errors": {
+      "train_sample_parse_error_mean": 0,
+      "train_sample_parse_error_count": 0,
+      "train_invalid_variable_error_mean": 0,
+      "train_invalid_variable_error_count": 0,
+      "train_other_error_mean": 0.04247104247104247,
+      "train_other_error_count": 11,
+      "valid_sample_parse_error_mean": 0,
+      "valid_sample_parse_error_count": 0,
+      "valid_invalid_variable_error_mean": 0,
+      "valid_invalid_variable_error_count": 0,
+      "valid_other_error_mean": 0.02666666666666667,
+      "valid_other_error_count": 4
+     }
+    }
+   ]
+  },
+  "scores": {
+   "graders": [
+    {
+     "name": "grader-84937f677aaf",
+     "type": "endpoint",
+     "train_reward_mean": 0.9387096774193548,
+     "valid_reward_mean": 0.9452054794520548
+    }
+   ]
+  },
+  "timing": {
+   "graders": [
+    {
+     "name": "grader-84937f677aaf",
+     "type": "endpoint",
+     "timing": {
+      "train_execution_latency_mean": 0.66511627682215,
+      "train_execution_latency_count": 259,
+      "valid_execution_latency_mean": 0.6154279336954157,
+      "valid_execution_latency_count": 150
+     }
+    }
+   ]
+  },
+  "train_tool_calls_to_list_tests": 0.6332046332046332,
+  "train_token_usage_mean_list_tests": 1696.6134969325153,
+  "train_latency_list_tests": 0.4761744324643553,
+  "train_error_count_list_tests": 0,
+  "valid_tool_calls_to_list_tests": 0.41333333333333333,
+  "valid_token_usage_mean_list_tests": 2287.9333333333334,
+  "valid_latency_list_tests": 0.4789095184920977,
+  "valid_error_count_list_tests": 0,
+  "train_tool_calls_to_get_test": 0.37065637065637064,
+  "train_token_usage_mean_get_test": 611.6666666666666,
+  "train_latency_get_test": 0.4703207250083021,
+  "train_error_count_get_test": 0,
+  "valid_tool_calls_to_get_test": 0.6,
+  "valid_token_usage_mean_get_test": 465.6666666666667,
+  "valid_latency_get_test": 0.4671650249304043,
+  "valid_error_count_get_test": 0,
+  "train_tool_calls_to_check_sample_ratio": 7.864864864864865,
+  "train_token_usage_mean_check_sample_ratio": 61.06949806949807,
+  "train_latency_check_sample_ratio": 0.602496581633924,
+  "train_error_count_check_sample_ratio": 0,
+  "valid_tool_calls_to_check_sample_ratio": 7.273333333333333,
+  "valid_token_usage_mean_check_sample_ratio": 63.333333333333336,
+  "valid_latency_check_sample_ratio": 0.4544953663647175,
+  "valid_error_count_check_sample_ratio": 0,
+  "train_tool_calls_to_compare_arms": 25.575289575289574,
+  "train_token_usage_mean_compare_arms": 116.52422907488987,
+  "train_latency_compare_arms": 0.6184216993019838,
+  "train_error_count_compare_arms": 0,
+  "valid_tool_calls_to_compare_arms": 9.826666666666666,
+  "valid_token_usage_mean_compare_arms": 115.04301075268818,
+  "valid_latency_compare_arms": 0.45518991201915726,
+  "valid_error_count_compare_arms": 0,
+  "train_tool_calls_to_power_calc": 5.980694980694981,
+  "train_token_usage_mean_power_calc": 10,
+  "train_latency_power_calc": 0.46105453013832215,
+  "train_error_count_power_calc": 0,
+  "valid_tool_calls_to_power_calc": 2.28,
+  "valid_token_usage_mean_power_calc": 10,
+  "valid_latency_power_calc": 0.4484340331650206,
+  "valid_error_count_power_calc": 0,
+  "train_tool_calls_to_calculate": 1.4285714285714286,
+  "train_token_usage_mean_calculate": 19.070866141732285,
+  "train_latency_calculate": 0.4921323884659865,
+  "train_error_count_calculate": 0,
+  "valid_tool_calls_to_calculate": 1.3866666666666667,
+  "valid_token_usage_mean_calculate": 27.513761467889907,
+  "valid_latency_calculate": 0.4481995925819928,
+  "valid_error_count_calculate": 0,
+  "train_tool_calls_to_ship_package": 0.12355212355212356,
+  "train_token_usage_mean_ship_package": 32,
+  "train_latency_ship_package": 0.45360264455666766,
+  "train_error_count_ship_package": 0,
+  "valid_tool_calls_to_ship_package": 0.06666666666666667,
+  "valid_token_usage_mean_ship_package": 31,
+  "valid_latency_ship_package": 0.4491238703019917,
+  "valid_error_count_ship_package": 0,
+  "train_tool_calls_to_notify_editor": 0,
+  "train_error_count_notify_editor": 0,
+  "valid_tool_calls_to_notify_editor": 0.06666666666666667,
+  "valid_token_usage_mean_notify_editor": 26,
+  "valid_latency_notify_editor": 0.4446165074594319,
+  "valid_error_count_notify_editor": 0,
+  "train_tool_calls_to_submit_verdict": 0.37065637065637064,
+  "train_token_usage_mean_submit_verdict": 7,
+  "train_latency_submit_verdict": 0.4449876669871931,
+  "train_error_count_submit_verdict": 0,
+  "valid_tool_calls_to_submit_verdict": 0.6,
+  "valid_token_usage_mean_submit_verdict": 7,
+  "valid_latency_submit_verdict": 0.43815754927280876,
+  "valid_error_count_submit_verdict": 0,
+  "train_tool_calls_to_submit_scorecard": 0.5057915057915058,
+  "train_token_usage_mean_submit_scorecard": 7,
+  "train_latency_submit_scorecard": 0.41498601904409077,
+  "train_error_count_submit_scorecard": 0,
+  "valid_tool_calls_to_submit_scorecard": 0.2,
+  "valid_token_usage_mean_submit_scorecard": 7,
+  "valid_latency_submit_scorecard": 0.4103386465460062,
+  "valid_error_count_submit_scorecard": 0,
+  "train_tool_calls_to_submit_plan": 0.12355212355212356,
+  "train_token_usage_mean_submit_plan": 7,
+  "train_latency_submit_plan": 0.4473729322780855,
+  "train_error_count_submit_plan": 0,
+  "valid_tool_calls_to_submit_plan": 0.2,
+  "valid_token_usage_mean_submit_plan": 7,
+  "valid_latency_submit_plan": 0.4492210617599388,
+  "valid_error_count_submit_plan": 0,
+  "valid_reasoning_tokens_mean": 379.70259208731244
+ },
+ "checkpoints": [
+  {
+   "id": "ftchkpt-4f15e3cc1f8742a7a87d70b8c5945f3a",
+   "step": 7,
+   "model": "MAI-Code-1.1-Flash-2026-09-15.ft-66799c54831c4c1a8097dcda9e05d55a-abtest-rft-acc-gs",
+   "metrics": {
+    "full_valid_loss": null,
+    "full_valid_mean_token_accuracy": null,
+    "step": 7.0,
+    "train_loss": -0.0006988875757087953,
+    "train_mean_token_accuracy": null,
+    "valid_loss": null,
+    "valid_mean_token_accuracy": null,
+    "train_mean_reward": 0.8994308035714287,
+    "full_valid_mean_reward": 0.9200000000000002,
+    "full_valid_mean_parse_error": 0,
+    "completion_tokens_mean": 4889.810810810811,
+    "usages/samples/train_reasoning_tokens_mean": 525.3115577889447,
+    "usages/samples/valid_reasoning_tokens_mean": 379.70259208731244,
+    "usages/samples/train_reasoning_tokens_count": 1393,
+    "usages/samples/valid_reasoning_tokens_count": 733
+   }
+  },
+  {
+   "id": "ftchkpt-44a9e03c429b4da7b3cbbf4c52bdd442",
+   "step": 5,
+   "model": "MAI-Code-1.1-Flash-2026-09-15.ft-66799c54831c4c1a8097dcda9e05d55a-abtest-rft-acc-gs:ckpt-step-5",
+   "metrics": {
+    "full_valid_loss": null,
+    "full_valid_mean_token_accuracy": null,
+    "step": 5.0,
+    "train_loss": 0.0014800425269640982,
+    "train_mean_token_accuracy": null,
+    "valid_loss": null,
+    "valid_mean_token_accuracy": null,
+    "train_mean_reward": 0.9011718750000001,
+    "full_valid_mean_reward": 0.9070000000000001,
+    "full_valid_mean_parse_error": 0,
+    "completion_tokens_mean": 4572.6875,
+    "usages/samples/train_reasoning_tokens_mean": 500.5444947209653,
+    "usages/samples/valid_reasoning_tokens_mean": 387.14341590612776,
+    "usages/samples/train_reasoning_tokens_count": 1326,
+    "usages/samples/valid_reasoning_tokens_count": 767
+   }
+  }
+ ],
  "events": [
   {
-   "created_at": 1793859715,
-   "message": "Job enqueued. Waiting for jobs ahead to complete."
+   "created_at": 1793888150,
+   "message": "Training hours billed: 3.500"
+  },
+  {
+   "created_at": 1793888149,
+   "message": "Completed results file: file-dee928bfabc74658a26cdb500e572ea8"
+  },
+  {
+   "created_at": 1793888123,
+   "message": "Model Evaluation Passed."
+  },
+  {
+   "created_at": 1793886497,
+   "message": "Model safety evaluation running."
+  },
+  {
+   "created_at": 1793886497,
+   "message": "Completed results file: file-dee928bfabc74658a26cdb500e572ea8"
+  },
+  {
+   "created_at": 1793886468,
+   "message": "Job succeeded."
+  },
+  {
+   "created_at": 1793883558,
+   "message": "Step 7: training mean reward=0.8994308035714287"
+  },
+  {
+   "created_at": 1793876749,
+   "message": "Step 1: training mean reward=0.9225043402777777"
+  },
+  {
+   "created_at": 1793876421,
+   "message": "Created results file: file-dee928bfabc74658a26cdb500e572ea8"
+  },
+  {
+   "created_at": 1793876366,
+   "message": "Step 0: training mean reward="
+  },
+  {
+   "created_at": 1793875541,
+   "message": "Created Eval=eval_6aec5e541a248191b692331e83b2f50f to evaluate outputs on the validation dataset during finetuning."
+  },
+  {
+   "created_at": 1793875541,
+   "message": "Created Eval=eval_6aec5e541a248191b692331e83b2f50f to evaluate outputs on the validation dataset during finetuning."
+  },
+  {
+   "created_at": 1793874383,
+   "message": "Training started."
+  },
+  {
+   "created_at": 1793861237,
+   "message": "Job queued, waiting for GPUs."
+  },
+  {
+   "created_at": 1793860471,
+   "message": "Finetuning started."
   }
  ]
 }

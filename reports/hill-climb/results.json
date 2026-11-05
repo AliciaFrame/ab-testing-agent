@@ -179,6 +179,36 @@
    "tokens": 62.90462222222222
   }
  },
+ "rft-eff": {
+  "overall": {
+   "pass": 99.25925925925925,
+   "tokens": 54.16414444444444
+  },
+  "validity": {
+   "pass": 100.0,
+   "tokens": 9.26
+  },
+  "ship_decision": {
+   "pass": 100.0,
+   "tokens": 24.111888888888892
+  },
+  "early_look": {
+   "pass": 100.0,
+   "tokens": 16.802400000000002
+  },
+  "attribution": {
+   "pass": 97.77777777777777,
+   "tokens": 20.10468888888889
+  },
+  "portfolio": {
+   "pass": 100.0,
+   "tokens": 181.4259111111111
+  },
+  "planning": {
+   "pass": 97.77777777777777,
+   "tokens": 73.27997777777777
+  }
+ },
  "routed-gpt6-sol-r5": {
   "overall": {
    "pass": 97.4074074074074,
