@@ -1,0 +1,15 @@
+{
+ "job": "abtest-rft-leff-gs",
+ "job_id": "ftjob-6a52361226ce4325850918f4ace96027",
+ "status": "pending",
+ "fine_tuned_model": null,
+ "error": null,
+ "latest_metrics": null,
+ "checkpoints": [],
+ "events": [
+  {
+   "created_at": 1793859716,
+   "message": "Job enqueued. Waiting for jobs ahead to complete."
+  }
+ ]
+}

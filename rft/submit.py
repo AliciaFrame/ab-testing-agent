@@ -39,6 +39,9 @@ JOBS = {
     "abtest-rft-eff": {"route": "eff", "threshold": 0.9, "effort": "medium"},
     "abtest-rft-low": {"route": "acc", "threshold": 0.99, "effort": "low"},
     "abtest-rft-low-eff": {"route": "eff", "threshold": 0.9, "effort": "low"},
+    # Same configs on a non-spot tier; queued after the developerTier jobs waited over an hour for GPUs.
+    "abtest-rft-acc-gs": {"route": "acc", "threshold": 0.99, "effort": "medium", "training_type": "GlobalStandard"},
+    "abtest-rft-leff-gs": {"route": "eff", "threshold": 0.9, "effort": "low", "training_type": "GlobalStandard"},
 }
 
 
@@ -68,7 +71,7 @@ def payload(job: str, train_id: str, valid_id: str, secret: str | None) -> dict:
             "tools": [{"name": n, "server_url": f"{SERVICE['url']}/tools/{n}", "headers": headers} for n in TOOL_NAMES],
             "max_episode_steps": MAX_EPISODE_STEPS, "pass_threshold": cfg["threshold"],
             "hyperparameters": {**_COMMON, "reasoning_effort": cfg["effort"]}}},
-        "extra_body": {"trainingType": TRAINING_TYPE},
+        "extra_body": {"trainingType": cfg.get("training_type", TRAINING_TYPE)},
     }
 
 

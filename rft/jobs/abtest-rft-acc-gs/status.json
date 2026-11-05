@@ -1,0 +1,15 @@
+{
+ "job": "abtest-rft-acc-gs",
+ "job_id": "ftjob-66799c54831c4c1a8097dcda9e05d55a",
+ "status": "pending",
+ "fine_tuned_model": null,
+ "error": null,
+ "latest_metrics": null,
+ "checkpoints": [],
+ "events": [
+  {
+   "created_at": 1793859715,
+   "message": "Job enqueued. Waiting for jobs ahead to complete."
+  }
+ ]
+}
