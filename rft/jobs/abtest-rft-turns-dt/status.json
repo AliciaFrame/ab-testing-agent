@@ -1,0 +1,15 @@
+{
+ "job": "abtest-rft-turns-dt",
+ "job_id": "ftjob-cd9f851f98da48678ff5c5217f1747fc",
+ "status": "pending",
+ "fine_tuned_model": null,
+ "error": null,
+ "latest_metrics": null,
+ "checkpoints": [],
+ "events": [
+  {
+   "created_at": 1793899704,
+   "message": "Job enqueued. Waiting for jobs ahead to complete."
+  }
+ ]
+}

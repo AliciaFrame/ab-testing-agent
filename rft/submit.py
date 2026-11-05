@@ -48,6 +48,8 @@ JOBS = {
                          "dataset": "v2"},
     "abtest-rft-turns-2ep": {"route": "turns", "threshold": 0.9, "effort": "medium", "training_type": "GlobalStandard",
                              "dataset": "v2", "n_epochs": 2},
+    # Same as abtest-rft-turns on developerTier, queued after the GlobalStandard jobs waited two hours for GPUs.
+    "abtest-rft-turns-dt": {"route": "turns", "threshold": 0.9, "effort": "medium", "dataset": "v2"},
 }
 
 

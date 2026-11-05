@@ -95,6 +95,7 @@ holds the redacted payload, file and job IDs, and status. Four jobs train the ba
 | `abtest-rft-low-eff` | `eff` | low |
 | `abtest-rft-turns` | `turns`, data v2 | medium, GlobalStandard, 1 epoch |
 | `abtest-rft-turns-2ep` | `turns`, data v2 | medium, GlobalStandard, 2 epochs |
+| `abtest-rft-turns-dt` | `turns`, data v2 | medium, developerTier, 1 epoch (same as `abtest-rft-turns`; whichever gets GPUs first) |
 
 Data v2 (`data/v2/`) is v1 plus the next 15 seeded portfolio items (30 portfolio rows, 105 total).
 
