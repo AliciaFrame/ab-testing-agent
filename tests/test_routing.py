@@ -143,3 +143,38 @@ def test_disallowed_tool_is_not_executed(monkeypatch):
     monkeypatch.setattr(agent, "execute_tool", lambda *args: pytest.fail("forbidden tool executed"))
     result = agent._run_episode({"messages": [{"role": "user", "content": "plan"}]}, [], api)
     assert "not available" in result["output_tools"][0]["output"]["error"]
+
+
+def test_specialist_model_and_endpoint_override_agent_defaults(monkeypatch, tmp_path):
+    for mode in ("portfolio", "validity"):
+        (tmp_path / f"{mode}.md").write_text(mode)
+    (tmp_path / "settings.json").write_text(json.dumps({"portfolio": {
+        "model": "base-model", "endpoint": "https://other.openai.azure.com/openai/v1/"}}))
+    monkeypatch.setenv("MAI_SPECIALIST_INSTRUCTIONS_DIR", str(tmp_path))
+    monkeypatch.setenv("MAI_MODEL_DEPLOYMENT_NAME", "rft-model")
+    monkeypatch.setenv("MAI_MODEL_OVERRIDE", "rft-model")
+    portfolio, validity = agent.policy_contract("portfolio"), agent.policy_contract("validity")
+    assert (portfolio["model"], portfolio["endpoint"]) == ("base-model", "https://other.openai.azure.com/openai/v1/")
+    assert (validity["model"], validity["endpoint"]) == ("rft-model", "https://example.openai.azure.com/openai/v1")
+    opened = []
+
+    class Api:
+        def __init__(self, endpoint):
+            self.responses = SimpleNamespace(create=lambda **kwargs: SimpleNamespace(
+                usage=None, output=[], output_text=f"answered via {endpoint}"))
+
+    from contextlib import contextmanager
+
+    @contextmanager
+    def fake_client(endpoint=None):
+        opened.append(endpoint)
+        yield Api(endpoint)
+
+    monkeypatch.setattr(agent, "client", fake_client)
+    monkeypatch.setenv("MAI_SPECIALIST", "portfolio")
+    result = agent._run_episode({"messages": [{"role": "user", "content": "scorecard"}]}, [], Api("default"))
+    assert opened == ["https://other.openai.azure.com/openai/v1/"]
+    assert "other.openai.azure.com" in result["output_text"]
+    (tmp_path / "settings.json").write_text(json.dumps({"portfolio": {"endpoint": "http://insecure/"}}))
+    with pytest.raises(ValueError, match="Invalid endpoint"):
+        agent.policy_contract("portfolio")

@@ -21,6 +21,16 @@ the deployed agent, not training data. Tool calls are penalized only above today
 
 Calls come from the tool server's record of the rollout (``trace_id``) when it is complete; otherwise the sample's
 ``output_tools`` are re-executed. The archive tools are deterministic and stateless, so both give identical outputs.
+
+``turns`` (``abtest-rft-turns-v1``): ``acc x turn efficiency``, aimed at input tokens. The ``eff`` model learned
+to split portfolio comparisons into one call per turn (13 turns vs 6, 3x the input tokens), which ``eff`` could not
+see: the trainer sends no usage and no turn boundaries. ``turns`` estimates tool-calling turns from the tool
+server's call arrival times (``estimate_turns``) and, for strict passes::
+
+    efficiency = max(0.6, 1 - p_turns - p_calls)
+    p_turns = 0.30 x clamp(turns / (1.5 x median_turns) - 1, 0, 1)
+
+Non-strict answers get the 0.6 floor, so a strict answer still always outscores a non-strict one.
 """
 
 from __future__ import annotations
@@ -33,6 +43,8 @@ import grader as canonical
 
 ACC_VERSION = "abtest-rft-acc-v1"
 EFF_VERSION = "abtest-rft-eff-v1"
+TURNS_VERSION = "abtest-rft-turns-v1"
+VERSIONS = {"acc": ACC_VERSION, "eff": EFF_VERSION, "turns": TURNS_VERSION}
 MIN_EFFICIENCY = 0.7
 MEDIANS = {  # deployed round-5 agent, development split (see module docstring)
     "validity": {"tool_calls": 4, "output_tokens": 876},
@@ -43,6 +55,12 @@ MEDIANS = {  # deployed round-5 agent, development split (see module docstring)
     "planning": {"tool_calls": 26, "output_tokens": 9090},
 }
 TOKEN_WEIGHT, CALL_WEIGHT = 0.20, 0.10
+# Tool-calling turns of the deployed round-5 agent (development split, median per task; model calls minus the
+# final answer). The trainer gives the grader no usage or turn boundaries, so ``turns`` estimates them from call timing.
+MEDIAN_TOOL_TURNS = {"validity": 3, "ship_decision": 5, "early_look": 4, "attribution": 4, "portfolio": 5,
+                     "planning": 9}
+TURN_WEIGHT, TURN_SLACK, MIN_TURN_EFFICIENCY = 0.30, 1.5, 0.6
+TURN_GAP_MARGIN = 0.6  # seconds above the rollout's own in-batch call spacing that marks a new model turn
 
 
 class GradingError(RuntimeError):
@@ -114,7 +132,37 @@ def efficiency(mode: str, tool_calls: int, tokens: int | None) -> dict:
             "p_calls": round(p_calls, 6), "output_tokens": tokens, "tool_calls": tool_calls, "median": median}
 
 
-def grade(sample: dict, item: dict, trace_calls: list[dict] | None = None, version: str = "acc") -> dict:
+def estimate_turns(created: list[float], reference_gap: float | None = None) -> int | None:
+    """Tool-calling turns of a rollout from the tool server's call arrival times.
+
+    The trainer executes one turn's calls back to back, so calls inside a turn arrive at the trainer's own call
+    spacing (about 2 s, drifting with load), while a new turn adds the model's generation time. A gap more than
+    ``TURN_GAP_MARGIN`` above the in-batch spacing starts a new turn. The in-batch spacing is the smaller of the
+    rollout's 25th-percentile gap and ``reference_gap`` (the tool server's pooled 25th percentile over recent
+    rollouts), so a rollout that never batches cannot pass its one-call turns off as one batch. Fast turns can merge,
+    so the estimate undercounts; the reward therefore only penalizes well above the base median (``TURN_SLACK``)."""
+    if not created:
+        return None
+    times = sorted(created)
+    gaps = [b - a for a, b in zip(times, times[1:])]
+    if not gaps:
+        return 1
+    base = sorted(gaps)[len(gaps) // 4]
+    if reference_gap is not None:
+        base = min(base, reference_gap)
+    return 1 + sum(g > base + TURN_GAP_MARGIN for g in gaps)
+
+
+def turn_efficiency(mode: str, tool_calls: int, turns: int | None) -> dict:
+    median = MEDIAN_TOOL_TURNS[mode]
+    p_turns = 0.0 if turns is None else TURN_WEIGHT * min(1.0, max(0.0, turns / (TURN_SLACK * median) - 1))
+    p_calls = CALL_WEIGHT * min(1.0, max(0.0, tool_calls / MEDIANS[mode]["tool_calls"] - 1))
+    return {"factor": round(max(MIN_TURN_EFFICIENCY, 1 - p_turns - p_calls), 6), "p_turns": round(p_turns, 6),
+            "p_calls": round(p_calls, 6), "turns": turns, "tool_calls": tool_calls, "median_turns": median}
+
+
+def grade(sample: dict, item: dict, trace_calls: list[dict] | None = None, version: str = "acc",
+          reference_gap: float | None = None) -> dict:
     """Endpoint entry point. ``trace_calls`` are the tool server's recorded calls for this rollout, if any."""
     if not isinstance(sample, dict) or not isinstance(item, dict):
         raise GradingError("sample and item must be objects")
@@ -133,6 +181,14 @@ def grade(sample: dict, item: dict, trace_calls: list[dict] | None = None, versi
         factor = eff["factor"] if result["strict_pass"] else MIN_EFFICIENCY
         result.update(score=round(result["acc_score"] * factor, 6), efficiency=eff, factor_applied=factor,
                       version=EFF_VERSION)
+    elif version == "turns":
+        timed = source == "tool_server_trace" and all(isinstance(c.get("created"), (int, float)) for c in calls)
+        turns = estimate_turns([c["created"] for c in calls], reference_gap) if timed else None
+        eff = turn_efficiency(item["mode"], len(calls), turns)
+        eff["reference_gap"] = reference_gap
+        factor = eff["factor"] if result["strict_pass"] else MIN_TURN_EFFICIENCY
+        result.update(score=round(result["acc_score"] * factor, 6), efficiency=eff, factor_applied=factor,
+                      version=TURNS_VERSION)
     elif version != "acc":
         raise GradingError(f"unknown reward version {version!r}")
     result["answer_chars"] = len(answer_text(sample))

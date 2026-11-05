@@ -7,8 +7,8 @@ benchmark's deterministic six-check grader (`agent/grader.py`), never an LLM jud
 | File | Purpose |
 |---|---|
 | `common.py` | Rows: the specialist's exact developer prompt (common constraints + task prompt) and the user request; the shared 11-tool list; grader reference data. |
-| `grader.py` | Endpoint rewards `acc` (canonical weighted reward) and `eff` (accuracy x efficiency). |
-| `tool_server.py` | Starlette service: `POST /tools/{name}`, `POST /grade/{acc,eff}`, `GET /health`, `/traces/{id}`, `/grades/{id}`, `/stats`. |
+| `grader.py` | Endpoint rewards `acc` (canonical weighted reward), `eff` (accuracy x efficiency) and `turns` (accuracy x turn efficiency). |
+| `tool_server.py` | Starlette service: `POST /tools/{name}`, `POST /grade/{acc,eff,turns}`, `GET /health`, `/traces/{id}`, `/grades/{id}`, `/stats`. |
 | `calibrate.py` | Replays the base model through the hosted service; reward distribution and hosted/local parity. |
 | `loadtest.py` | Parallel replay of recorded episodes: every tool output and grade compared with local execution. |
 | `build_data.py` | Hard-filtered train rows and validation rows from calibration, with a manifest. |
@@ -56,6 +56,24 @@ are re-executed. The archive tools are deterministic and stateless, so both give
 scenario binding is needed. Tool problems return HTTP 200 with the agent's `{"error": ...}` text; only
 infrastructure failures return 5xx, which makes the trainer retry and then drop the rollout.
 
+### Turn-aware reward (`turns`)
+
+`eff` produced the most accurate model (99.3%) but it unlearned batching: on 29% of portfolio episodes it makes one
+`compare_arms` call per turn (13 turns vs 6), so it re-reads a growing context each time and portfolio input tokens
+nearly tripled (181k per episode). `eff` could not see this because the trainer sends no usage or turn boundaries.
+Continued fine-tuning of `abtest-rft-eff` is not supported ("Continuous fine-tuning is not currently supported for
+Blossom execution config", [probe](jobs/continued-rft-probe.json)), so `turns` retrains from base.
+
+`turns` estimates tool-calling turns from the server's call arrival times. The trainer executes a turn's calls back to
+back (about 2 s apart in training), and a new turn adds the model's generation time, so a gap more than 0.6 s above the
+in-batch spacing starts a new turn. The in-batch spacing is the smaller of the rollout's own 25th-percentile gap and
+the pooled 25th percentile over the last 15 minutes, so a rollout that never batches cannot hide one-call turns. For
+strict passes, `factor = max(0.6, 1 - 0.30 x clamp(turns / (1.5 x median) - 1, 0, 1) - p_calls)` with the r5 agent's
+median tool turns (portfolio 5, planning 9, ship decision 5, early look 4, attribution 4, validity 3); non-strict
+rollouts get the 0.6 floor, so a strict answer always outscores a wrong one. Calibration on the 15 new portfolio rows
+([`train-portfolio-v2.jsonl`](calibration/train-portfolio-v2.jsonl)): the estimate equals the true turn count on
+15/15 base rollouts; 5-7 turn passes score 0.97-1.0, a 19-turn pass scores 0.7, the one failure 0.33.
+
 ## Service
 
 Container App `abtest-rft-tools` in environment `azce34tnx7umq74fw` (Sweden Central), image in `azcr34tnx7umq74fw`,
@@ -75,6 +93,10 @@ holds the redacted payload, file and job IDs, and status. Four jobs train the ba
 | `abtest-rft-eff` | `eff` | medium |
 | `abtest-rft-low` | `acc` | low |
 | `abtest-rft-low-eff` | `eff` | low |
+| `abtest-rft-turns` | `turns`, data v2 | medium, GlobalStandard, 1 epoch |
+| `abtest-rft-turns-2ep` | `turns`, data v2 | medium, GlobalStandard, 2 epochs |
+
+Data v2 (`data/v2/`) is v1 plus the next 15 seeded portfolio items (30 portfolio rows, 105 total).
 
 Common settings: `mai-code-1.1-flash` (MAI-Code-1.1-Flash-2026-09-15), developerTier, 2 epochs, batch 8, LR 1.0,
 compute 1.0, eval every 5 steps on 10 samples. Checkpoints are evaluated on the 270-episode development benchmark

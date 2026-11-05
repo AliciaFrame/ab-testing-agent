@@ -4,8 +4,9 @@
     python -m rft.submit submit --jobs abtest-rft-acc abtest-rft-eff abtest-rft-low abtest-rft-low-eff --confirm-submit
     python -m rft.submit status
 
-Every job trains the base model on the same rows (``rft/data``), served by the same tool server; they differ only in
-reward (``/grade/acc`` or ``/grade/eff``) and training reasoning effort. Receipts (redacted payload, file and job IDs)
+Every job trains the base model, served by the same tool server. Jobs differ in reward (``/grade/acc``, ``/grade/eff``
+or ``/grade/turns``), training reasoning effort, epochs and rows (``rft/data`` = v1; the turns jobs use
+``rft/data/v2``, portfolio doubled). Receipts (redacted payload, file and job IDs)
 are written to ``rft/jobs/<name>/``. The bearer token is read from Key Vault and never written to disk.
 """
 
@@ -42,6 +43,11 @@ JOBS = {
     # Same configs on a non-spot tier; queued after the developerTier jobs waited over an hour for GPUs.
     "abtest-rft-acc-gs": {"route": "acc", "threshold": 0.99, "effort": "medium", "training_type": "GlobalStandard"},
     "abtest-rft-leff-gs": {"route": "eff", "threshold": 0.9, "effort": "low", "training_type": "GlobalStandard"},
+    # Turn-aware reward (``rft/grader.py``) on dataset v2 (portfolio doubled); one vs two epochs.
+    "abtest-rft-turns": {"route": "turns", "threshold": 0.9, "effort": "medium", "training_type": "GlobalStandard",
+                         "dataset": "v2"},
+    "abtest-rft-turns-2ep": {"route": "turns", "threshold": 0.9, "effort": "medium", "training_type": "GlobalStandard",
+                             "dataset": "v2", "n_epochs": 2},
 }
 
 
@@ -70,17 +76,23 @@ def payload(job: str, train_id: str, valid_id: str, secret: str | None) -> dict:
                        "headers": headers, "rate_limit": 20, "pass_threshold": cfg["threshold"]},
             "tools": [{"name": n, "server_url": f"{SERVICE['url']}/tools/{n}", "headers": headers} for n in TOOL_NAMES],
             "max_episode_steps": MAX_EPISODE_STEPS, "pass_threshold": cfg["threshold"],
-            "hyperparameters": {**_COMMON, "reasoning_effort": cfg["effort"]}}},
+            "hyperparameters": {**_COMMON, "n_epochs": cfg.get("n_epochs", _COMMON["n_epochs"]),
+                                "reasoning_effort": cfg["effort"]}}},
         "extra_body": {"trainingType": cfg.get("training_type", TRAINING_TYPE)},
     }
 
 
-def preflight() -> dict:
-    manifest = json.loads((DATA_DIR / "manifest.json").read_text(encoding="utf-8"))
+def data_dir(dataset: str):
+    return DATA_DIR if dataset == "v1" else DATA_DIR / dataset
+
+
+def preflight(dataset: str = "v1") -> dict:
+    data = data_dir(dataset)
+    manifest = json.loads((data / "manifest.json").read_text(encoding="utf-8"))
     for name in ("train.jsonl", "valid.jsonl"):
-        if sha256_file(DATA_DIR / name) != manifest["files"][name]["sha256"]:
+        if sha256_file(data / name) != manifest["files"][name]["sha256"]:
             raise SystemExit(f"{name} does not match the manifest")
-    rows = read_jsonl(DATA_DIR / "train.jsonl") + read_jsonl(DATA_DIR / "valid.jsonl")
+    rows = read_jsonl(data / "train.jsonl") + read_jsonl(data / "valid.jsonl")
     if len({json.dumps(r["tools"]) for r in rows}) != 1 or [t["function"]["name"] for t in rows[0]["tools"]] != TOOL_NAMES:
         raise SystemExit("rows must share the job's tool list")
     if manifest["heldout_test_overlap"]:
@@ -88,7 +100,7 @@ def preflight() -> dict:
     if manifest["max_row_bytes"] > 900_000:
         raise SystemExit("a row is too large")
     health = httpx.get(f"{SERVICE['url']}/health", timeout=30).json()
-    if health.get("graders") != {"acc": grader.ACC_VERSION, "eff": grader.EFF_VERSION} or health.get("tools") != TOOL_NAMES:
+    if health.get("graders") != grader.VERSIONS or health.get("tools") != TOOL_NAMES:
         raise SystemExit(f"service does not serve the local grader/tool versions: {health}")
     calibration = []
     for path in sorted((RFT_DIR / "calibration").glob("train-*.jsonl")):
@@ -96,7 +108,7 @@ def preflight() -> dict:
     ok = [r for r in calibration if not r.get("error")]
     if not ok or any(not r["parity"] for r in ok):
         raise SystemExit("calibration missing or hosted/local score mismatch")
-    return {"health": health, "train_sha256": manifest["files"]["train.jsonl"]["sha256"],
+    return {"dataset": dataset, "health": health, "train_sha256": manifest["files"]["train.jsonl"]["sha256"],
             "valid_sha256": manifest["files"]["valid.jsonl"]["sha256"], "calibration_rollouts": len(ok),
             "calibration_errors": len(calibration) - len(ok)}
 
@@ -107,12 +119,12 @@ def write(path, value: dict) -> None:
 
 
 def upload(c: OpenAI, checks: dict) -> dict:
-    files_path = JOBS_DIR / "files.json"
+    files_path = JOBS_DIR / ("files.json" if checks["dataset"] == "v1" else f"files-{checks['dataset']}.json")
     files = json.loads(files_path.read_text(encoding="utf-8")) if files_path.exists() else {}
     if files.get("train_sha256") != checks["train_sha256"] or files.get("valid_sha256") != checks["valid_sha256"]:
         files = {"train_sha256": checks["train_sha256"], "valid_sha256": checks["valid_sha256"]}
         for key, name in (("training_file", "train.jsonl"), ("validation_file", "valid.jsonl")):
-            with (DATA_DIR / name).open("rb") as handle:
+            with (data_dir(checks["dataset"]) / name).open("rb") as handle:
                 files[key] = c.files.create(file=(name, handle.read(), "application/jsonl"), purpose="fine-tune").id
         write(files_path, files)
     for key in ("training_file", "validation_file"):
@@ -125,11 +137,13 @@ def upload(c: OpenAI, checks: dict) -> dict:
 
 
 def submit(jobs: list[str]) -> list[dict]:
-    checks = preflight()
-    c = client()
-    files = upload(c, checks)
-    secret, receipts = token(), []
+    c, secret, receipts, uploaded = client(), token(), [], {}
     for job in jobs:
+        dataset = JOBS[job].get("dataset", "v1")
+        if dataset not in uploaded:
+            checks = preflight(dataset)
+            uploaded[dataset] = (checks, upload(c, checks))
+        checks, files = uploaded[dataset]
         path = JOBS_DIR / job / "submission.json"
         receipt = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
         if receipt.get("job_id"):
@@ -178,9 +192,10 @@ def main() -> None:
     parser.add_argument("action", choices=["preflight", "submit", "status"])
     parser.add_argument("--jobs", nargs="+", choices=sorted(JOBS), default=sorted(JOBS))
     parser.add_argument("--confirm-submit", action="store_true")
+    parser.add_argument("--dataset", default="v1", help="preflight only: v1 (rft/data) or v2 (rft/data/v2)")
     args = parser.parse_args()
     if args.action == "preflight":
-        print(json.dumps(preflight(), indent=1, default=str))
+        print(json.dumps(preflight(args.dataset), indent=1, default=str))
     elif args.action == "submit":
         if not args.confirm_submit:
             raise SystemExit("submission requires --confirm-submit")

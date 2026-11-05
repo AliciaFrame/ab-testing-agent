@@ -28,15 +28,18 @@ from the original rules, split by task.
 | + incident date checks (round 3) | 88.9% | 33.8k |
 | + prompt fixes, batched portfolio (round 4) | 92.6% | 28.9k |
 | + threshold rules (round 5) | 94.8% | 31.4k |
-| **+ RFT, efficiency reward (deployed v9)** | **99.3%** | 54.2k |
-| RFT model except portfolio (option, not deployed) | 96.7% | 35.1k |
+| **+ RFT, efficiency reward (v9)** | **99.3%** | 54.2k |
+| **RFT model except portfolio (deployed v10)** | **96.7%** | **35.1k** |
 | GPT-6 Sol, same router, prompts and tools | 97.4% | 29.4k |
 
 - **RFT passes Sol:** the fine-tuned MAI scores 99.3% vs 97.4%, with ship decision and
   portfolio at 100%. Only 2 of 270 episodes fail (one attribution, one planning).
 - **But it costs tokens:** output tokens fell sharply (portfolio 18.1k to 10.3k), but the model
   stopped batching tool calls, so portfolio input nearly tripled. Total: 54.2k per episode vs
-  31.4k for v8 and 29.4k for Sol. Keeping the base model for portfolio gives 96.7% at 35.1k.
+  31.4k for v8 and 29.4k for Sol.
+- **Deployed (v10): RFT everywhere except portfolio,** which stays on base MAI: 96.7% at 35.1k,
+  +1.9 points over v8 for +3.7k tokens. A turn-aware RFT reward to fix portfolio batching is in
+  training ([rft/README.md](rft/README.md)).
 - **Low reasoning effort** cut tokens but cost accuracy in both prompting and RFT (RFT at low
   effort: portfolio 57.8%), so it is used only for validity.
 - **Caveat:** prompts were selected on the development split, so these are selection-set
@@ -49,8 +52,10 @@ share, model identities, policy hashes and every acceptance check.
 
 ## The best agent
 
-Hosted Foundry agent `ab-testing-agent` **version 9**: the round-5 specialists on the RFT model
-`abtest-rft-eff` (version 8 is the same agent on base MAI-Code-1.1-Flash). Each request goes through two stages:
+Hosted Foundry agent `ab-testing-agent` **version 10**: the round-5 specialist prompts, with the RFT model
+`abtest-rft-eff` for every task except portfolio, which runs on base MAI-Code-1.1-Flash
+([`optimized-r6/settings.json`](agent/specialists/optimized-r6/settings.json)). Version 9 is the same
+agent with the RFT model everywhere (most accurate, most tokens); version 8 is base MAI everywhere. Each request goes through two stages:
 
 1. **Router.** [`agent/router.py`](agent/router.py) asks **Microsoft Decision-1** (preview) to pick one
    of six tasks or "ambiguous", from the request text and the referenced tests' status only.
@@ -58,9 +63,10 @@ Hosted Foundry agent `ab-testing-agent` **version 9**: the round-5 specialists o
    ([validation](runs/decision1-router-v1/validation/summary.json)).
 2. **Specialist.** One MAI-Code-1.1-Flash specialist answers, with the shared constraints
    ([`common.md`](agent/specialists/common.md)) plus its task prompt from
-   [`agent/specialists/optimized-r5/`](agent/specialists/optimized-r5/), and only its task's
+   [`agent/specialists/optimized-r6/`](agent/specialists/optimized-r6/) (the round-5 prompts), and only its task's
    tools ([`agent/specialists.py`](agent/specialists.py)). A tool outside the specialist's list is
-   refused, not executed. `settings.json` sets low reasoning effort for validity only.
+   refused, not executed. `settings.json` sets low reasoning effort for validity and, per
+   specialist, an optional `model` and `endpoint` (portfolio: base MAI).
 
 Run it locally against any MAI deployment:
 
@@ -70,7 +76,7 @@ $env:MAI_MODEL_DEPLOYMENT_NAME = "<mai-code-1.1-flash deployment>"
 $env:MAI_ROUTER = "decision1"                       # "off" = the original shared-prompt agent
 $env:DECISION_ENDPOINT = "https://<resource>.services.ai.azure.com"
 $env:DECISION_DEPLOYMENT = "<Microsoft-Decision-1 deployment>"
-$env:MAI_SPECIALIST_PROFILE = "optimized-r5"         # baseline | optimized | optimized-r4 | optimized-r5
+$env:MAI_SPECIALIST_PROFILE = "optimized-r5"         # baseline | optimized | optimized-r4 | optimized-r5 | optimized-r6
 $env:MAI_MAX_OUTPUT_TOKENS = "32768"
 python scripts\run_eval.py --split development --runs 3 --label my-run --workers 4
 ```
@@ -191,7 +197,7 @@ never are.
 agent/                 hosted agent
   router.py            Decision-1 routing (six tasks + ambiguous)
   specialists.py       per-task prompt loading, tool lists, settings
-  specialists/         common.md, baseline task prompts, and the optimized, optimized-r4, optimized-r5 profiles
+  specialists/         common.md, baseline task prompts, and the optimized, optimized-r4, optimized-r5, optimized-r6 profiles
   instructions.md      original shared prompt; instructions.optimizer.md = Agent Optimizer version
   abstats.py           house statistical rules: the reference for labels and tools
   domain.py            tools over agent/data/arms.parquet

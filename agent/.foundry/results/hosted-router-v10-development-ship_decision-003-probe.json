@@ -1,0 +1,78 @@
+{
+  "version": "10",
+  "case_id": "development-ship_decision-003",
+  "response_status": "completed",
+  "output_text": "I submitted the verdict as KEEP_TESTING.\n\nArm A had the highest CTR, but the test did not produce a statistically reliable winner under Holm-adjusted comparisons, and the sample split was valid. With the current sample sizes, this test is underpowered to detect a 50% relative lift, so it should keep testing rather than shipping a winner.",
+  "output_tools": [
+    {
+      "name": "get_test",
+      "arguments": "{\"test_id\": \"5474e8ae32376400120c0000\"}",
+      "output": "{\"test_id\": \"5474e8ae32376400120c0000\", \"started\": \"2014-11-25T20:38:06\", \"status\": \"completed\", \"arms\": [{\"arm_id\": \"A\", \"headline\": \"A Beautiful And Real Response To A Disgusting Article That Should Never Exist\", \"excerpt\": \"Things that matter. Pass 'em on. \", \"image_id\": \"5474b5541631de66cc00004a\", \"impressions\": 3057, \"clicks\": 72, \"dashboard_significance\": 100.0, \"dashboard_first_place\": true}, {\"arm_id\": \"B\", \"headline\": \"A Beautiful And Real Response To A Disgusting Article That Should Never Exist\", \"excerpt\": \"I got so uncomfortable when she started talking, but that's the point. \", \"image_id\": \"5474b5541631de66cc00004a\", \"impressions\": 3088, \"clicks\": 69, \"dashboard_significance\": 70.5, \"dashboard_first_place\": false}, {\"arm_id\": \"C\", \"headline\": \"A Beautiful And Real Response To A Disgusting Article That Should Never Exist\", \"excerpt\": \"No one ever wants to talk about how ugly body issues can get, but she had to. \", \"image_id\": \"5474b5541631de66cc00004a\", \"impressions\": 3067, \"clicks\": 56, \"dashboard_significance\": 15.7, \"dashboard_first_place\": false}, {\"arm_id\": \"D\", \"headline\": \"A Beautiful And Real Response To A Disgusting Article That Should Never Exist\", \"excerpt\": \"What dating a woman with an eating disorder is really like\\n\", \"image_id\": \"5474b5541631de66cc00004a\", \"impressions\": 2985, \"clicks\": 51, \"dashboard_significance\": 8.1, \"dashboard_first_place\": false}, {\"arm_id\": \"E\", \"headline\": \"A Beautiful And Real Response To A Disgusting Article That Should Never Exist\", \"excerpt\": \"It's not a joke. It's an illness.\", \"image_id\": \"5474b5541631de66cc00004a\", \"impressions\": 3022, \"clicks\": 67, \"dashboard_significance\": 67.5, \"dashboard_first_place\": false}]}"
+    },
+    {
+      "name": "check_sample_ratio",
+      "arguments": "{\"test_id\": \"5474e8ae32376400120c0000\"}",
+      "output": "{\"test_id\": \"5474e8ae32376400120c0000\", \"chi2\": 2.1679479597871083, \"df\": 4, \"p_value\": 0.704901401671248, \"expected_per_arm\": 3043.8}"
+    },
+    {
+      "name": "calculate",
+      "arguments": "{\"expression\": \"min(20141125-20130625, 20140110-20141125)\"}",
+      "output": "{\"result\": -1015}"
+    },
+    {
+      "name": "compare_arms",
+      "arguments": "{\"test_id\": \"5474e8ae32376400120c0000\", \"arm_a\": \"A\", \"arm_b\": \"B\"}",
+      "output": "{\"test_id\": \"5474e8ae32376400120c0000\", \"arm_a\": \"A\", \"arm_b\": \"B\", \"ctr_a\": 0.023552502453385672, \"ctr_b\": 0.022344559585492228, \"absolute_difference\": 0.0012079428678934447, \"relative_lift\": 0.054059819942825466, \"z\": 0.31620141176680283, \"p_value\": 0.7518496362478564}"
+    },
+    {
+      "name": "compare_arms",
+      "arguments": "{\"test_id\": \"5474e8ae32376400120c0000\", \"arm_a\": \"A\", \"arm_b\": \"C\"}",
+      "output": "{\"test_id\": \"5474e8ae32376400120c0000\", \"arm_a\": \"A\", \"arm_b\": \"C\", \"ctr_a\": 0.023552502453385672, \"ctr_b\": 0.018258884903814804, \"absolute_difference\": 0.0052936175495708684, \"relative_lift\": 0.2899200897238188, \"z\": 1.4479013161217429, \"p_value\": 0.14764465152806797}"
+    },
+    {
+      "name": "compare_arms",
+      "arguments": "{\"test_id\": \"5474e8ae32376400120c0000\", \"arm_a\": \"A\", \"arm_b\": \"D\"}",
+      "output": "{\"test_id\": \"5474e8ae32376400120c0000\", \"arm_a\": \"A\", \"arm_b\": \"D\", \"ctr_a\": 0.023552502453385672, \"ctr_b\": 0.017085427135678392, \"absolute_difference\": 0.00646707531770728, \"relative_lift\": 0.3785141141834555, \"z\": 1.7796780366958815, \"p_value\": 0.07512866687975124}"
+    },
+    {
+      "name": "compare_arms",
+      "arguments": "{\"test_id\": \"5474e8ae32376400120c0000\", \"arm_a\": \"A\", \"arm_b\": \"E\"}",
+      "output": "{\"test_id\": \"5474e8ae32376400120c0000\", \"arm_a\": \"A\", \"arm_b\": \"E\", \"ctr_a\": 0.023552502453385672, \"ctr_b\": 0.022170747849106553, \"absolute_difference\": 0.0013817546042791187, \"relative_lift\": 0.06232331961390293, \"z\": 0.36036393358272123, \"p_value\": 0.7185749941452739}"
+    },
+    {
+      "name": "calculate",
+      "arguments": "{\"expression\": \"315/15219\"}",
+      "output": "{\"result\": 0.02069781194559432}"
+    },
+    {
+      "name": "power_calc",
+      "arguments": "{\"baseline_ctr\": 0.02069781194559432, \"relative_lift\": 0.5, \"alpha\": 0.0125, \"power\": 0.8}",
+      "output": "{\"impressions_per_arm\": 5247}"
+    },
+    {
+      "name": "submit_verdict",
+      "arguments": "{\"test_id\": \"5474e8ae32376400120c0000\", \"verdict\": \"KEEP_TESTING\", \"winning_arm\": null, \"srm_p_value\": 0.704901401671248, \"summary\": \"The test is valid: sample-ratio p=0.7049 and it started outside the caching incident window. Arm A had the highest CTR, but none of the A-vs-other-arm comparisons rejected under Holm\\u2019s step-down procedure, so there is no winner; power analysis shows you would need about 5,247 impressions per arm to reliably detect a 50% relative lift, and this test did not reach that threshold, so keep testing with winning_arm null.\"}",
+      "output": "{\"status\": \"recorded\"}"
+    }
+  ],
+  "usage": {
+    "input_tokens": 26483,
+    "input_tokens_details": {
+      "cache_write_tokens": null,
+      "cached_tokens": 24064
+    },
+    "output_tokens": 1776,
+    "output_tokens_details": {
+      "reasoning_tokens": 960
+    },
+    "total_tokens": 28259
+  },
+  "checks": {
+    "submitted": true,
+    "answer": true,
+    "detail": true,
+    "workflow": true,
+    "side_effects": true,
+    "report": true
+  }
+}

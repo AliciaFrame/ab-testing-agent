@@ -7,8 +7,10 @@ Contract (as used by the Foundry agentic-RFT trainer):
   problems (unknown tool, invalid arguments) come back with HTTP 200 as the same ``{"error": ...}`` text the agent
   returns, so the model sees what it would in production and the trainer's per-tool failure limit is never tripped.
   Only infrastructure failures return 5xx.
-* ``POST /grade/{version}`` (``acc`` or ``eff``; ``/grade`` = ``acc``) receives ``{"sample", "item", "trace_id"}``
-  and returns ``{"score": <float in [0, 1]>}``. Details are kept per rollout at ``GET /grades/{trace_id}``.
+* ``POST /grade/{version}`` (``acc``, ``eff`` or ``turns``; ``/grade`` = ``acc``) receives ``{"sample", "item",
+  "trace_id"}`` and returns ``{"score": <float in [0, 1]>}``. Details are kept per rollout at ``GET /grades/{trace_id}``.
+  ``turns`` also uses ``reference_gap``: the 25th-percentile gap between consecutive calls of all rollouts recorded in
+  the last 15 minutes (the trainer's in-batch call spacing under the current load), cached for a minute.
 
 The archive tools are stateless, so no per-rollout scenario binding is needed. Calls are recorded per ``trace_id``
 in SQLite (shared by the worker processes of the single replica) so the grader scores the exact outputs the model
@@ -43,7 +45,7 @@ log = logging.getLogger("rft.tool_server")
 MAX_BYTES = 1_000_000
 TIMEOUT_SECONDS = float(os.getenv("RFT_TIMEOUT_SECONDS", "60"))
 _CONCURRENCY = asyncio.Semaphore(int(os.getenv("RFT_MAX_CONCURRENCY", "32")))
-VERSIONS = {"acc": grader.ACC_VERSION, "eff": grader.EFF_VERSION}
+VERSIONS = grader.VERSIONS
 
 
 class HTTPError(Exception):
@@ -66,6 +68,8 @@ class Store:
                 version TEXT, score REAL NOT NULL, details TEXT NOT NULL);
             CREATE TABLE IF NOT EXISTS counters (name TEXT PRIMARY KEY, value INTEGER NOT NULL);
             CREATE TABLE IF NOT EXISTS errors (created REAL NOT NULL, route TEXT NOT NULL, detail TEXT NOT NULL);
+            CREATE TABLE IF NOT EXISTS shapes (created REAL NOT NULL, detail TEXT NOT NULL);
+            CREATE INDEX IF NOT EXISTS calls_created ON calls (created);
         """)
 
     def _db(self) -> sqlite3.Connection:
@@ -87,9 +91,17 @@ class Store:
                    (trace_id, call_id, seq, name, json.dumps(arguments), output, time.time()))
 
     def calls(self, trace_id: str) -> list[dict]:
-        rows = self._db().execute("SELECT call_id, name, arguments, output FROM calls WHERE trace_id = ? "
+        rows = self._db().execute("SELECT call_id, name, arguments, output, created FROM calls WHERE trace_id = ? "
                                   "ORDER BY seq, created", (trace_id,)).fetchall()
-        return [{"call_id": r[0], "name": r[1], "arguments": json.loads(r[2]), "output": r[3]} for r in rows]
+        return [{"call_id": r[0], "name": r[1], "arguments": json.loads(r[2]), "output": r[3], "created": r[4]}
+                for r in rows]
+
+    def reference_gap(self, window: float = 900.0, min_gaps: int = 50) -> float | None:
+        """25th-percentile gap between consecutive calls of the same rollout over the last ``window`` seconds."""
+        rows = self._db().execute("SELECT trace_id, created FROM calls WHERE created >= ? ORDER BY trace_id, seq",
+                                  (time.time() - window,)).fetchall()
+        gaps = [b[1] - a[1] for a, b in zip(rows, rows[1:]) if a[0] == b[0]]
+        return sorted(gaps)[len(gaps) // 4] if len(gaps) >= min_gaps else None
 
     def save_grade(self, trace_id: str, case_id: str, version: str, score: float, details: dict) -> None:
         self._db().execute("INSERT INTO grades VALUES (?, ?, ?, ?, ?, ?)",
@@ -217,12 +229,22 @@ def shape(value, depth: int = 0):
     return type(value).__name__
 
 
+_REFERENCE = {"at": 0.0, "value": None}
+
+
+def reference_gap() -> float | None:
+    if time.time() - _REFERENCE["at"] > 60:
+        _REFERENCE.update(at=time.time(), value=store().reference_gap())
+    return _REFERENCE["value"]
+
+
 def run_grade(body: dict, version: str) -> float:
     sample, item, trace_id = body.get("sample"), body.get("item"), body.get("trace_id") or ""
     if not isinstance(sample, dict) or not isinstance(item, dict):
         raise HTTPError(422, "sample and item objects are required")
     try:
-        result = grader.grade(sample, item, store().calls(trace_id) if trace_id else None, version)
+        result = grader.grade(sample, item, store().calls(trace_id) if trace_id else None, version,
+                              reference_gap() if version == "turns" else None)
     except grader.GradingError as error:
         store().count("grade_infra_error")
         # Structure only (keys and types), never contents, so the record is safe to inspect.
@@ -261,7 +283,32 @@ async def tool(request: Request):
         raise HTTPError(422, "tool name is required")
     if body.get("name") not in (None, name):
         raise HTTPError(400, "Tool name does not match route")
+    _sample_shape(request, body, name)
     return JSONResponse(await _bounded(run_tool, body, name))
+
+
+SHAPE_LIMIT = 300
+_SECRET_HEADERS = {"authorization", "cookie", "x-api-key", "api-key", "ocp-apim-subscription-key"}
+
+
+def _sample_shape(request: Request, body: dict, name: str) -> None:
+    """Request structure for the first calls (header names and short non-secret values, body keys) to look for
+    any per-turn metadata the trainer sends. Tool arguments are not stored."""
+    db = store()._db()
+    if db.execute("SELECT count(*) FROM shapes").fetchone()[0] >= SHAPE_LIMIT:
+        return
+    headers = {k: (v[:120] if k.lower() not in _SECRET_HEADERS else "<redacted>") for k, v in request.headers.items()}
+    extra = {k: (v if isinstance(v, (str, int, float, bool)) and len(str(v)) < 120 else type(v).__name__)
+             for k, v in body.items() if k != "arguments"}
+    db.execute("INSERT INTO shapes VALUES (?, ?)", (time.time(), json.dumps({"tool": name, "headers": headers,
+                                                                           "body": extra})))
+
+
+@_handle
+async def shapes(request: Request):
+    _authorized(request)
+    rows = store()._db().execute("SELECT created, detail FROM shapes ORDER BY created").fetchall()
+    return JSONResponse({"shapes": [{"created": r[0], **json.loads(r[1])} for r in rows]})
 
 
 @_handle
@@ -326,4 +373,5 @@ app = Starlette(lifespan=contextlib.asynccontextmanager(_lifespan), routes=[
     Route("/stats", stats, methods=["GET"]),
     Route("/errors", errors, methods=["GET"]),
     Route("/recent-grades", recent, methods=["GET"]),
+    Route("/shapes", shapes, methods=["GET"]),
 ])

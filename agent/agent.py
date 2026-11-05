@@ -41,8 +41,8 @@ def reasoning_effort():
 
 
 @contextmanager
-def client():
-    endpoint = os.environ["MAI_OPENAI_BASE_URL"].rstrip("/") + "/"
+def client(endpoint=None):
+    endpoint = (endpoint or os.environ["MAI_OPENAI_BASE_URL"]).rstrip("/") + "/"
     scope = (
         "https://cognitiveservices.azure.com/.default"
         if ".openai.azure.com" in endpoint
@@ -110,7 +110,9 @@ def policy_contract(specialist=None):
     config = configuration(specialist)
     explicit = os.getenv("MAI_MODEL_OVERRIDE")
     configured = config.model
-    model = explicit or configured or os.getenv("MAI_MODEL_DEPLOYMENT_NAME")
+    chosen = specialists.settings(specialist) if specialist else {}
+    # A per-specialist model is more specific than the agent-wide override.
+    model = chosen.get("model") or explicit or configured or os.getenv("MAI_MODEL_DEPLOYMENT_NAME")
     if not model:
         raise ValueError("A resolved model deployment is required")
     instructions = config.compose_instructions()
@@ -128,7 +130,7 @@ def policy_contract(specialist=None):
     return {
         "model": model,
         "model_override": explicit,
-        "endpoint": os.environ["MAI_OPENAI_BASE_URL"],
+        "endpoint": chosen.get("endpoint") or os.environ["MAI_OPENAI_BASE_URL"],
         "instructions": instructions,
         "tools": definitions,
         "specialist": specialist,
@@ -137,9 +139,7 @@ def policy_contract(specialist=None):
         "max_tool_steps": int(os.getenv("MAI_MAX_TOOL_STEPS", "200")),
         "max_output_tokens": int(os.getenv("MAI_MAX_OUTPUT_TOKENS", "131072")),
         "request_timeout_seconds": request_timeout(),
-        "reasoning_effort": (
-            specialists.settings(specialist).get("reasoning_effort") if specialist else None
-        ) or reasoning_effort(),
+        "reasoning_effort": chosen.get("reasoning_effort") or reasoning_effort(),
         "domain_sha256": hashlib.sha256((ROOT / "domain.py").read_bytes()).hexdigest(),
     }
 
@@ -176,6 +176,13 @@ def _run_episode(item, calls, api):
             }
         specialist = routing["specialist"]
     policy = policy_contract(specialist)
+    if policy["endpoint"].rstrip("/") != os.environ["MAI_OPENAI_BASE_URL"].rstrip("/"):
+        with client(policy["endpoint"]) as specialist_api:
+            return _run_specialist(item, calls, specialist_api, policy, routing, specialist)
+    return _run_specialist(item, calls, api, policy, routing, specialist)
+
+
+def _run_specialist(item, calls, api, policy, routing, specialist):
     instructions, model = policy["instructions"], policy["model"]
     inputs = list(item["messages"])
     if inputs[0]["role"] == "system" and inputs[0]["content"].strip() == instructions.strip():

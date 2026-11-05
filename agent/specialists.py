@@ -32,6 +32,7 @@ TOOLS = {
 
 
 EFFORTS = {"none", "minimal", "low", "medium", "high", "xhigh"}
+SETTING_KEYS = {"reasoning_effort", "model", "endpoint"}
 
 
 def directory():
@@ -54,10 +55,16 @@ def all_settings():
     path = directory() / "settings.json"
     data = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
     for mode, values in data.items():
-        if mode not in TOOLS or not isinstance(values, dict) or set(values) - {"reasoning_effort"}:
+        if mode not in TOOLS or not isinstance(values, dict) or set(values) - SETTING_KEYS:
             raise ValueError(f"Invalid specialist settings for {mode}")
         if values.get("reasoning_effort") not in EFFORTS | {None}:
             raise ValueError(f"Invalid reasoning effort for {mode}")
+        if "model" in values and not (isinstance(values["model"], str) and values["model"].strip()):
+            raise ValueError(f"Invalid model for {mode}")
+        if "endpoint" in values and not (
+            isinstance(values["endpoint"], str) and re.fullmatch(r"https://[^\s/]+/\S*", values["endpoint"])
+        ):
+            raise ValueError(f"Invalid endpoint for {mode}")
     return data
 
 

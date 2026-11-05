@@ -91,8 +91,17 @@ def rollout(api: OpenAI, http: httpx.Client, server: str, auth: dict, deployment
     local_calls = [{"call_id": c["call_id"], "name": c["name"], "arguments": grader._arguments(c["arguments"]),
                     "output": c["output"]} for c in calls]
     local = {v: grader.grade(sample, item, local_calls, v) for v in ("acc", "eff")}
+    # ``turns`` needs the server's call timestamps, so it has no local twin: record the hosted score and the hosted
+    # turn estimate next to the true number of tool-calling turns.
+    reply = http.post(f"{server}/grade/turns", headers=auth, timeout=180,
+                      json={"sample": sample, "item": item, "trace_id": trace_id})
+    reply.raise_for_status()
+    turns_score = reply.json()["score"]
+    details = http.get(f"{server}/grades/{trace_id}", headers=auth, timeout=60).json()["grades"]
+    estimated = next((g["details"]["efficiency"]["turns"] for g in details if g["version"] == "turns"), None)
     return {"case_id": item["case_id"], "mode": item["mode"], "effort": effort, "trace_id": trace_id,
-            "acc": hosted["acc"], "eff": hosted["eff"], "strict_pass": local["acc"]["strict_pass"],
+            "acc": hosted["acc"], "eff": hosted["eff"], "turns_reward": turns_score,
+            "tool_turns": turns - (1 if answer else 0), "estimated_tool_turns": estimated, "strict_pass": local["acc"]["strict_pass"],
             "checks": local["acc"]["checks"],
             "parity": all(abs(hosted[v] - local[v]["score"]) < 1e-9 for v in hosted),
             "tool_calls": len(calls), "turns": turns, "input_tokens": usage_in, "output_tokens": usage_out,
@@ -105,6 +114,7 @@ def summarize(results: list[dict]) -> dict:
     def block(rows):
         if not rows:
             return {}
+        timed = [r for r in rows if r.get("estimated_tool_turns") is not None]
         return {"episodes": len(rows), "strict_pass": sum(r["strict_pass"] for r in rows) / len(rows),
                 "acc_fail_rate_at_1": sum(r["acc"] < 0.999 for r in rows) / len(rows),
                 "eff_fail_rate_at_0.9": sum(r["eff"] < 0.9 for r in rows) / len(rows),
@@ -112,7 +122,11 @@ def summarize(results: list[dict]) -> dict:
                 "tool_calls_p50": statistics.median(r["tool_calls"] for r in rows),
                 "tool_calls_max": max(r["tool_calls"] for r in rows), "turns_max": max(r["turns"] for r in rows),
                 "output_tokens_mean": statistics.mean(r["output_tokens"] for r in rows),
-                "input_tokens_mean": statistics.mean(r["input_tokens"] for r in rows)}
+                "input_tokens_mean": statistics.mean(r["input_tokens"] for r in rows),
+                **({"tool_turns_mean": statistics.mean(r["tool_turns"] for r in timed),
+                    "estimated_tool_turns_mean": statistics.mean(r["estimated_tool_turns"] for r in timed),
+                    "turn_estimate_exact": sum(r["estimated_tool_turns"] == r["tool_turns"] for r in timed) / len(timed),
+                    "mean_turns_reward": statistics.mean(r["turns_reward"] for r in timed)} if timed else {})}
 
     return {"rollouts": len(results), "errors": len(results) - len(ok),
             "parity_mismatches": sum(not r["parity"] for r in ok), "overall": block(ok),

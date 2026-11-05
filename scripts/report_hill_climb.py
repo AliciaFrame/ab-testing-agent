@@ -28,7 +28,8 @@ STEPS = [
     ("routed", "+ incident\ndate checks", "+ incident date checks", "routed-mai-optimized"),
     ("routed", "+ prompt fixes,\nbatched\nportfolio", "+ prompt fixes, batched portfolio", "routed-mai-r4"),
     ("routed", "+ threshold\nrules", "+ threshold rules (v8)", "routed-mai-r5"),
-    ("routed", "+ RFT, efficiency\nreward\n(deployed v9)", "+ RFT, efficiency reward (deployed v9)", "rft-eff"),
+    ("routed", "+ RFT, efficiency\nreward (v9)", "+ RFT, efficiency reward (v9)", "rft-eff"),
+    ("routed", "RFT except\nportfolio\n(deployed v10)", "RFT except portfolio (deployed v10)", "rft-eff-mixed"),
 ]
 SEGMENTS = {"single": "One agent, one shared prompt", "routed": "Decision-1 router + six task specialists"}
 SOL = ("GPT-6 Sol, same router and prompts", "routed-gpt6-sol-r5")

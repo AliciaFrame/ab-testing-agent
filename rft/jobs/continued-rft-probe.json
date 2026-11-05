@@ -1,0 +1,14 @@
+{
+ "date": "2026-11-05",
+ "purpose": "Can RFT continue from the deployed RFT model?",
+ "base_model": "MAI-Code-1.1-Flash-2026-09-15.ft-6fd7856b176f46b3bd4fcf7be09ed96c-abtest-rft-eff",
+ "resource": "amf-mai-shoppingbench-resource",
+ "method": "reinforcement (validation-only submission)",
+ "result": {
+  "status": 400,
+  "code": "invalidPayload",
+  "message": "Continuous fine-tuning is not currently supported for Blossom execution config"
+ },
+ "job_created": false,
+ "consequence": "turn-aware jobs retrain from base mai-code-1.1-flash"
+}

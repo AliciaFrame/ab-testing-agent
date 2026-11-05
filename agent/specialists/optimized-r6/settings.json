@@ -1,0 +1,4 @@
+{
+  "validity": {"reasoning_effort": "low"},
+  "portfolio": {"model": "mai-code-flash-1-1", "endpoint": "https://att-hillclimb-resource.openai.azure.com/openai/v1/"}
+}

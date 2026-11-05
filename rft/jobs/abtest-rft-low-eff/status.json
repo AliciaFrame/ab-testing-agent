@@ -1,8 +1,8 @@
 {
  "job": "abtest-rft-low-eff",
  "job_id": "ftjob-2c24a0fd2ccd4523ad505e5f878a12b2",
- "status": "running",
- "fine_tuned_model": null,
+ "status": "succeeded",
+ "fine_tuned_model": "MAI-Code-1.1-Flash-2026-09-15.ft-2c24a0fd2ccd4523ad505e5f878a12b2-abtest-rft-low-eff",
  "error": null,
  "latest_metrics": {
   "step": 5,
@@ -157,8 +157,77 @@
   "valid_error_count_submit_plan": 0,
   "valid_reasoning_tokens_mean": 362.7871064467766
  },
- "checkpoints": [],
+ "checkpoints": [
+  {
+   "id": "ftchkpt-4d263e20aadc4e508d4505b0e5c6f696",
+   "step": 9,
+   "model": "MAI-Code-1.1-Flash-2026-09-15.ft-2c24a0fd2ccd4523ad505e5f878a12b2-abtest-rft-low-eff",
+   "metrics": {
+    "full_valid_loss": null,
+    "full_valid_mean_token_accuracy": null,
+    "step": 9.0,
+    "train_loss": 0.008315454036164738,
+    "train_mean_token_accuracy": null,
+    "valid_loss": null,
+    "valid_mean_token_accuracy": null,
+    "train_mean_reward": 0.9463501640625002,
+    "full_valid_mean_reward": 0.9350879333333334,
+    "full_valid_mean_parse_error": 0,
+    "completion_tokens_mean": 3711.05078125,
+    "usages/samples/train_reasoning_tokens_mean": 385.5129642606868,
+    "usages/samples/valid_reasoning_tokens_mean": 325.578313253012,
+    "usages/samples/train_reasoning_tokens_count": 1427,
+    "usages/samples/valid_reasoning_tokens_count": 747
+   }
+  },
+  {
+   "id": "ftchkpt-2ee795ea61354ae49b32ff9b1d5d08c9",
+   "step": 5,
+   "model": "MAI-Code-1.1-Flash-2026-09-15.ft-2c24a0fd2ccd4523ad505e5f878a12b2-abtest-rft-low-eff:ckpt-step-5",
+   "metrics": {
+    "full_valid_loss": null,
+    "full_valid_mean_token_accuracy": null,
+    "step": 5.0,
+    "train_loss": 0.002906037261709571,
+    "train_mean_token_accuracy": null,
+    "valid_loss": null,
+    "valid_mean_token_accuracy": null,
+    "train_mean_reward": 0.9067557543174343,
+    "full_valid_mean_reward": 0.8834195933333334,
+    "full_valid_mean_parse_error": 0,
+    "completion_tokens_mean": 3302.9198473282445,
+    "usages/samples/train_reasoning_tokens_mean": 389.6890192791283,
+    "usages/samples/valid_reasoning_tokens_mean": 362.7871064467766,
+    "usages/samples/train_reasoning_tokens_count": 1193,
+    "usages/samples/valid_reasoning_tokens_count": 667
+   }
+  }
+ ],
  "events": [
+  {
+   "created_at": 1793890039,
+   "message": "Training hours billed: 2.750"
+  },
+  {
+   "created_at": 1793890039,
+   "message": "Completed results file: file-12c72085e839447c93f2609ae6131418"
+  },
+  {
+   "created_at": 1793890011,
+   "message": "Model Evaluation Passed."
+  },
+  {
+   "created_at": 1793888567,
+   "message": "Model safety evaluation running."
+  },
+  {
+   "created_at": 1793888566,
+   "message": "Completed results file: file-12c72085e839447c93f2609ae6131418"
+  },
+  {
+   "created_at": 1793888478,
+   "message": "Job succeeded."
+  },
   {
    "created_at": 1793884780,
    "message": "Step 5: training mean reward=0.9067557543174343"
@@ -194,30 +263,6 @@
   {
    "created_at": 1793849605,
    "message": "Finetuning started."
-  },
-  {
-   "created_at": 1793849605,
-   "message": "Data Import started."
-  },
-  {
-   "created_at": 1793849580,
-   "message": "Job started."
-  },
-  {
-   "created_at": 1793849564,
-   "message": "Preprocessing completed for file validation file."
-  },
-  {
-   "created_at": 1793849464,
-   "message": "Preprocessing running for file validation file."
-  },
-  {
-   "created_at": 1793849205,
-   "message": "Preprocessing completed for file training file."
-  },
-  {
-   "created_at": 1793849204,
-   "message": "Preprocessing running for file training file."
   }
  ]
 }
