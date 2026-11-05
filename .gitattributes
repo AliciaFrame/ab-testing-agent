@@ -1,1 +1,2 @@
 rft/data/*.jsonl text eol=lf
+rft/data/**/*.jsonl text eol=lf
