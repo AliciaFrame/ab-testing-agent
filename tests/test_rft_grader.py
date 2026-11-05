@@ -55,11 +55,11 @@ def _trace(episode, gaps):
 
 
 def test_turn_estimate_separates_batched_calls_from_one_call_turns():
-    batched = [0, 2.0, 2.1, 1.9, 2.2, 30.0, 2.0, 2.1, 1.9, 15.0, 2.0]  # 3 turns at ~2 s in-batch spacing
+    batched = [0, 2.0, 2.1, 1.9, 2.2, 30.0, 2.0, 2.4, 2.9, 3.4, 15.0, 2.0]  # 3 turns; spacing drifts 2 -> 3.4 s
     assert grader.estimate_turns([sum(batched[:i + 1]) for i in range(len(batched))]) == 3
-    one_per_turn = [0] + [2.0, 2.9] * 10  # alternating in-batch call and a turn with ~0.9 s of generation
+    one_per_turn = [0] + [2.0, 6.0] * 10  # alternating in-batch call and a turn with ~4 s of generation
     assert grader.estimate_turns([sum(one_per_turn[:i + 1]) for i in range(len(one_per_turn))]) == 11
-    never_batched = [3.0 * i for i in range(12)]  # every call its own turn: no in-batch gaps of its own
+    never_batched = [6.0 * i for i in range(12)]  # every call its own turn: no in-batch gaps of its own
     assert grader.estimate_turns(never_batched) == 1
     assert grader.estimate_turns(never_batched, reference_gap=2.0) == 12
 
@@ -69,7 +69,7 @@ def test_turn_reward_prefers_fewer_turns_and_never_lets_wrong_answers_win():
     good, bad = _episode(True), _episode(False)
     item = row(cases[good["case_id"]])
     one_turn = grader.grade(_sample(good), item, _trace(good, lambda i: 2.0), "turns", 2.0)
-    per_call = grader.grade(_sample(good), item, _trace(good, lambda i: 3.0), "turns", 2.0)
+    per_call = grader.grade(_sample(good), item, _trace(good, lambda i: 6.0), "turns", 2.0)
     assert one_turn["efficiency"]["turns"] == 1 and one_turn["score"] > per_call["score"]
     wrong = grader.grade(_sample(bad), row(cases[bad["case_id"]]), _trace(bad, lambda i: 2.0), "turns", 2.0)["score"]
     assert per_call["score"] >= grader.MIN_TURN_EFFICIENCY > wrong

@@ -50,6 +50,9 @@ JOBS = {
                              "dataset": "v2", "n_epochs": 2},
     # Same as abtest-rft-turns on developerTier, queued after the GlobalStandard jobs waited two hours for GPUs.
     "abtest-rft-turns-dt": {"route": "turns", "threshold": 0.9, "effort": "medium", "dataset": "v2"},
+    # abtest-rft-turns-dt trained two steps on turns-v1, which counted drift in the trainer's call spacing as turns;
+    # cancelled and resubmitted on turns-v2.
+    "abtest-rft-turns-dt2": {"route": "turns", "threshold": 0.9, "effort": "medium", "dataset": "v2"},
 }
 
 

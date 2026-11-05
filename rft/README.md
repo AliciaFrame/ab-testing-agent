@@ -65,8 +65,13 @@ Continued fine-tuning of `abtest-rft-eff` is not supported ("Continuous fine-tun
 Blossom execution config", [probe](jobs/continued-rft-probe.json)), so `turns` retrains from base.
 
 `turns` estimates tool-calling turns from the server's call arrival times. The trainer executes a turn's calls back to
-back (about 2 s apart in training), and a new turn adds the model's generation time, so a gap more than 0.6 s above the
-in-batch spacing starts a new turn. The in-batch spacing is the smaller of the rollout's own 25th-percentile gap and
+back (2-3.5 s apart in training, drifting up within long batches), and a new turn adds the model's generation time
+(about 4 s per one-call turn on the deployed RFT model), so a gap above max(1.75 x spacing, spacing + 1.5 s) starts a
+new turn (`turns-v2`). `turns-v1` used spacing + 0.6 s: exact on calibration rollouts, but in training it counted
+spacing drift as turns (base-like portfolio rollouts at step 0-1: median 18 estimated turns instead of about 5), so
+`abtest-rft-turns-dt` was cancelled after two steps and resubmitted as `abtest-rft-turns-dt2`. On the same step 0-1
+traces v2 gives portfolio 4 (p90 6), ship decision 5, planning 6, attribution 4: at or below the true counts, so
+batched rollouts are not penalized. The in-batch spacing is the smaller of the rollout's own 25th-percentile gap and
 the pooled 25th percentile over the last 15 minutes, so a rollout that never batches cannot hide one-call turns. For
 strict passes, `factor = max(0.6, 1 - 0.30 x clamp(turns / (1.5 x median) - 1, 0, 1) - p_calls)` with the r5 agent's
 median tool turns (portfolio 5, planning 9, ship decision 5, early look 4, attribution 4, validity 3); non-strict
@@ -95,7 +100,8 @@ holds the redacted payload, file and job IDs, and status. Four jobs train the ba
 | `abtest-rft-low-eff` | `eff` | low |
 | `abtest-rft-turns` | `turns`, data v2 | medium, GlobalStandard, 1 epoch |
 | `abtest-rft-turns-2ep` | `turns`, data v2 | medium, GlobalStandard, 2 epochs |
-| `abtest-rft-turns-dt` | `turns`, data v2 | medium, developerTier, 1 epoch (same as `abtest-rft-turns`; whichever gets GPUs first) |
+| `abtest-rft-turns-dt` | `turns-v1`, data v2 | cancelled at step 1 (v1 turn estimate overcounted in training) |
+| `abtest-rft-turns-dt2` | `turns`, data v2 | medium, developerTier, 1 epoch (same as `abtest-rft-turns`; whichever gets GPUs first) |
 
 Data v2 (`data/v2/`) is v1 plus the next 15 seeded portfolio items (30 portfolio rows, 105 total).
 

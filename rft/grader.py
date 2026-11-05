@@ -22,7 +22,7 @@ the deployed agent, not training data. Tool calls are penalized only above today
 Calls come from the tool server's record of the rollout (``trace_id``) when it is complete; otherwise the sample's
 ``output_tools`` are re-executed. The archive tools are deterministic and stateless, so both give identical outputs.
 
-``turns`` (``abtest-rft-turns-v1``): ``acc x turn efficiency``, aimed at input tokens. The ``eff`` model learned
+``turns`` (``abtest-rft-turns-v2``): ``acc x turn efficiency``, aimed at input tokens. The ``eff`` model learned
 to split portfolio comparisons into one call per turn (13 turns vs 6, 3x the input tokens), which ``eff`` could not
 see: the trainer sends no usage and no turn boundaries. ``turns`` estimates tool-calling turns from the tool
 server's call arrival times (``estimate_turns``) and, for strict passes::
@@ -43,7 +43,7 @@ import grader as canonical
 
 ACC_VERSION = "abtest-rft-acc-v1"
 EFF_VERSION = "abtest-rft-eff-v1"
-TURNS_VERSION = "abtest-rft-turns-v1"
+TURNS_VERSION = "abtest-rft-turns-v2"
 VERSIONS = {"acc": ACC_VERSION, "eff": EFF_VERSION, "turns": TURNS_VERSION}
 MIN_EFFICIENCY = 0.7
 MEDIANS = {  # deployed round-5 agent, development split (see module docstring)
@@ -60,7 +60,10 @@ TOKEN_WEIGHT, CALL_WEIGHT = 0.20, 0.10
 MEDIAN_TOOL_TURNS = {"validity": 3, "ship_decision": 5, "early_look": 4, "attribution": 4, "portfolio": 5,
                      "planning": 9}
 TURN_WEIGHT, TURN_SLACK, MIN_TURN_EFFICIENCY = 0.30, 1.5, 0.6
-TURN_GAP_MARGIN = 0.6  # seconds above the rollout's own in-batch call spacing that marks a new model turn
+# A gap marks a new model turn when it exceeds max(ratio x in-batch spacing, spacing + margin seconds). In training the
+# trainer runs a turn's calls back to back about 2-3.5 s apart (spacing drifts up within long batches); a one-call turn
+# adds generation time (about 4 s on the deployed RFT model). v1 used spacing + 0.6 s and counted drift as turns.
+TURN_GAP_RATIO, TURN_GAP_MARGIN = 1.75, 1.5
 
 
 class GradingError(RuntimeError):
@@ -136,8 +139,8 @@ def estimate_turns(created: list[float], reference_gap: float | None = None) -> 
     """Tool-calling turns of a rollout from the tool server's call arrival times.
 
     The trainer executes one turn's calls back to back, so calls inside a turn arrive at the trainer's own call
-    spacing (about 2 s, drifting with load), while a new turn adds the model's generation time. A gap more than
-    ``TURN_GAP_MARGIN`` above the in-batch spacing starts a new turn. The in-batch spacing is the smaller of the
+    spacing (about 2-3.5 s, drifting up within long batches), while a new turn adds the model's generation time. A
+    gap above ``max(TURN_GAP_RATIO x spacing, spacing + TURN_GAP_MARGIN)`` starts a new turn. The in-batch spacing is the smaller of the
     rollout's 25th-percentile gap and ``reference_gap`` (the tool server's pooled 25th percentile over recent
     rollouts), so a rollout that never batches cannot pass its one-call turns off as one batch. Fast turns can merge,
     so the estimate undercounts; the reward therefore only penalizes well above the base median (``TURN_SLACK``)."""
@@ -150,7 +153,7 @@ def estimate_turns(created: list[float], reference_gap: float | None = None) -> 
     base = sorted(gaps)[len(gaps) // 4]
     if reference_gap is not None:
         base = min(base, reference_gap)
-    return 1 + sum(g > base + TURN_GAP_MARGIN for g in gaps)
+    return 1 + sum(g > max(base * TURN_GAP_RATIO, base + TURN_GAP_MARGIN) for g in gaps)
 
 
 def turn_efficiency(mode: str, tool_calls: int, turns: int | None) -> dict:
