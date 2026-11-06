@@ -36,7 +36,7 @@ development benchmark (90 cases x 3 runs) unless noted; tokens are input + outpu
 | R12 | `abtest-rft-strict-dt` | `turns-strict`, v2 | 94.8%, 52.1k | ❌ |
 | R13 | `abtest-rft-noport-dt` | `turns-strict`, v3 (no portfolio) | 96.3%, 35.7k in the v10 configuration | ❌ ties v10 |
 | R14 | `abtest-rft-port-dt` | `turns-strict`, v4 (portfolio only) | v10 + specialist: 98.5%, 55.9k; portfolio 95.6% at 192k | ❌ dominated by v9 |
-| R15 | `abtest-rft-port2-dt` | `turns-strict`, v4, 2 epochs | portfolio 27/27 so far, 16 turns, 254k | ❌ tokens |
+| R15 | `abtest-rft-port2-dt` | `turns-strict`, v4, 2 epochs | v10 + specialist: 98.9%, 85.0k; portfolio 16 turns | ❌ dominated by v9 |
 | R16 | `abtest-rft-ptc-eff` | `eff`, v1p (= v1 + `parallel_tool_calls: true`) | training / queued | ⏳ |
 | R17 | `abtest-rft-ptc-strict-dt` | `turns-strict`, v2p | training | ⏳ |
 

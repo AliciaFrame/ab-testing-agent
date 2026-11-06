@@ -37,7 +37,7 @@
   "seen": "running|None"
  },
  "abtest-rft-ptc-strict-dt": {
-  "seen": "running|(1, 0.8499495231181732)"
+  "seen": "running|(5, 0.8518264805494994)"
  },
  "abtest-rft-ptc-strict-gs": {
   "seen": "cancelled|None"

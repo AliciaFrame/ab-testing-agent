@@ -125,7 +125,7 @@ with the full routed agent before any adoption.
 | `abtest-rft-turns-dt2` | every task | 97.0% | 68.9k | no |
 | `abtest-rft-strict-dt` | every task | 94.8% | 52.1k | no |
 | `abtest-rft-turns-2ep` | every task | 76.3% (58 unresolved 429s) | 56.2k | no |
-| `abtest-rft-port2-dt` | portfolio specialist, 2 epochs | portfolio 27/27 so far (evaluation retrying 429s) | portfolio 254k | no (tokens) |
+| `abtest-rft-port2-dt` | portfolio specialist, 2 epochs, in v10 | 98.9% | 85.0k | yes, but dominated by v9 |
 
 **What we learned.** Every RFT run that trains on portfolio makes it accurate (95-100%) and unbatches it (12-13 model
 turns vs 6, 180-190k tokens vs 67k), whatever the reward: the turn penalties (`turns`, `turns-strict`) detected the
