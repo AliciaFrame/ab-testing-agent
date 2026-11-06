@@ -70,6 +70,7 @@ class Store:
             CREATE TABLE IF NOT EXISTS errors (created REAL NOT NULL, route TEXT NOT NULL, detail TEXT NOT NULL);
             CREATE TABLE IF NOT EXISTS shapes (created REAL NOT NULL, detail TEXT NOT NULL);
             CREATE INDEX IF NOT EXISTS calls_created ON calls (created);
+            CREATE TABLE IF NOT EXISTS trace_jobs (trace_id TEXT PRIMARY KEY, job_id TEXT NOT NULL);
         """)
 
     def _db(self) -> sqlite3.Connection:
@@ -284,6 +285,9 @@ async def tool(request: Request):
     if body.get("name") not in (None, name):
         raise HTTPError(400, "Tool name does not match route")
     _sample_shape(request, body, name)
+    job_id, trace_id = request.headers.get("x-rft-ftjobid"), body.get("trace_id")
+    if job_id and isinstance(trace_id, str) and trace_id:
+        store()._db().execute("INSERT OR IGNORE INTO trace_jobs VALUES (?, ?)", (trace_id, job_id[:80]))
     return JSONResponse(await _bounded(run_tool, body, name))
 
 

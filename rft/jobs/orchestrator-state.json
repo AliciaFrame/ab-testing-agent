@@ -29,5 +29,17 @@
  },
  "abtest-rft-port2-gs": {
   "seen": "cancelled|None"
+ },
+ "abtest-rft-ptc-eff-dt": {
+  "seen": "running|None"
+ },
+ "abtest-rft-ptc-eff-gs": {
+  "seen": "running|None"
+ },
+ "abtest-rft-ptc-strict-dt": {
+  "seen": "running|(1, 0.8499495231181732)"
+ },
+ "abtest-rft-ptc-strict-gs": {
+  "seen": "cancelled|None"
  }
 }

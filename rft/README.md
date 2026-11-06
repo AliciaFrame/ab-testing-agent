@@ -125,6 +125,7 @@ with the full routed agent before any adoption.
 | `abtest-rft-turns-dt2` | every task | 97.0% | 68.9k | no |
 | `abtest-rft-strict-dt` | every task | 94.8% | 52.1k | no |
 | `abtest-rft-turns-2ep` | every task | 76.3% (58 unresolved 429s) | 56.2k | no |
+| `abtest-rft-port2-dt` | portfolio specialist, 2 epochs | portfolio 27/27 so far (evaluation retrying 429s) | portfolio 254k | no (tokens) |
 
 **What we learned.** Every RFT run that trains on portfolio makes it accurate (95-100%) and unbatches it (12-13 model
 turns vs 6, 180-190k tokens vs 67k), whatever the reward: the turn penalties (`turns`, `turns-strict`) detected the
@@ -133,3 +134,16 @@ extra turns in training but did not reverse them, and neither did an explicit pe
 turn penalty) scores 95.6% at 192k tokens: no better than `abtest-rft-eff` on portfolio. Without portfolio rows
 (`noport-dt`), RFT matches the `eff` model on the other tasks (96.3% vs 96.7% in the v10 configuration). So the
 choice is accuracy (v9: 99.3% at 54.2k) or tokens (v10: 96.7% at 35.1k).
+
+**Why the turn penalties did not bite.** The training-time turn estimate undercounts one-call turns under the
+trainer's timing: for `abtest-rft-port2-dt` the tool server estimated a median of 5 portfolio turns in training,
+while the same model takes 16 model turns at evaluation. The trainer's short one-call turns arrive at nearly the
+same spacing as calls within a batch, so `turns-v2`/`turns-strict` rarely applied a penalty and those runs were
+effectively accuracy training. (`turns-v1` had the opposite problem: it counted spacing drift as turns.) The
+estimator was exact on calibration rollouts, which use our own client's timing, not the trainer's. The tool server
+now records the trainer's job ID per rollout (`x-rft-ftjobid`), so training behaviour can be compared per job.
+
+**Open hypothesis: `parallel_tool_calls`.** The rows never set `parallel_tool_calls`, so the trainer may sample one
+tool call per response. `abtest-rft-ptc-eff` repeats `abtest-rft-eff` with only `parallel_tool_calls: true` added
+(data `v1p`); `abtest-rft-ptc-strict` uses `v2p` with `turns-strict`. Batching is judged at evaluation, not from
+training-time turn estimates.

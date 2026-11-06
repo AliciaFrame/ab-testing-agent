@@ -41,3 +41,23 @@
 2026-11-06 07:39 abtest-rft-port2-dt: running started=True reward=(3, 0.8120036872840856)
 2026-11-06 08:00 abtest-rft-port2-dt: running started=True reward=(4, 0.6282008137261071)
 2026-11-06 08:20 abtest-rft-port2-dt: running started=True reward=(5, 0.62448990625)
+2026-11-06 09:40 abtest-rft-ptc-eff-dt: pending started=False reward=None
+2026-11-06 09:40 abtest-rft-ptc-eff-gs: pending started=False reward=None
+2026-11-06 09:40 abtest-rft-ptc-strict-dt: pending started=False reward=None
+2026-11-06 09:40 abtest-rft-ptc-strict-gs: pending started=False reward=None
+2026-11-06 09:50 abtest-rft-ptc-eff-dt: running started=False reward=None
+2026-11-06 09:50 abtest-rft-ptc-strict-dt: running started=False reward=None
+2026-11-06 09:50 abtest-rft-ptc-strict-gs: running started=False reward=None
+2026-11-06 09:55 abtest-rft-ptc-eff-gs: running started=False reward=None
+2026-11-06 10:12 abtest-rft-port2-dt: running started=True reward=(10, 0.7372148106680647)
+2026-11-06 11:43 abtest-rft-port2-dt: running started=True reward=(15, 0.8802708849584467)
+2026-11-06 12:01 abtest-rft-ptc-strict-gs: cancelled (twin abtest-rft-ptc-strict-dt started training first)
+2026-11-06 12:01 abtest-rft-ptc-strict-gs: cancelled started=False reward=None
+2026-11-06 12:24 abtest-rft-port2-dt: succeeded started=True reward=(15, 0.8802708849584467)
+2026-11-06 12:24 abtest-rft-port2-dt: evaluating
+2026-11-06 13:22 abtest-rft-ptc-strict-dt: running started=True reward=(1, 0.8499495231181732)
+2026-11-06 13:25 abtest-rft-port2-dt: evaluation exit 1: ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aliciaframe\ab-testing-bench\scripts\assemble_runs.py", line 37, in assemble
+    raise ValueError("Assembled episodes contain unresolved transport errors")
+ValueError: Assembled episodes contain unresolved transport errors
+2026-11-06 13:31 abtest-rft-port2-dt: evaluating
