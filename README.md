@@ -50,6 +50,8 @@ from the original rules, split by task.
 - **Caveat:** prompts were selected on the development split, so these are selection-set
   scores. The final split (150 cases) is sealed and has not been run.
 
+Every experiment, with what did and did not work: [docs/experiment-log.md](docs/experiment-log.md).
+
 The chart and table are generated from the recorded episodes by
 [`scripts/report_hill_climb.py`](scripts/report_hill_climb.py). The
 [routed comparison report](reports/2026-11-04-routed-comparison.html) adds latency, reasoning
