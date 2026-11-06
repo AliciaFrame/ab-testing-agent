@@ -1,0 +1,19 @@
+{
+ "experiment": "optimized-r7 portfolio prompt (explicit per-response batching plan) on abtest-rft-eff",
+ "episodes_completed": 36,
+ "without_errors": 29,
+ "strict_pass": 27,
+ "median_model_turns": 13,
+ "median_tokens": 152645,
+ "reference": {
+  "rft-eff portfolio": {
+   "median_model_turns": 13,
+   "mean_tokens": 181400
+  },
+  "base r5 portfolio": {
+   "median_model_turns": 6,
+   "mean_tokens": 67000
+  }
+ },
+ "conclusion": "Stopped early: the prompt does not restore batching on the RFT model; not adopted."
+}

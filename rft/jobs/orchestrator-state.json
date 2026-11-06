@@ -1,0 +1,33 @@
+{
+ "abtest-rft-turns-2ep": {
+  "seen": "succeeded|(20, 0.9882527734375002)",
+  "evaluated": true
+ },
+ "abtest-rft-strict-dt": {
+  "seen": "succeeded|(10, 0.9379569367546181)",
+  "evaluated": true
+ },
+ "abtest-rft-strict-gs": {
+  "seen": "cancelled|None"
+ },
+ "abtest-rft-noport-dt": {
+  "seen": "succeeded|(7, 0.9257288041666667)",
+  "evaluated": true
+ },
+ "abtest-rft-noport-gs": {
+  "seen": "cancelled|None"
+ },
+ "abtest-rft-port-dt": {
+  "seen": "succeeded|(7, 0.72583065234375)",
+  "evaluated": true
+ },
+ "abtest-rft-port-gs": {
+  "seen": "cancelled|None"
+ },
+ "abtest-rft-port2-dt": {
+  "seen": "running|(5, 0.62448990625)"
+ },
+ "abtest-rft-port2-gs": {
+  "seen": "cancelled|None"
+ }
+}

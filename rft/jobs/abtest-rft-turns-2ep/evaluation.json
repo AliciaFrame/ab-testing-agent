@@ -1,0 +1,229 @@
+{
+ "job": "abtest-rft-turns-2ep",
+ "job_id": "ftjob-55826104164f40ca8db4b498e3adb298",
+ "fine_tuned_model": "MAI-Code-1.1-Flash-2026-09-15.ft-55826104164f40ca8db4b498e3adb298-abtest-rft-turns-2ep",
+ "deployment": "abtest-rft-turns-2ep",
+ "label": "rft-turns-2ep",
+ "served_reasoning_effort": "default",
+ "overall": {
+  "episodes": 270,
+  "strict_pass": 0.762962962962963,
+  "mean_reward": 0.775,
+  "errors": 58,
+  "mean_latency_s": 46.83318518518518,
+  "mean_input_tokens": 53746.84444444445,
+  "mean_output_tokens": 2471.4925925925927,
+  "total_input_tokens": 14511648,
+  "total_output_tokens": 667303,
+  "total_tokens": 15178951,
+  "total_latency_s": 12644.96,
+  "median_latency_s": 33.620000000000005,
+  "p95_latency_s": 123.79,
+  "routing_accuracy": 1.0,
+  "usage_complete": true,
+  "transport_overhead_tokens": 16294000,
+  "transport_overhead_latency_s": 20365.4,
+  "all_attempt_tokens": 31472951,
+  "check_submitted": 0.7851851851851852,
+  "check_answer": 0.774074074074074,
+  "check_detail": 0.8185185185185185,
+  "check_workflow": 0.774074074074074,
+  "check_side_effects": 0.9962962962962963,
+  "check_report": 0.7851851851851852
+ },
+ "by_task": {
+  "validity": 1.0,
+  "ship_decision": 0.9777777777777777,
+  "early_look": 0.9777777777777777,
+  "attribution": 0.9333333333333333,
+  "portfolio": 0.17777777777777778,
+  "planning": 0.5111111111111111
+ },
+ "acceptance_vs_r5": {
+  "overall": {
+   "baseline": 0.9481481481481482,
+   "candidate": 0.762962962962963,
+   "gain": -0.18518518518518523,
+   "baseline_run_spread": 0.005237828008789275,
+   "baseline_tokens": 31428.033333333333,
+   "candidate_tokens": 56218.33703703704
+  },
+  "scenarios": [
+   {
+    "mode": "validity",
+    "baseline": 1.0,
+    "candidate": 1.0,
+    "delta": -0.0,
+    "lost_stable_cases": [],
+    "baseline_tokens": 7604.311111111111,
+    "candidate_tokens": 10307.555555555555,
+    "ok": true
+   },
+   {
+    "mode": "ship_decision",
+    "baseline": 0.8888888888888888,
+    "candidate": 0.9777777777777777,
+    "delta": 0.0888888888888889,
+    "lost_stable_cases": [],
+    "baseline_tokens": 18707.31111111111,
+    "candidate_tokens": 30910.133333333335,
+    "ok": true
+   },
+   {
+    "mode": "early_look",
+    "baseline": 1.0,
+    "candidate": 0.9777777777777777,
+    "delta": -0.022222222222222254,
+    "lost_stable_cases": [],
+    "baseline_tokens": 13147.8,
+    "candidate_tokens": 21495.11111111111,
+    "ok": true
+   },
+   {
+    "mode": "attribution",
+    "baseline": 1.0,
+    "candidate": 0.9333333333333333,
+    "delta": -0.06666666666666665,
+    "lost_stable_cases": [],
+    "baseline_tokens": 19184.17777777778,
+    "candidate_tokens": 41760.955555555556,
+    "ok": false
+   },
+   {
+    "mode": "portfolio",
+    "baseline": 0.8444444444444444,
+    "candidate": 0.17777777777777778,
+    "delta": -0.6666666666666666,
+    "lost_stable_cases": [
+     "development-portfolio-001",
+     "development-portfolio-003",
+     "development-portfolio-004",
+     "development-portfolio-006",
+     "development-portfolio-009",
+     "development-portfolio-013"
+    ],
+    "baseline_tokens": 67019.97777777778,
+    "candidate_tokens": 140371.46666666667,
+    "ok": false
+   },
+   {
+    "mode": "planning",
+    "baseline": 0.9555555555555556,
+    "candidate": 0.5111111111111111,
+    "delta": -0.44444444444444453,
+    "lost_stable_cases": [
+     "development-planning-006"
+    ],
+    "baseline_tokens": 62904.62222222222,
+    "candidate_tokens": 92464.8,
+    "ok": false
+   }
+  ],
+  "checks": {
+   "overall_gain_exceeds_spread": false,
+   "no_scenario_regression": false,
+   "no_new_side_effect_violations": false,
+   "clean_evaluation": false
+  },
+  "accept": false,
+  "token_flags": [
+   "ship_decision",
+   "early_look",
+   "attribution",
+   "portfolio"
+  ],
+  "runtime_errors": 58
+ },
+ "acceptance_vs_v10": {
+  "overall": {
+   "baseline": 0.9666666666666667,
+   "candidate": 0.762962962962963,
+   "gain": -0.20370370370370372,
+   "baseline_run_spread": 0.009072184232530258,
+   "baseline_tokens": 35096.48888888889,
+   "candidate_tokens": 56218.33703703704
+  },
+  "scenarios": [
+   {
+    "mode": "validity",
+    "baseline": 1.0,
+    "candidate": 1.0,
+    "delta": -0.0,
+    "lost_stable_cases": [],
+    "baseline_tokens": 9260.0,
+    "candidate_tokens": 10307.555555555555,
+    "ok": true
+   },
+   {
+    "mode": "ship_decision",
+    "baseline": 1.0,
+    "candidate": 0.9777777777777777,
+    "delta": -0.022222222222222254,
+    "lost_stable_cases": [],
+    "baseline_tokens": 24111.88888888889,
+    "candidate_tokens": 30910.133333333335,
+    "ok": true
+   },
+   {
+    "mode": "early_look",
+    "baseline": 1.0,
+    "candidate": 0.9777777777777777,
+    "delta": -0.022222222222222254,
+    "lost_stable_cases": [],
+    "baseline_tokens": 16802.4,
+    "candidate_tokens": 21495.11111111111,
+    "ok": true
+   },
+   {
+    "mode": "attribution",
+    "baseline": 0.9777777777777777,
+    "candidate": 0.9333333333333333,
+    "delta": -0.0444444444444444,
+    "lost_stable_cases": [],
+    "baseline_tokens": 20104.68888888889,
+    "candidate_tokens": 41760.955555555556,
+    "ok": true
+   },
+   {
+    "mode": "portfolio",
+    "baseline": 0.8444444444444444,
+    "candidate": 0.17777777777777778,
+    "delta": -0.6666666666666666,
+    "lost_stable_cases": [
+     "development-portfolio-001",
+     "development-portfolio-003",
+     "development-portfolio-004",
+     "development-portfolio-006",
+     "development-portfolio-009",
+     "development-portfolio-013"
+    ],
+    "baseline_tokens": 67019.97777777778,
+    "candidate_tokens": 140371.46666666667,
+    "ok": false
+   },
+   {
+    "mode": "planning",
+    "baseline": 0.9777777777777777,
+    "candidate": 0.5111111111111111,
+    "delta": -0.4666666666666667,
+    "lost_stable_cases": [],
+    "baseline_tokens": 73279.97777777778,
+    "candidate_tokens": 92464.8,
+    "ok": false
+   }
+  ],
+  "checks": {
+   "overall_gain_exceeds_spread": false,
+   "no_scenario_regression": false,
+   "no_new_side_effect_violations": false,
+   "clean_evaluation": false
+  },
+  "accept": false,
+  "token_flags": [
+   "attribution",
+   "portfolio"
+  ],
+  "runtime_errors": 58
+ },
+ "candidate_only": {}
+}

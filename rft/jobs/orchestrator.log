@@ -1,0 +1,43 @@
+2026-11-05 21:58 abtest-rft-turns-2ep: running started=True reward=(15, 0.92440259375)
+2026-11-05 21:58 abtest-rft-strict-dt: running started=True reward=None
+2026-11-05 21:58 abtest-rft-strict-gs: cancelled (twin abtest-rft-strict-dt started training first)
+2026-11-05 21:58 abtest-rft-strict-gs: cancelled started=False reward=None
+2026-11-05 21:58 abtest-rft-noport-dt: running started=True reward=(7, 0.9257288041666667)
+2026-11-05 21:58 abtest-rft-noport-gs: cancelled (twin abtest-rft-noport-dt started training first)
+2026-11-05 21:58 abtest-rft-noport-gs: cancelled started=False reward=None
+2026-11-05 21:58 abtest-rft-port-dt: pending started=False reward=None
+2026-11-05 21:58 abtest-rft-port-gs: pending started=False reward=None
+2026-11-05 21:58 abtest-rft-port2-dt: pending started=False reward=None
+2026-11-05 21:58 abtest-rft-port2-gs: pending started=False reward=None
+2026-11-05 22:08 abtest-rft-noport-dt: succeeded started=True reward=(7, 0.9257288041666667)
+2026-11-05 22:08 abtest-rft-port-dt: running started=False reward=None
+2026-11-05 22:08 abtest-rft-port-gs: running started=False reward=None
+2026-11-05 22:08 abtest-rft-port2-dt: running started=False reward=None
+2026-11-05 22:08 abtest-rft-port2-gs: running started=False reward=None
+2026-11-05 22:23 abtest-rft-turns-2ep: running started=True reward=(20, 0.9882527734375002)
+2026-11-05 22:44 abtest-rft-strict-dt: running started=True reward=(1, 0.8596156743421056)
+2026-11-05 22:49 abtest-rft-noport-dt: evaluating
+2026-11-05 23:13 abtest-rft-noport-dt: evaluation exit 0: abtest-rft-noport-dt: strict 96.3%, tokens/episode 35,743, errors 0, accept vs r5: True, vs v10: False
+2026-11-05 23:34 abtest-rft-turns-2ep: succeeded started=True reward=(20, 0.9882527734375002)
+2026-11-05 23:34 abtest-rft-turns-2ep: evaluating
+2026-11-06 00:59 abtest-rft-turns-2ep: evaluation exit 0: abtest-rft-turns-2ep: strict 76.3%, tokens/episode 56,218, errors 58, accept vs r5: False, vs v10: False
+2026-11-06 01:05 abtest-rft-strict-dt: running started=True reward=(5, 0.8295131897132721)
+2026-11-06 01:46 abtest-rft-strict-dt: running started=True reward=(10, 0.9379569367546181)
+2026-11-06 02:01 abtest-rft-port-gs: cancelled (twin abtest-rft-port-dt started training first)
+2026-11-06 02:01 abtest-rft-port-gs: cancelled started=False reward=None
+2026-11-06 02:26 abtest-rft-strict-dt: succeeded started=True reward=(10, 0.9379569367546181)
+2026-11-06 02:26 abtest-rft-strict-dt: evaluating
+2026-11-06 03:31 abtest-rft-strict-dt: evaluation exit 0: abtest-rft-strict-dt: strict 94.8%, tokens/episode 52,127, errors 9, accept vs r5: False, vs v10: False
+2026-11-06 03:37 abtest-rft-port-dt: running started=True reward=(1, 0.8041218270865056)
+2026-11-06 04:48 abtest-rft-port-dt: running started=True reward=(5, 0.5523535111607143)
+2026-11-06 05:18 abtest-rft-port-dt: running started=True reward=(7, 0.72583065234375)
+2026-11-06 05:34 abtest-rft-port2-gs: cancelled (twin abtest-rft-port2-dt started training first)
+2026-11-06 05:34 abtest-rft-port2-gs: cancelled started=False reward=None
+2026-11-06 05:54 abtest-rft-port-dt: succeeded started=True reward=(7, 0.72583065234375)
+2026-11-06 05:54 abtest-rft-port-dt: evaluating
+2026-11-06 06:33 abtest-rft-port-dt: evaluation exit 0: abtest-rft-port-dt: strict 98.5%, tokens/episode 55,898, errors 0, accept vs r5: True, vs v10: True
+2026-11-06 06:54 abtest-rft-port2-dt: running started=True reward=(1, 0.7635017913549899)
+2026-11-06 07:14 abtest-rft-port2-dt: running started=True reward=(2, 0.790280040463755)
+2026-11-06 07:39 abtest-rft-port2-dt: running started=True reward=(3, 0.8120036872840856)
+2026-11-06 08:00 abtest-rft-port2-dt: running started=True reward=(4, 0.6282008137261071)
+2026-11-06 08:20 abtest-rft-port2-dt: running started=True reward=(5, 0.62448990625)

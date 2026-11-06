@@ -112,3 +112,24 @@ Data v2 (`data/v2/`) is v1 plus the next 15 seeded portfolio items (30 portfolio
 Common settings: `mai-code-1.1-flash` (MAI-Code-1.1-Flash-2026-09-15), developerTier, 2 epochs, batch 8, LR 1.0,
 compute 1.0, eval every 5 steps on 10 samples. Checkpoints are evaluated on the 270-episode development benchmark
 with the full routed agent before any adoption.
+
+## Results (development, 270 episodes; composites = v10 with the candidate's tasks swapped in)
+
+| Model | Configuration | Strict pass | Tokens / episode | Accepted vs v10 |
+|---|---|---:|---:|:-:|
+| `abtest-rft-eff` | every task (v9) | 99.3% | 54.2k | - |
+| `abtest-rft-eff` | every task except portfolio (v10, deployed) | 96.7% | 35.1k | - |
+| `abtest-rft-port-dt` | portfolio specialist in v10 | 98.5% | 55.9k | yes, but dominated by v9 |
+| `abtest-rft-noport-dt` | every task except portfolio | 96.3% | 35.7k | no |
+| `abtest-rft-turns` | every task | 98.1% | 94.9k | no |
+| `abtest-rft-turns-dt2` | every task | 97.0% | 68.9k | no |
+| `abtest-rft-strict-dt` | every task | 94.8% | 52.1k | no |
+| `abtest-rft-turns-2ep` | every task | 76.3% (58 unresolved 429s) | 56.2k | no |
+
+**What we learned.** Every RFT run that trains on portfolio makes it accurate (95-100%) and unbatches it (12-13 model
+turns vs 6, 180-190k tokens vs 67k), whatever the reward: the turn penalties (`turns`, `turns-strict`) detected the
+extra turns in training but did not reverse them, and neither did an explicit per-response batching prompt
+([experiment](jobs/prompt-batching-experiment.json)). The portfolio specialist (`port-dt`, 60 portfolio rows, strict
+turn penalty) scores 95.6% at 192k tokens: no better than `abtest-rft-eff` on portfolio. Without portfolio rows
+(`noport-dt`), RFT matches the `eff` model on the other tasks (96.3% vs 96.7% in the v10 configuration). So the
+choice is accuracy (v9: 99.3% at 54.2k) or tokens (v10: 96.7% at 35.1k).

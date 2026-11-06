@@ -7,46 +7,46 @@
  "served_reasoning_effort": "default",
  "overall": {
   "episodes": 270,
-  "strict_pass": 0.9259259259259259,
-  "mean_reward": 0.9337037037037037,
-  "errors": 16,
-  "mean_latency_s": 52.32162962962963,
-  "mean_input_tokens": 72182.94814814815,
-  "mean_output_tokens": 4048.0481481481484,
-  "total_input_tokens": 19489396,
-  "total_output_tokens": 1092973,
-  "total_tokens": 20582369,
-  "total_latency_s": 14126.84,
+  "strict_pass": 0.9814814814814815,
+  "mean_reward": 0.9892592592592594,
+  "errors": 1,
+  "mean_latency_s": 56.006629629629636,
+  "mean_input_tokens": 90756.6,
+  "mean_output_tokens": 4165.2962962962965,
+  "total_input_tokens": 24504282,
+  "total_output_tokens": 1124630,
+  "total_tokens": 25628912,
+  "total_latency_s": 15121.79,
   "median_latency_s": 30.439999999999998,
-  "p95_latency_s": 130.36,
+  "p95_latency_s": 161.83,
   "routing_accuracy": 1.0,
   "usage_complete": true,
-  "transport_overhead_tokens": 8982700,
-  "transport_overhead_latency_s": 12442.9,
-  "all_attempt_tokens": 29565069,
-  "check_submitted": 0.9407407407407408,
-  "check_answer": 0.9259259259259259,
-  "check_detail": 0.9518518518518518,
-  "check_workflow": 0.937037037037037,
+  "transport_overhead_tokens": 12173253,
+  "transport_overhead_latency_s": 15939.41,
+  "all_attempt_tokens": 37802165,
+  "check_submitted": 0.9962962962962963,
+  "check_answer": 0.9814814814814815,
+  "check_detail": 0.9888888888888889,
+  "check_workflow": 0.9925925925925926,
   "check_side_effects": 1.0,
-  "check_report": 0.937037037037037
+  "check_report": 0.9925925925925926
  },
  "by_task": {
   "validity": 1.0,
   "ship_decision": 0.9777777777777777,
   "early_look": 1.0,
   "attribution": 1.0,
-  "portfolio": 0.6888888888888889,
-  "planning": 0.8888888888888888
+  "portfolio": 0.9777777777777777,
+  "planning": 0.9333333333333333
  },
  "acceptance_vs_r5": {
   "overall": {
    "baseline": 0.9481481481481482,
-   "candidate": 0.9259259259259259,
-   "gain": -0.022222222222222254,
+   "candidate": 0.9814814814814815,
+   "gain": 0.033333333333333326,
    "baseline_run_spread": 0.005237828008789275,
    "baseline_tokens": 31428.033333333333,
-   "candidate_tokens": 76230.99629629629
+   "candidate_tokens": 94921.8962962963
   },
   "scenarios": [
    {
@@ -92,27 +92,27 @@
    {
     "mode": "portfolio",
     "baseline": 0.8444444444444444,
-    "candidate": 0.6888888888888889,
-    "delta": -0.15555555555555556,
+    "candidate": 0.9777777777777777,
+    "delta": 0.1333333333333333,
     "lost_stable_cases": [],
     "baseline_tokens": 67019.97777777778,
-    "candidate_tokens": 162586.84444444443,
-    "ok": false
+    "candidate_tokens": 271010.6222222222,
+    "ok": true
    },
    {
     "mode": "planning",
     "baseline": 0.9555555555555556,
-    "candidate": 0.8888888888888888,
-    "delta": -0.06666666666666676,
+    "candidate": 0.9333333333333333,
+    "delta": -0.022222222222222254,
     "lost_stable_cases": [],
     "baseline_tokens": 62904.62222222222,
-    "candidate_tokens": 218518.13333333333,
-    "ok": false
+    "candidate_tokens": 222239.75555555554,
+    "ok": true
    }
   ],
   "checks": {
-   "overall_gain_exceeds_spread": false,
-   "no_scenario_regression": false,
+   "overall_gain_exceeds_spread": true,
+   "no_scenario_regression": true,
    "no_new_side_effect_violations": true,
    "clean_evaluation": false
   },
@@ -121,6 +121,91 @@
    "portfolio",
    "planning"
   ],
-  "runtime_errors": 16
- }
+  "runtime_errors": 1
+ },
+ "acceptance_vs_v10": {
+  "overall": {
+   "baseline": 0.9666666666666667,
+   "candidate": 0.9814814814814815,
+   "gain": 0.014814814814814836,
+   "baseline_run_spread": 0.009072184232530258,
+   "baseline_tokens": 35096.48888888889,
+   "candidate_tokens": 94921.8962962963
+  },
+  "scenarios": [
+   {
+    "mode": "validity",
+    "baseline": 1.0,
+    "candidate": 1.0,
+    "delta": -0.0,
+    "lost_stable_cases": [],
+    "baseline_tokens": 9260.0,
+    "candidate_tokens": 9873.177777777777,
+    "ok": true
+   },
+   {
+    "mode": "ship_decision",
+    "baseline": 1.0,
+    "candidate": 0.9777777777777777,
+    "delta": -0.022222222222222254,
+    "lost_stable_cases": [],
+    "baseline_tokens": 24111.88888888889,
+    "candidate_tokens": 23825.8,
+    "ok": true
+   },
+   {
+    "mode": "early_look",
+    "baseline": 1.0,
+    "candidate": 1.0,
+    "delta": -0.0,
+    "lost_stable_cases": [],
+    "baseline_tokens": 16802.4,
+    "candidate_tokens": 17975.51111111111,
+    "ok": true
+   },
+   {
+    "mode": "attribution",
+    "baseline": 0.9777777777777777,
+    "candidate": 1.0,
+    "delta": 0.022222222222222254,
+    "lost_stable_cases": [],
+    "baseline_tokens": 20104.68888888889,
+    "candidate_tokens": 24606.51111111111,
+    "ok": true
+   },
+   {
+    "mode": "portfolio",
+    "baseline": 0.8444444444444444,
+    "candidate": 0.9777777777777777,
+    "delta": 0.1333333333333333,
+    "lost_stable_cases": [],
+    "baseline_tokens": 67019.97777777778,
+    "candidate_tokens": 271010.6222222222,
+    "ok": true
+   },
+   {
+    "mode": "planning",
+    "baseline": 0.9777777777777777,
+    "candidate": 0.9333333333333333,
+    "delta": -0.0444444444444444,
+    "lost_stable_cases": [],
+    "baseline_tokens": 73279.97777777778,
+    "candidate_tokens": 222239.75555555554,
+    "ok": true
+   }
+  ],
+  "checks": {
+   "overall_gain_exceeds_spread": true,
+   "no_scenario_regression": true,
+   "no_new_side_effect_violations": true,
+   "clean_evaluation": false
+  },
+  "accept": false,
+  "token_flags": [
+   "portfolio",
+   "planning"
+  ],
+  "runtime_errors": 1
+ },
+ "candidate_only": {}
 }

@@ -1,0 +1,223 @@
+{
+ "job": "abtest-rft-noport-dt",
+ "job_id": "ftjob-597a0d40253440289081481ccfae53f9",
+ "fine_tuned_model": "MAI-Code-1.1-Flash-2026-09-15.ft-597a0d40253440289081481ccfae53f9-abtest-rft-noport-dt",
+ "deployment": "abtest-rft-noport-dt",
+ "label": "rft-noport-dt-composite",
+ "served_reasoning_effort": "default",
+ "overall": {
+  "episodes": 270,
+  "strict_pass": 0.9629629629629629,
+  "mean_reward": 0.9844444444444445,
+  "errors": 0,
+  "mean_latency_s": 38.56988888888889,
+  "mean_input_tokens": 31166.05925925926,
+  "mean_output_tokens": 4577.025925925926,
+  "total_input_tokens": 8414836,
+  "total_output_tokens": 1235797,
+  "total_tokens": 9650633,
+  "total_latency_s": 10413.87,
+  "median_latency_s": 26.384999999999998,
+  "p95_latency_s": 104.44,
+  "routing_accuracy": 1.0,
+  "usage_complete": true,
+  "transport_overhead_tokens": 1458100,
+  "transport_overhead_latency_s": 1813.68,
+  "all_attempt_tokens": 11108733,
+  "check_submitted": 1.0,
+  "check_answer": 0.9629629629629629,
+  "check_detail": 0.9962962962962963,
+  "check_workflow": 0.9888888888888889,
+  "check_side_effects": 1.0,
+  "check_report": 1.0
+ },
+ "by_task": {
+  "validity": 1.0,
+  "ship_decision": 0.9333333333333333,
+  "early_look": 1.0,
+  "attribution": 1.0,
+  "portfolio": 0.8444444444444444,
+  "planning": 1.0
+ },
+ "acceptance_vs_r5": {
+  "overall": {
+   "baseline": 0.9481481481481482,
+   "candidate": 0.9629629629629629,
+   "gain": 0.014814814814814725,
+   "baseline_run_spread": 0.005237828008789275,
+   "baseline_tokens": 31428.033333333333,
+   "candidate_tokens": 35743.085185185184
+  },
+  "scenarios": [
+   {
+    "mode": "validity",
+    "baseline": 1.0,
+    "candidate": 1.0,
+    "delta": -0.0,
+    "lost_stable_cases": [],
+    "baseline_tokens": 7604.311111111111,
+    "candidate_tokens": 8913.8,
+    "ok": true
+   },
+   {
+    "mode": "ship_decision",
+    "baseline": 0.8888888888888888,
+    "candidate": 0.9333333333333333,
+    "delta": 0.04444444444444451,
+    "lost_stable_cases": [],
+    "baseline_tokens": 18707.31111111111,
+    "candidate_tokens": 22505.71111111111,
+    "ok": true
+   },
+   {
+    "mode": "early_look",
+    "baseline": 1.0,
+    "candidate": 1.0,
+    "delta": -0.0,
+    "lost_stable_cases": [],
+    "baseline_tokens": 13147.8,
+    "candidate_tokens": 15422.422222222222,
+    "ok": true
+   },
+   {
+    "mode": "attribution",
+    "baseline": 1.0,
+    "candidate": 1.0,
+    "delta": -0.0,
+    "lost_stable_cases": [],
+    "baseline_tokens": 19184.17777777778,
+    "candidate_tokens": 18798.911111111112,
+    "ok": true
+   },
+   {
+    "mode": "portfolio",
+    "baseline": 0.8444444444444444,
+    "candidate": 0.8444444444444444,
+    "delta": -0.0,
+    "lost_stable_cases": [],
+    "baseline_tokens": 67019.97777777778,
+    "candidate_tokens": 67019.97777777778,
+    "ok": true
+   },
+   {
+    "mode": "planning",
+    "baseline": 0.9555555555555556,
+    "candidate": 1.0,
+    "delta": 0.0444444444444444,
+    "lost_stable_cases": [],
+    "baseline_tokens": 62904.62222222222,
+    "candidate_tokens": 81797.6888888889,
+    "ok": true
+   }
+  ],
+  "checks": {
+   "overall_gain_exceeds_spread": true,
+   "no_scenario_regression": true,
+   "no_new_side_effect_violations": true,
+   "clean_evaluation": true
+  },
+  "accept": true,
+  "token_flags": [],
+  "runtime_errors": 0
+ },
+ "acceptance_vs_v10": {
+  "overall": {
+   "baseline": 0.9666666666666667,
+   "candidate": 0.9629629629629629,
+   "gain": -0.0037037037037037646,
+   "baseline_run_spread": 0.009072184232530258,
+   "baseline_tokens": 35096.48888888889,
+   "candidate_tokens": 35743.085185185184
+  },
+  "scenarios": [
+   {
+    "mode": "validity",
+    "baseline": 1.0,
+    "candidate": 1.0,
+    "delta": -0.0,
+    "lost_stable_cases": [],
+    "baseline_tokens": 9260.0,
+    "candidate_tokens": 8913.8,
+    "ok": true
+   },
+   {
+    "mode": "ship_decision",
+    "baseline": 1.0,
+    "candidate": 0.9333333333333333,
+    "delta": -0.06666666666666665,
+    "lost_stable_cases": [
+     "development-ship_decision-013"
+    ],
+    "baseline_tokens": 24111.88888888889,
+    "candidate_tokens": 22505.71111111111,
+    "ok": false
+   },
+   {
+    "mode": "early_look",
+    "baseline": 1.0,
+    "candidate": 1.0,
+    "delta": -0.0,
+    "lost_stable_cases": [],
+    "baseline_tokens": 16802.4,
+    "candidate_tokens": 15422.422222222222,
+    "ok": true
+   },
+   {
+    "mode": "attribution",
+    "baseline": 0.9777777777777777,
+    "candidate": 1.0,
+    "delta": 0.022222222222222254,
+    "lost_stable_cases": [],
+    "baseline_tokens": 20104.68888888889,
+    "candidate_tokens": 18798.911111111112,
+    "ok": true
+   },
+   {
+    "mode": "portfolio",
+    "baseline": 0.8444444444444444,
+    "candidate": 0.8444444444444444,
+    "delta": -0.0,
+    "lost_stable_cases": [],
+    "baseline_tokens": 67019.97777777778,
+    "candidate_tokens": 67019.97777777778,
+    "ok": true
+   },
+   {
+    "mode": "planning",
+    "baseline": 0.9777777777777777,
+    "candidate": 1.0,
+    "delta": 0.022222222222222254,
+    "lost_stable_cases": [],
+    "baseline_tokens": 73279.97777777778,
+    "candidate_tokens": 81797.6888888889,
+    "ok": true
+   }
+  ],
+  "checks": {
+   "overall_gain_exceeds_spread": false,
+   "no_scenario_regression": false,
+   "no_new_side_effect_violations": true,
+   "clean_evaluation": true
+  },
+  "accept": false,
+  "token_flags": [],
+  "runtime_errors": 0
+ },
+ "candidate_only": {
+  "label": "rft-noport-dt",
+  "modes": [
+   "validity",
+   "ship_decision",
+   "early_look",
+   "attribution",
+   "planning"
+  ],
+  "by_task": {
+   "validity": 1.0,
+   "ship_decision": 0.9333333333333333,
+   "early_look": 1.0,
+   "attribution": 1.0,
+   "planning": 1.0
+  }
+ }
+}
