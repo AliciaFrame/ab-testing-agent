@@ -1,0 +1,6 @@
+{
+ "train_sha256": "a07e473a48a6363408876ca321da7ed239d2010e3140f7c17e5da7d9f111aa67",
+ "valid_sha256": "57ee5efb9f21032201ac6f1c1f65d4500c72a4786f1f5dc36936a5f33ef35c45",
+ "training_file": "file-39f1d852ed1345dd96bdfb845f07f0d0",
+ "validation_file": "file-054dcd5788ca41869d20da99edb95eda"
+}

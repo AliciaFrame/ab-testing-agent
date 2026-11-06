@@ -74,6 +74,13 @@ JOBS = {
     "abtest-rft-port2-gs": {"route": "turns-strict", "threshold": 0.9, "effort": "medium", "dataset": "v4", "n_epochs": 2,
                             "training_type": "GlobalStandard", "eval_modes": ["portfolio"],
                             "composite_base": "rft-eff-mixed"},
+    # parallel_tool_calls: true in every row. ptc-eff repeats abtest-rft-eff exactly except for that flag.
+    "abtest-rft-ptc-eff-dt": {"route": "eff", "threshold": 0.9, "effort": "medium", "dataset": "v1p"},
+    "abtest-rft-ptc-eff-gs": {"route": "eff", "threshold": 0.9, "effort": "medium", "dataset": "v1p",
+                              "training_type": "GlobalStandard"},
+    "abtest-rft-ptc-strict-dt": {"route": "turns-strict", "threshold": 0.9, "effort": "medium", "dataset": "v2p"},
+    "abtest-rft-ptc-strict-gs": {"route": "turns-strict", "threshold": 0.9, "effort": "medium", "dataset": "v2p",
+                                 "training_type": "GlobalStandard"},
 }
 
 

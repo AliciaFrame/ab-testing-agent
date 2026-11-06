@@ -40,6 +40,11 @@ from the original rules, split by task.
 - **Deployed (v10): RFT everywhere except portfolio,** which stays on base MAI: 96.7% at 35.1k,
   +1.9 points over v8 for +3.7k tokens. A turn-aware RFT reward to fix portfolio batching is in
   training ([rft/README.md](rft/README.md)).
+- **What did not fix portfolio tokens:** turn-aware rewards (two strengths), a portfolio-only RFT specialist,
+  and an explicit batching prompt. Every run that trains on portfolio makes it accurate but unbatched (12-13
+  model turns, about 190k tokens). The training rows did not set `parallel_tool_calls`; jobs with it set are
+  queued to test whether the trainer was sampling one tool call per response
+  ([results](rft/README.md#results-development-270-episodes-composites--v10-with-the-candidates-tasks-swapped-in)).
 - **Low reasoning effort** cut tokens but cost accuracy in both prompting and RFT (RFT at low
   effort: portfolio 57.8%), so it is used only for validity.
 - **Caveat:** prompts were selected on the development split, so these are selection-set

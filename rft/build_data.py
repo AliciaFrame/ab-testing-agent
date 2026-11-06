@@ -30,7 +30,12 @@ DATASETS = {"v1": {"dir": DATA_DIR, "train_per_mode": TRAIN_PER_MODE},
             "v3": {"dir": DATA_DIR / "v3", "train_per_mode": {**TRAIN_PER_MODE, "portfolio": 0},
                    "valid_per_mode": {**VALID_PER_MODE, "portfolio": 0}},
             "v4": {"dir": DATA_DIR / "v4", "train_per_mode": {m: 60 if m == "portfolio" else 0 for m in TRAIN_PER_MODE},
-                   "valid_per_mode": {m: 10 if m == "portfolio" else 0 for m in VALID_PER_MODE}}}
+                   "valid_per_mode": {m: 10 if m == "portfolio" else 0 for m in VALID_PER_MODE}},
+            # v1 / v2 rows with ``parallel_tool_calls: true``: without it the trainer may sample one tool call per
+            # response, which would explain why every RFT run unbatched portfolio.
+            "v1p": {"dir": DATA_DIR / "v1p", "train_per_mode": TRAIN_PER_MODE, "parallel_tool_calls": True},
+            "v2p": {"dir": DATA_DIR / "v2p", "train_per_mode": {**TRAIN_PER_MODE, "portfolio": 30},
+                    "parallel_tool_calls": True}}
 
 
 def seeded(split: str, mode: str, salt: str = "") -> list[dict]:
@@ -49,6 +54,9 @@ def main() -> None:
     valid_per_mode = spec.get("valid_per_mode", VALID_PER_MODE)
     valid = [row(c) for m in MODES for c in seeded("validation", m, "-valid")[:valid_per_mode[m]]]
     random.Random(SEED).shuffle(train)
+    if spec.get("parallel_tool_calls"):
+        train = [{**r, "parallel_tool_calls": True} for r in train]
+        valid = [{**r, "parallel_tool_calls": True} for r in valid]
     write_jsonl(out / "train.jsonl", train)
     write_jsonl(out / "valid.jsonl", valid)
     calibration = []
