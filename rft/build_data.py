@@ -9,6 +9,7 @@ validation split. Rows never come from the development, optimizer or final split
 Dataset ``v2`` (``rft/data/v2/``, the ``turns`` jobs) is ``v1`` with portfolio doubled to 30 items: the next 15
 seeded portfolio items are appended, so the first 15 are the ``v1`` items. Dataset ``v3`` (``rft/data/v3/``) is ``v1``
 without portfolio rows: the deployed agent keeps portfolio on the base model, and portfolio is where RFT unlearns batching.
+Dataset ``v4`` (``rft/data/v4/``) is portfolio only (60 train, 10 valid: the jobs sample 10 validation rows) for a portfolio specialist model.
 
     python -m rft.build_data [--dataset v2]
 """
@@ -27,7 +28,9 @@ VALID_PER_MODE = {"planning": 3, "ship_decision": 3, "portfolio": 3, "validity":
 DATASETS = {"v1": {"dir": DATA_DIR, "train_per_mode": TRAIN_PER_MODE},
             "v2": {"dir": DATA_DIR / "v2", "train_per_mode": {**TRAIN_PER_MODE, "portfolio": 30}},
             "v3": {"dir": DATA_DIR / "v3", "train_per_mode": {**TRAIN_PER_MODE, "portfolio": 0},
-                   "valid_per_mode": {**VALID_PER_MODE, "portfolio": 0}}}
+                   "valid_per_mode": {**VALID_PER_MODE, "portfolio": 0}},
+            "v4": {"dir": DATA_DIR / "v4", "train_per_mode": {m: 60 if m == "portfolio" else 0 for m in TRAIN_PER_MODE},
+                   "valid_per_mode": {m: 10 if m == "portfolio" else 0 for m in VALID_PER_MODE}}}
 
 
 def seeded(split: str, mode: str, salt: str = "") -> list[dict]:

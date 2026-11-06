@@ -166,7 +166,7 @@ def main():
     parser.add_argument("--label", required=True)
     parser.add_argument("--workers", type=int, default=3)
     parser.add_argument("--limit", type=int)
-    parser.add_argument("--mode", choices=list(grader.SUBMIT_TOOL))
+    parser.add_argument("--mode", nargs="+", choices=list(grader.SUBMIT_TOOL), help="one or more tasks")
     parser.add_argument("--rerun-transport-errors", action="store_true",
                         help="Only re-run episodes in an existing run that failed on transport")
     parser.add_argument("--max-reruns", type=int, default=3)
@@ -174,7 +174,7 @@ def main():
     path = ROOT / "data" / "cases" / f"{args.split}.jsonl"
     cases = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines()]
     if args.mode:
-        cases = [case for case in cases if case["expected"]["mode"] == args.mode]
+        cases = [case for case in cases if case["expected"]["mode"] in args.mode]
     cases = cases[: args.limit] if args.limit else cases
     out_dir = ROOT / "runs" / args.label / args.split
     if args.rerun_transport_errors:

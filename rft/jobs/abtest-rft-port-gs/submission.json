@@ -1,0 +1,183 @@
+{
+ "resource": {
+  "subscription_id": "507baf40-e783-4961-baf7-d7bc3109baab",
+  "resource_group": "alicia-rl-demo",
+  "foundry_resource": "amf-mai-shoppingbench-resource",
+  "region": "swedencentral",
+  "base_url": "https://amf-mai-shoppingbench-resource.openai.azure.com/openai/v1/"
+ },
+ "service": {
+  "container_app": "abtest-rft-tools",
+  "url": "https://abtest-rft-tools.reddune-8f0ff2f0.swedencentral.azurecontainerapps.io",
+  "token_secret": {
+   "vault": "kv-att-evalmai-75343",
+   "name": "abtest-rft-endpoint-token"
+  }
+ },
+ "model": "mai-code-1.1-flash",
+ "config": {
+  "route": "turns-strict",
+  "threshold": 0.9,
+  "effort": "medium",
+  "dataset": "v4",
+  "training_type": "GlobalStandard",
+  "eval_modes": [
+   "portfolio"
+  ],
+  "composite_base": "rft-eff-mixed"
+ },
+ "max_episode_steps": 160,
+ "preflight": {
+  "dataset": "v4",
+  "health": {
+   "status": "ok",
+   "graders": {
+    "acc": "abtest-rft-acc-v1",
+    "eff": "abtest-rft-eff-v1",
+    "turns": "abtest-rft-turns-v2",
+    "turns-strict": "abtest-rft-turns-strict-v1"
+   },
+   "tools": [
+    "list_tests",
+    "get_test",
+    "check_sample_ratio",
+    "compare_arms",
+    "power_calc",
+    "calculate",
+    "ship_package",
+    "notify_editor",
+    "submit_verdict",
+    "submit_scorecard",
+    "submit_plan"
+   ]
+  },
+  "train_sha256": "2093b6ea3a0f2518ad5b4219009437141ba389255b14544f8b7299b4d0a3a11e",
+  "valid_sha256": "127ce35cb6e86ef6735788a561dbe3f1daeb111deccdfd938a2cf959c809b10c",
+  "calibration_rollouts": 230,
+  "calibration_errors": 0
+ },
+ "files": {
+  "train_sha256": "2093b6ea3a0f2518ad5b4219009437141ba389255b14544f8b7299b4d0a3a11e",
+  "valid_sha256": "127ce35cb6e86ef6735788a561dbe3f1daeb111deccdfd938a2cf959c809b10c",
+  "training_file": "file-32ebae4795f94ec1a485be610cc8f1ff",
+  "validation_file": "file-786c609f192449a8a5c257dc6684d7c0"
+ },
+ "payload": {
+  "model": "mai-code-1.1-flash",
+  "suffix": "abtest-rft-port-gs",
+  "training_file": "file-32ebae4795f94ec1a485be610cc8f1ff",
+  "validation_file": "file-786c609f192449a8a5c257dc6684d7c0",
+  "method": {
+   "type": "reinforcement",
+   "reinforcement": {
+    "grader": {
+     "type": "endpoint",
+     "name": "abtest_turns_strict",
+     "url": "https://abtest-rft-tools.reddune-8f0ff2f0.swedencentral.azurecontainerapps.io/grade/turns-strict",
+     "headers": {
+      "Authorization": "Bearer <redacted>"
+     },
+     "rate_limit": 20,
+     "pass_threshold": 0.9
+    },
+    "tools": [
+     {
+      "name": "list_tests",
+      "server_url": "https://abtest-rft-tools.reddune-8f0ff2f0.swedencentral.azurecontainerapps.io/tools/list_tests",
+      "headers": {
+       "Authorization": "Bearer <redacted>"
+      }
+     },
+     {
+      "name": "get_test",
+      "server_url": "https://abtest-rft-tools.reddune-8f0ff2f0.swedencentral.azurecontainerapps.io/tools/get_test",
+      "headers": {
+       "Authorization": "Bearer <redacted>"
+      }
+     },
+     {
+      "name": "check_sample_ratio",
+      "server_url": "https://abtest-rft-tools.reddune-8f0ff2f0.swedencentral.azurecontainerapps.io/tools/check_sample_ratio",
+      "headers": {
+       "Authorization": "Bearer <redacted>"
+      }
+     },
+     {
+      "name": "compare_arms",
+      "server_url": "https://abtest-rft-tools.reddune-8f0ff2f0.swedencentral.azurecontainerapps.io/tools/compare_arms",
+      "headers": {
+       "Authorization": "Bearer <redacted>"
+      }
+     },
+     {
+      "name": "power_calc",
+      "server_url": "https://abtest-rft-tools.reddune-8f0ff2f0.swedencentral.azurecontainerapps.io/tools/power_calc",
+      "headers": {
+       "Authorization": "Bearer <redacted>"
+      }
+     },
+     {
+      "name": "calculate",
+      "server_url": "https://abtest-rft-tools.reddune-8f0ff2f0.swedencentral.azurecontainerapps.io/tools/calculate",
+      "headers": {
+       "Authorization": "Bearer <redacted>"
+      }
+     },
+     {
+      "name": "ship_package",
+      "server_url": "https://abtest-rft-tools.reddune-8f0ff2f0.swedencentral.azurecontainerapps.io/tools/ship_package",
+      "headers": {
+       "Authorization": "Bearer <redacted>"
+      }
+     },
+     {
+      "name": "notify_editor",
+      "server_url": "https://abtest-rft-tools.reddune-8f0ff2f0.swedencentral.azurecontainerapps.io/tools/notify_editor",
+      "headers": {
+       "Authorization": "Bearer <redacted>"
+      }
+     },
+     {
+      "name": "submit_verdict",
+      "server_url": "https://abtest-rft-tools.reddune-8f0ff2f0.swedencentral.azurecontainerapps.io/tools/submit_verdict",
+      "headers": {
+       "Authorization": "Bearer <redacted>"
+      }
+     },
+     {
+      "name": "submit_scorecard",
+      "server_url": "https://abtest-rft-tools.reddune-8f0ff2f0.swedencentral.azurecontainerapps.io/tools/submit_scorecard",
+      "headers": {
+       "Authorization": "Bearer <redacted>"
+      }
+     },
+     {
+      "name": "submit_plan",
+      "server_url": "https://abtest-rft-tools.reddune-8f0ff2f0.swedencentral.azurecontainerapps.io/tools/submit_plan",
+      "headers": {
+       "Authorization": "Bearer <redacted>"
+      }
+     }
+    ],
+    "max_episode_steps": 160,
+    "pass_threshold": 0.9,
+    "hyperparameters": {
+     "n_epochs": 1,
+     "batch_size": 8,
+     "learning_rate_multiplier": 1.0,
+     "eval_interval": 5,
+     "eval_samples": 10,
+     "compute_multiplier": 1.0,
+     "reasoning_effort": "medium"
+    }
+   }
+  },
+  "extra_body": {
+   "trainingType": "GlobalStandard"
+  }
+ },
+ "job_id": "ftjob-e5d03ca386934bbc909b60daa606a821",
+ "status": "pending",
+ "created_at": 1793933819,
+ "base_model": "MAI-Code-1.1-Flash-2026-09-15"
+}

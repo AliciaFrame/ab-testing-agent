@@ -21,8 +21,8 @@ def assemble(base_label, label, tasks):
     records = []
     for mode in compare_runs.MODES:
         if mode in tasks:
-            rows = compare_runs.load(tasks[mode], "development")
-            if {r["mode"] for r in rows} != {mode} or len(rows) != 45:
+            rows = [r for r in compare_runs.load(tasks[mode], "development") if r["mode"] == mode]
+            if len(rows) != 45:
                 raise ValueError(f"{tasks[mode]} is not a complete 45-episode {mode} run")
             for row in rows:
                 row["measurement_source"] = f"rerun:{tasks[mode]}"
@@ -33,8 +33,8 @@ def assemble(base_label, label, tasks):
         (r["case_id"], r["run"]) for r in base
     }:
         raise ValueError("Assembled episodes do not match the base case/run set")
-    if any(r["error"] for r in records):
-        raise ValueError("Assembled episodes contain unresolved runtime errors")
+    if any(run_eval.is_transport_error(r) for r in records):
+        raise ValueError("Assembled episodes contain unresolved transport errors")
     out = ROOT / "runs" / label / "development"
     out.mkdir(parents=True, exist_ok=True)
     (out / "episodes.jsonl").write_text("".join(json.dumps(r) + "\n" for r in records), encoding="utf-8")

@@ -73,8 +73,9 @@ def evaluate(job: str) -> dict:
         env["MAI_REASONING_EFFORT"] = "low"
     else:
         env.pop("MAI_REASONING_EFFORT", None)
+    modes = JOBS[job].get("eval_modes")
     run = [sys.executable, str(ROOT / "scripts" / "run_eval.py"), "--split", "development", "--runs", "3",
-           "--label", label, "--workers", str(WORKERS)]
+           "--label", label, "--workers", str(WORKERS)] + (["--mode", *modes] if modes else [])
     summary_path = ROOT / "runs" / label / "development" / "summary.json"
     if not summary_path.exists():
         subprocess.run(run, env=env, check=True, cwd=ROOT, stdout=subprocess.DEVNULL)
@@ -83,18 +84,32 @@ def evaluate(job: str) -> dict:
     sys.path.insert(0, str(ROOT / "scripts"))
     import compare_runs
 
+    summary = json.loads(summary_path.read_text(encoding="utf-8"))
+    partial = {}
+    if modes:
+        # The candidate serves only ``modes``; the rest of the agent is ``composite_base`` (v10 = rft-eff-mixed for a
+        # portfolio specialist, base MAI round 5 for portfolio when the candidate skips portfolio).
+        import assemble_runs
+
+        partial = {"label": label, "modes": modes, "by_task": {m: summary[m]["strict_pass"] for m in modes if m in summary}}
+        base = JOBS[job]["composite_base"]
+        label = f"{label}-composite"
+        assemble_runs.assemble(base, label, {m: partial["label"] for m in modes})
+        summary_path = ROOT / "runs" / label / "development" / "summary.json"
+        summary = json.loads(summary_path.read_text(encoding="utf-8"))
     acceptance = compare_runs.compare(compare_runs.load("routed-mai-r5", "development"),
                                       compare_runs.load(label, "development"))
-    summary = json.loads(summary_path.read_text(encoding="utf-8"))
+    versus_v10 = compare_runs.compare(compare_runs.load("rft-eff-mixed", "development"),
+                                      compare_runs.load(label, "development"))
     result = {"job": job, "job_id": info.id, "fine_tuned_model": info.fine_tuned_model, "deployment": name,
               "label": label, "served_reasoning_effort": env.get("MAI_REASONING_EFFORT", "default"),
               "overall": summary["overall"],
               "by_task": {m: summary[m]["strict_pass"] for m in compare_runs.MODES if m in summary},
-              "acceptance_vs_r5": acceptance}
+              "acceptance_vs_r5": acceptance, "acceptance_vs_v10": versus_v10, "candidate_only": partial}
     (JOBS_DIR / job / "evaluation.json").write_text(json.dumps(result, indent=1), encoding="utf-8")
     o = summary["overall"]
     print(f"{job}: strict {o['strict_pass']:.1%}, tokens/episode {o['total_tokens'] / o['episodes']:,.0f}, "
-          f"errors {o['errors']}, accept vs r5: {acceptance['accept']}")
+          f"errors {o['errors']}, accept vs r5: {acceptance['accept']}, vs v10: {versus_v10['accept']}")
     return result
 
 

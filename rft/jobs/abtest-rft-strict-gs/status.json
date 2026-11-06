@@ -1,0 +1,47 @@
+{
+ "job": "abtest-rft-strict-gs",
+ "job_id": "ftjob-b33e9614c8a8496090cdace05475ef68",
+ "status": "running",
+ "fine_tuned_model": null,
+ "error": null,
+ "latest_metrics": null,
+ "checkpoints": [],
+ "events": [
+  {
+   "created_at": 1793926713,
+   "message": "Job queued, waiting for GPUs."
+  },
+  {
+   "created_at": 1793926123,
+   "message": "Finetuning started."
+  },
+  {
+   "created_at": 1793926123,
+   "message": "Data Import started."
+  },
+  {
+   "created_at": 1793926115,
+   "message": "Job started."
+  },
+  {
+   "created_at": 1793926034,
+   "message": "Preprocessing completed for file validation file."
+  },
+  {
+   "created_at": 1793925913,
+   "message": "Preprocessing running for file validation file."
+  },
+  {
+   "created_at": 1793925794,
+   "message": "Preprocessing completed for file training file."
+  },
+  {
+   "created_at": 1793925673,
+   "message": "Preprocessing running for file training file."
+  },
+  {
+   "created_at": 1793925587,
+   "message": "Job enqueued. Waiting for jobs ahead to complete."
+  }
+ ]
+}

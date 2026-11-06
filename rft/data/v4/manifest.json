@@ -1,0 +1,43 @@
+{
+ "seed": 20261104,
+ "train_per_mode": {
+  "planning": 0,
+  "ship_decision": 0,
+  "portfolio": 60,
+  "validity": 0,
+  "early_look": 0,
+  "attribution": 0
+ },
+ "valid_per_mode": {
+  "planning": 0,
+  "ship_decision": 0,
+  "portfolio": 10,
+  "validity": 0,
+  "early_look": 0,
+  "attribution": 0
+ },
+ "train_rows": 60,
+ "valid_rows": 10,
+ "calibration_on_train_rows": {
+  "portfolio/medium": {
+   "rollouts": 35,
+   "acc_below_1": 5,
+   "eff_below_0.9": 23
+  },
+  "portfolio/low": {
+   "rollouts": 15,
+   "acc_below_1": 2,
+   "eff_below_0.9": 5
+  }
+ },
+ "files": {
+  "train.jsonl": {
+   "sha256": "2093b6ea3a0f2518ad5b4219009437141ba389255b14544f8b7299b4d0a3a11e"
+  },
+  "valid.jsonl": {
+   "sha256": "127ce35cb6e86ef6735788a561dbe3f1daeb111deccdfd938a2cf959c809b10c"
+  }
+ },
+ "heldout_test_overlap": [],
+ "max_row_bytes": 10393
+}

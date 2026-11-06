@@ -57,9 +57,23 @@ JOBS = {
     "abtest-rft-strict-dt": {"route": "turns-strict", "threshold": 0.9, "effort": "medium", "dataset": "v2"},
     "abtest-rft-strict-gs": {"route": "turns-strict", "threshold": 0.9, "effort": "medium", "dataset": "v2",
                              "training_type": "GlobalStandard"},
-    "abtest-rft-noport-dt": {"route": "turns-strict", "threshold": 0.9, "effort": "medium", "dataset": "v3"},
+    "abtest-rft-noport-dt": {"route": "turns-strict", "threshold": 0.9, "effort": "medium", "dataset": "v3",
+                             "eval_modes": ["validity", "ship_decision", "early_look", "attribution", "planning"], "composite_base": "rft-eff-mixed"},
     "abtest-rft-noport-gs": {"route": "turns-strict", "threshold": 0.9, "effort": "medium", "dataset": "v3",
-                             "training_type": "GlobalStandard"},
+                             "training_type": "GlobalStandard", "eval_modes": ["validity", "ship_decision", "early_look", "attribution", "planning"],
+                             "composite_base": "rft-eff-mixed"},
+    # Portfolio specialist: 7 of v10's 9 failures are base-model portfolio; the RFT models pass portfolio 45/45 but
+    # unbatch (181k tokens). Portfolio-only rows with the strict turn penalty; evaluated as v10 with portfolio replaced.
+    "abtest-rft-port-dt": {"route": "turns-strict", "threshold": 0.9, "effort": "medium", "dataset": "v4",
+                           "eval_modes": ["portfolio"], "composite_base": "rft-eff-mixed"},
+    "abtest-rft-port-gs": {"route": "turns-strict", "threshold": 0.9, "effort": "medium", "dataset": "v4",
+                           "training_type": "GlobalStandard", "eval_modes": ["portfolio"],
+                           "composite_base": "rft-eff-mixed"},
+    "abtest-rft-port2-dt": {"route": "turns-strict", "threshold": 0.9, "effort": "medium", "dataset": "v4", "n_epochs": 2,
+                            "eval_modes": ["portfolio"], "composite_base": "rft-eff-mixed"},
+    "abtest-rft-port2-gs": {"route": "turns-strict", "threshold": 0.9, "effort": "medium", "dataset": "v4", "n_epochs": 2,
+                            "training_type": "GlobalStandard", "eval_modes": ["portfolio"],
+                            "composite_base": "rft-eff-mixed"},
 }
 
 
