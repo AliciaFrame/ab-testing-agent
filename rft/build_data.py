@@ -7,7 +7,8 @@ calibrated item is kept: clean passes still carry the efficiency signal. Valid r
 validation split. Rows never come from the development, optimizer or final splits.
 
 Dataset ``v2`` (``rft/data/v2/``, the ``turns`` jobs) is ``v1`` with portfolio doubled to 30 items: the next 15
-seeded portfolio items are appended, so the first 15 are the ``v1`` items.
+seeded portfolio items are appended, so the first 15 are the ``v1`` items. Dataset ``v3`` (``rft/data/v3/``) is ``v1``
+without portfolio rows: the deployed agent keeps portfolio on the base model, and portfolio is where RFT unlearns batching.
 
     python -m rft.build_data [--dataset v2]
 """
@@ -24,7 +25,9 @@ from rft.common import DATA_DIR, MODES, RFT_DIR, load_cases, read_jsonl, row, sh
 TRAIN_PER_MODE = {"planning": 30, "ship_decision": 30, "portfolio": 15, "validity": 5, "early_look": 5, "attribution": 5}
 VALID_PER_MODE = {"planning": 3, "ship_decision": 3, "portfolio": 3, "validity": 2, "early_look": 2, "attribution": 2}
 DATASETS = {"v1": {"dir": DATA_DIR, "train_per_mode": TRAIN_PER_MODE},
-            "v2": {"dir": DATA_DIR / "v2", "train_per_mode": {**TRAIN_PER_MODE, "portfolio": 30}}}
+            "v2": {"dir": DATA_DIR / "v2", "train_per_mode": {**TRAIN_PER_MODE, "portfolio": 30}},
+            "v3": {"dir": DATA_DIR / "v3", "train_per_mode": {**TRAIN_PER_MODE, "portfolio": 0},
+                   "valid_per_mode": {**VALID_PER_MODE, "portfolio": 0}}}
 
 
 def seeded(split: str, mode: str, salt: str = "") -> list[dict]:
@@ -40,7 +43,8 @@ def main() -> None:
     out, per_mode = spec["dir"], spec["train_per_mode"]
     out.mkdir(parents=True, exist_ok=True)
     train = [row(c) for m in MODES for c in seeded("train", m)[:per_mode[m]]]
-    valid = [row(c) for m in MODES for c in seeded("validation", m, "-valid")[:VALID_PER_MODE[m]]]
+    valid_per_mode = spec.get("valid_per_mode", VALID_PER_MODE)
+    valid = [row(c) for m in MODES for c in seeded("validation", m, "-valid")[:valid_per_mode[m]]]
     random.Random(SEED).shuffle(train)
     write_jsonl(out / "train.jsonl", train)
     write_jsonl(out / "valid.jsonl", valid)
@@ -60,7 +64,7 @@ def main() -> None:
         heldout |= {c["expected"]["test_id"] for c in load_cases(split) if "test_id" in c["expected"]}
     used = {r["case"]["expected"]["test_id"] for r in train + valid if "test_id" in r["case"]["expected"]}
     manifest = {
-        "seed": SEED, "train_per_mode": per_mode, "valid_per_mode": VALID_PER_MODE,
+        "seed": SEED, "train_per_mode": per_mode, "valid_per_mode": valid_per_mode,
         "train_rows": len(train), "valid_rows": len(valid),
         "calibration_on_train_rows": stats,
         "files": {name: {"sha256": sha256_file(out / name)} for name in ("train.jsonl", "valid.jsonl")},

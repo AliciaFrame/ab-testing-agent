@@ -244,7 +244,7 @@ def run_grade(body: dict, version: str) -> float:
         raise HTTPError(422, "sample and item objects are required")
     try:
         result = grader.grade(sample, item, store().calls(trace_id) if trace_id else None, version,
-                              reference_gap() if version == "turns" else None)
+                              reference_gap() if version in grader.TURN_PARAMS else None)
     except grader.GradingError as error:
         store().count("grade_infra_error")
         # Structure only (keys and types), never contents, so the record is safe to inspect.

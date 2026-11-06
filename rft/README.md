@@ -102,6 +102,10 @@ holds the redacted payload, file and job IDs, and status. Four jobs train the ba
 | `abtest-rft-turns-2ep` | `turns`, data v2 | medium, GlobalStandard, 2 epochs |
 | `abtest-rft-turns-dt` | `turns-v1`, data v2 | cancelled at step 1 (v1 turn estimate overcounted in training) |
 | `abtest-rft-turns-dt2` | `turns`, data v2 | medium, developerTier, 1 epoch (same as `abtest-rft-turns`; whichever gets GPUs first) |
+| `abtest-rft-strict-dt` / `-gs` | `turns-strict`, data v2 | medium, 1 epoch, developerTier / GlobalStandard |
+| `abtest-rft-noport-dt` / `-gs` | `turns-strict`, data v3 (no portfolio) | medium, 1 epoch, developerTier / GlobalStandard |
+
+`turns` detected unbatching in training but did not reverse it: estimated portfolio turns rose from 4 to 11-13 and partly recovered to 8, and `abtest-rft-turns-dt2` still uses about 12 portfolio turns. `turns-strict` penalizes from 1.2x the base median turns with weight 0.6 and floor 0.4 (non-strict answers stay below: `acc` <= 0.9 x 0.4). On recorded calibration rollouts it scores batched base portfolio answers 0.88-1.0 and one-call-per-turn answers 0.4-0.5. Data v3 drops portfolio rows: the deployed agent keeps portfolio on the base model.
 
 Data v2 (`data/v2/`) is v1 plus the next 15 seeded portfolio items (30 portfolio rows, 105 total).
 

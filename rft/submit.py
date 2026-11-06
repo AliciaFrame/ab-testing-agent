@@ -53,6 +53,13 @@ JOBS = {
     # abtest-rft-turns-dt trained two steps on turns-v1, which counted drift in the trainer's call spacing as turns;
     # cancelled and resubmitted on turns-v2.
     "abtest-rft-turns-dt2": {"route": "turns", "threshold": 0.9, "effort": "medium", "dataset": "v2"},
+    # turns-strict (earlier, harder turn penalty) with portfolio rows (v2) and without them (v3); each on both tiers.
+    "abtest-rft-strict-dt": {"route": "turns-strict", "threshold": 0.9, "effort": "medium", "dataset": "v2"},
+    "abtest-rft-strict-gs": {"route": "turns-strict", "threshold": 0.9, "effort": "medium", "dataset": "v2",
+                             "training_type": "GlobalStandard"},
+    "abtest-rft-noport-dt": {"route": "turns-strict", "threshold": 0.9, "effort": "medium", "dataset": "v3"},
+    "abtest-rft-noport-gs": {"route": "turns-strict", "threshold": 0.9, "effort": "medium", "dataset": "v3",
+                             "training_type": "GlobalStandard"},
 }
 
 
@@ -77,7 +84,7 @@ def payload(job: str, train_id: str, valid_id: str, secret: str | None) -> dict:
     return {
         "model": MODEL, "suffix": job, "training_file": train_id, "validation_file": valid_id,
         "method": {"type": "reinforcement", "reinforcement": {
-            "grader": {"type": "endpoint", "name": f"abtest_{cfg['route']}", "url": f"{SERVICE['url']}/grade/{cfg['route']}",
+            "grader": {"type": "endpoint", "name": f"abtest_{cfg['route'].replace('-', '_')}", "url": f"{SERVICE['url']}/grade/{cfg['route']}",
                        "headers": headers, "rate_limit": 20, "pass_threshold": cfg["threshold"]},
             "tools": [{"name": n, "server_url": f"{SERVICE['url']}/tools/{n}", "headers": headers} for n in TOOL_NAMES],
             "max_episode_steps": MAX_EPISODE_STEPS, "pass_threshold": cfg["threshold"],

@@ -73,3 +73,13 @@ def test_turn_reward_prefers_fewer_turns_and_never_lets_wrong_answers_win():
     assert one_turn["efficiency"]["turns"] == 1 and one_turn["score"] > per_call["score"]
     wrong = grader.grade(_sample(bad), row(cases[bad["case_id"]]), _trace(bad, lambda i: 2.0), "turns", 2.0)["score"]
     assert per_call["score"] >= grader.MIN_TURN_EFFICIENCY > wrong
+
+
+def test_strict_turn_reward_penalizes_more_and_keeps_wrong_answers_lowest():
+    cases = {c["id"]: c for c in load_cases("development")}
+    good, bad = _episode(True), _episode(False)
+    item = row(cases[good["case_id"]])
+    per_call = {v: grader.grade(_sample(good), item, _trace(good, lambda i: 6.0), v, 2.0) for v in ("turns", "turns-strict")}
+    assert per_call["turns-strict"]["score"] < per_call["turns"]["score"]
+    wrong = grader.grade(_sample(bad), row(cases[bad["case_id"]]), _trace(bad, lambda i: 2.0), "turns-strict", 2.0)
+    assert per_call["turns-strict"]["score"] >= grader.TURN_PARAMS["turns-strict"][2] > wrong["score"]

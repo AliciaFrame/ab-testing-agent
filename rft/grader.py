@@ -44,7 +44,8 @@ import grader as canonical
 ACC_VERSION = "abtest-rft-acc-v1"
 EFF_VERSION = "abtest-rft-eff-v1"
 TURNS_VERSION = "abtest-rft-turns-v2"
-VERSIONS = {"acc": ACC_VERSION, "eff": EFF_VERSION, "turns": TURNS_VERSION}
+TURNS_STRICT_VERSION = "abtest-rft-turns-strict-v1"
+VERSIONS = {"acc": ACC_VERSION, "eff": EFF_VERSION, "turns": TURNS_VERSION, "turns-strict": TURNS_STRICT_VERSION}
 MIN_EFFICIENCY = 0.7
 MEDIANS = {  # deployed round-5 agent, development split (see module docstring)
     "validity": {"tool_calls": 4, "output_tokens": 876},
@@ -60,6 +61,9 @@ TOKEN_WEIGHT, CALL_WEIGHT = 0.20, 0.10
 MEDIAN_TOOL_TURNS = {"validity": 3, "ship_decision": 5, "early_look": 4, "attribution": 4, "portfolio": 5,
                      "planning": 9}
 TURN_WEIGHT, TURN_SLACK, MIN_TURN_EFFICIENCY = 0.30, 1.5, 0.6
+# ``turns-strict``: the 1.5x-slack, 0.3-weight penalty detected unbatching in training (estimated portfolio turns rose
+# from 4 to 11-13) but did not reverse it, so the strict variant penalizes from 1.2x the median and harder.
+TURN_PARAMS = {"turns": (TURN_WEIGHT, TURN_SLACK, MIN_TURN_EFFICIENCY), "turns-strict": (0.60, 1.2, 0.4)}
 # A gap marks a new model turn when it exceeds max(ratio x in-batch spacing, spacing + margin seconds). In training the
 # trainer runs a turn's calls back to back about 2-3.5 s apart (spacing drifts up within long batches); a one-call turn
 # adds generation time (about 4 s on the deployed RFT model). v1 used spacing + 0.6 s and counted drift as turns.
@@ -156,11 +160,12 @@ def estimate_turns(created: list[float], reference_gap: float | None = None) -> 
     return 1 + sum(g > max(base * TURN_GAP_RATIO, base + TURN_GAP_MARGIN) for g in gaps)
 
 
-def turn_efficiency(mode: str, tool_calls: int, turns: int | None) -> dict:
+def turn_efficiency(mode: str, tool_calls: int, turns: int | None, variant: str = "turns") -> dict:
+    weight, slack, floor = TURN_PARAMS[variant]
     median = MEDIAN_TOOL_TURNS[mode]
-    p_turns = 0.0 if turns is None else TURN_WEIGHT * min(1.0, max(0.0, turns / (TURN_SLACK * median) - 1))
+    p_turns = 0.0 if turns is None else weight * min(1.0, max(0.0, turns / (slack * median) - 1))
     p_calls = CALL_WEIGHT * min(1.0, max(0.0, tool_calls / MEDIANS[mode]["tool_calls"] - 1))
-    return {"factor": round(max(MIN_TURN_EFFICIENCY, 1 - p_turns - p_calls), 6), "p_turns": round(p_turns, 6),
+    return {"factor": round(max(floor, 1 - p_turns - p_calls), 6), "p_turns": round(p_turns, 6),
             "p_calls": round(p_calls, 6), "turns": turns, "tool_calls": tool_calls, "median_turns": median}
 
 
@@ -184,14 +189,14 @@ def grade(sample: dict, item: dict, trace_calls: list[dict] | None = None, versi
         factor = eff["factor"] if result["strict_pass"] else MIN_EFFICIENCY
         result.update(score=round(result["acc_score"] * factor, 6), efficiency=eff, factor_applied=factor,
                       version=EFF_VERSION)
-    elif version == "turns":
+    elif version in TURN_PARAMS:
         timed = source == "tool_server_trace" and all(isinstance(c.get("created"), (int, float)) for c in calls)
         turns = estimate_turns([c["created"] for c in calls], reference_gap) if timed else None
-        eff = turn_efficiency(item["mode"], len(calls), turns)
+        eff = turn_efficiency(item["mode"], len(calls), turns, version)
         eff["reference_gap"] = reference_gap
-        factor = eff["factor"] if result["strict_pass"] else MIN_TURN_EFFICIENCY
+        factor = eff["factor"] if result["strict_pass"] else TURN_PARAMS[version][2]
         result.update(score=round(result["acc_score"] * factor, 6), efficiency=eff, factor_applied=factor,
-                      version=TURNS_VERSION)
+                      version=VERSIONS[version])
     elif version != "acc":
         raise GradingError(f"unknown reward version {version!r}")
     result["answer_chars"] = len(answer_text(sample))
